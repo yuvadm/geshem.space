@@ -55,19 +55,11 @@ var mapStyle = {
             "paint": {"background-color": "#111"}
         },
         {
-            "id": "water",
-            "source": "mapbox",
-            "source-layer": "water",
-            "type": "fill",
-            "paint": {"fill-color": "#2c2c2c"}
-        },
-        {
             "id": "boundaries",
             "source": "mapbox",
             "source-layer": "admin",
             "type": "line",
-            "paint": {"line-color": "#797979", "line-dasharray": [2, 2, 6, 2]},
-            "filter": ["all", ["==", "maritime", 0]],
+            "paint": {"line-color": "#797979"},
         },
         {
             "id": "overlay",
