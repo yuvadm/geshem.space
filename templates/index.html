@@ -39,6 +39,11 @@ var mapStyle = {
         "mapbox": {
             "type": "vector",
             "url": "mapbox://mapbox.mapbox-streets-v6"
+        },
+        "overlay": {
+            "type": "image",
+            "url": "/static/280.png",
+            "coordinates": RASTER_COORDS_280
         }
     },
     "sprite": "mapbox://sprites/mapbox/dark-v8",
@@ -63,6 +68,19 @@ var mapStyle = {
             "source-layer": "water",
             "type": "line",
             "paint": {"line-color": "#797979"}
+        },
+        {
+            "id": "water2",
+            "source": "mapbox",
+            "source-layer": "water",
+            "type": "fill",
+            "paint": {"fill-color": "#111122"}
+        },
+        {
+            "id": "overlay",
+            "source": "overlay",
+            "type": "raster",
+            "paint": {"raster-opacity": 0.85}
         },
         {
             "id": "cities",
@@ -112,39 +130,6 @@ var map = new mapboxgl.Map({
     style: mapStyle,
     hash: false
 });
-
-function changeToImage(num){
-  map.addSource('overlay'+num,{
-      "type": "image",
-      "url": "/img/280_"+num+".png",
-      "coordinates": RASTER_COORDS_280
-    }
-  );
-  if (map.getLayer("overlay")) {
-    map.removeSource(map.getLayer("overlay").source);
-    map.removeLayer('overlay');
-  }
-  map.addLayer({
-    "id": "overlay",
-    "source": "overlay"+num,
-    "type": "raster",
-    "paint": {"raster-opacity": 0.85}
-  },"cities");
-  map.update(true);
-}
-
-map.on('load', function(){
-  var count = 0;
-  var nextImage = function(){
-    changeToImage(count);
-    count = count+1;
-    if(count>4) count = 0;
-  }
-
-  window.setInterval(nextImage, 1000);
-});
-
-
 </script>
 
 </body>
