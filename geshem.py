@@ -4,6 +4,7 @@ import requests
 from flask import Flask, render_template
 from os import environ
 from pathlib import Path
+from redis.exceptions import ConnectionError
 
 MAPS_JSON = 'http://map.govmap.gov.il/rainradar/radar.json'
 STATIC_DIR = Path(__file__).resolve().parents[0] / 'static'
@@ -28,9 +29,13 @@ def home():
 @app.after_request
 def update_images(response):
     # poor man's background task
-    if not redis.get('fresh'):
-        redis.setex('fresh', 'yes', 60)
-        fetch_latest_images()
+    try:
+        if not redis.get('fresh'):
+            redis.setex('fresh', 'yes', 60)
+            fetch_latest_images()
+    except ConnectionError as e:
+        if app.debug:
+            fetch_latest_images()
     return response
 
 if __name__ == '__main__':
