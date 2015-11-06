@@ -42,7 +42,7 @@ var mapStyle = {
         },
         "overlay": {
             "type": "image",
-            "url": "/img/280.png",
+            "url": "/static/280.png",
             "coordinates": RASTER_COORDS_280
         }
     },
@@ -68,6 +68,13 @@ var mapStyle = {
             "source-layer": "water",
             "type": "line",
             "paint": {"line-color": "#797979"}
+        },
+        {
+            "id": "water2",
+            "source": "mapbox",
+            "source-layer": "water",
+            "type": "fill",
+            "paint": {"fill-color": "#111122"}
         },
         {
             "id": "overlay",
