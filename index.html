@@ -60,7 +60,14 @@ var mapStyle = {
             "source-layer": "admin",
             "type": "line",
             "paint": {"line-color": "#797979"},
-            "filter": ["all", ["<=", "admin_level", 2]],
+            "filter": ["all", ["<=", "admin_level", 2], ['==', 'maritime', 0]]
+        },
+        {
+            "id": "water",
+            "source": "mapbox",
+            "source-layer": "water",
+            "type": "line",
+            "paint": {"line-color": "#797979"}
         },
         {
             "id": "overlay",
