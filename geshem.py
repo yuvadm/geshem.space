@@ -1,13 +1,15 @@
+import redis
 import requests
 
 from flask import Flask, render_template
+from os import environ
 from pathlib import Path
 
 MAPS_JSON = 'http://map.govmap.gov.il/rainradar/radar.json'
 STATIC_DIR = Path(__file__).resolve().parents[0] / 'static'
 
 app = Flask(__name__)
-
+redis = redis.from_url(environ.get('REDIS_URL'))
 
 def fetch_latest_images():
     maps_json = requests.get(MAPS_JSON).json()
@@ -21,8 +23,14 @@ def fetch_latest_images():
 
 @app.route('/')
 def home():
-    fetch_latest_images()
     return render_template('index.html')
+
+@app.after_request
+def update_images():
+    # poor man's background task
+    if not redis.get('fresh'):
+        redis.setex('fresh', 60, 'yes')
+        fetch_latest_images()
 
 if __name__ == '__main__':
     app.run(debug=True)
