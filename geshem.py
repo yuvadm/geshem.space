@@ -9,7 +9,7 @@ MAPS_JSON = 'http://map.govmap.gov.il/rainradar/radar.json'
 STATIC_DIR = Path(__file__).resolve().parents[0] / 'static'
 
 app = Flask(__name__)
-redis = redis.from_url(environ.get('REDIS_URL'))
+redis = redis.from_url(environ.get('REDIS_URL', 'redis://localhost'))
 
 def fetch_latest_images():
     maps_json = requests.get(MAPS_JSON).json()
@@ -26,11 +26,12 @@ def home():
     return render_template('index.html')
 
 @app.after_request
-def update_images():
+def update_images(response):
     # poor man's background task
     if not redis.get('fresh'):
-        redis.setex('fresh', 60, 'yes')
+        redis.setex('fresh', 'yes', 60)
         fetch_latest_images()
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
