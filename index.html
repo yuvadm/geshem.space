@@ -60,6 +60,7 @@ var mapStyle = {
             "source-layer": "admin",
             "type": "line",
             "paint": {"line-color": "#797979"},
+            "filter": ["all", ["<=", "admin_level", 2]],
         },
         {
             "id": "overlay",
