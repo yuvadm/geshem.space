@@ -13,7 +13,7 @@ STATIC_DIR = Path(__file__).resolve().parents[0] / 'static'
 app = Flask(__name__)
 redis = redis.from_url(environ.get('REDIS_URL', 'redis://localhost'))
 
-def fetch_latest_images():
+def fetch_latest_images(local=False):
     maps_json = requests.get(MAPS_JSON).json()
     for r in ['images140', 'images280']:
         imgs = sorted(maps_json[r].items(), key=lambda x: x[0], reverse=True)[:1]  # only take latest
@@ -21,15 +21,21 @@ def fetch_latest_images():
         for ts, url in imgs:
             dt = datetime.strptime(ts, '%Y:%m:%d:%H:%M').strftime('%Y%m%d_%H%M%S')
             image = requests.get('http://' + url)
+            if not local:
+                redis.set('latest_{}'.format(res), dt)
+            else:
+                dt = 'dev'
             filename = '{}_{}.png'.format(dt, res)
             with open(str(STATIC_DIR / filename), 'wb+') as f:
                 f.write(image.content)
-            redis.set('latest_{}'.format(res), dt)
 
 @app.route('/')
 def home():
-    latests = redis.pipeline().get('latest_140').get('latest_280').execute()
-    latest_140, latest_280 = map(lambda x: x.decode(), latests)
+    try:
+        latests = redis.pipeline().get('latest_140').get('latest_280').execute()
+        latest_140, latest_280 = map(lambda x: x.decode(), latests)
+    except ConnectionError:
+        latest_140, latest_280 = 'dev', 'dev'
     return render_template('index.html', latest_140=latest_140, latest_280=latest_280)
 
 @app.after_request
@@ -41,7 +47,7 @@ def update_images(response):
             fetch_latest_images()
     except ConnectionError as e:
         if app.debug:
-            fetch_latest_images()
+            fetch_latest_images(local=True)
     return response
 
 if __name__ == '__main__':
