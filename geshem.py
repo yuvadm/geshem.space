@@ -3,7 +3,6 @@ import requests
 
 from datetime import datetime
 from flask import Flask, render_template
-from flask.ext.cache import Cache
 from os import environ
 from pathlib import Path
 from redis.exceptions import ConnectionError
@@ -12,7 +11,6 @@ MAPS_JSON = 'http://map.govmap.gov.il/rainradar/radar.json'
 STATIC_DIR = Path(__file__).resolve().parents[0] / 'static'
 
 app = Flask(__name__)
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 redis = redis.from_url(environ.get('REDIS_URL', 'redis://localhost'))
 
 def fetch_latest_images():
