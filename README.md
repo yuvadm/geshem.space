@@ -1,6 +1,6 @@
-# Raindar Mapbox
+# Geshem
 
-A rain radar clone for Mapbox GL, see it live at: [http://geshem.space](http://geshem.space)
+A rain radar clone running on Mapbox GL, see it live at: [http://geshem.space](http://geshem.space)
 
 ## Dev
 
