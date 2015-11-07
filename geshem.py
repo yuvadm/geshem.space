@@ -1,7 +1,9 @@
 import redis
 import requests
 
+from datetime import datetime
 from flask import Flask, render_template
+from flask.ext.cache import Cache
 from os import environ
 from pathlib import Path
 from redis.exceptions import ConnectionError
@@ -10,21 +12,28 @@ MAPS_JSON = 'http://map.govmap.gov.il/rainradar/radar.json'
 STATIC_DIR = Path(__file__).resolve().parents[0] / 'static'
 
 app = Flask(__name__)
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 redis = redis.from_url(environ.get('REDIS_URL', 'redis://localhost'))
 
 def fetch_latest_images():
     maps_json = requests.get(MAPS_JSON).json()
     for r in ['images140', 'images280']:
         imgs = sorted(maps_json[r].items(), key=lambda x: x[0], reverse=True)[:1]  # only take latest
-        for _ts, url in imgs:
+        res = r[-3:]
+        for ts, url in imgs:
+            dt = datetime.strptime(ts, '%Y:%m:%d:%H:%M').strftime('%Y%m%d_%H%M%S')
             image = requests.get('http://' + url)
-            filename = r[-3:] + '.png'
+            filename = '{}_{}.png'.format(dt, res)
             with open(str(STATIC_DIR / filename), 'wb+') as f:
                 f.write(image.content)
+            redis.set('latest_{}'.format(res), dt)
 
+@cache.cached(timeout=60)
 @app.route('/')
 def home():
-    return render_template('index.html')
+    latests = redis.pipeline().get('latest_140').get('latest_280').execute()
+    latest_140, latest_280 = map(lambda x: x.decode(), latests)
+    return render_template('index.html', latest_140=latest_140, latest_280=latest_280)
 
 @app.after_request
 def update_images(response):
