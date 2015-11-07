@@ -28,7 +28,6 @@ def fetch_latest_images():
                 f.write(image.content)
             redis.set('latest_{}'.format(res), dt)
 
-@cache.cached(timeout=60)
 @app.route('/')
 def home():
     latests = redis.pipeline().get('latest_140').get('latest_280').execute()
