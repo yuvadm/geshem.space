@@ -22,21 +22,6 @@
 <div id='map'></div>
 <script>
 
-var RASTER_COORDS_140 = [
-    [33.35317413, 33.27232471],
-    [36.32243686, 33.27232471],
-    [36.32243686, 30.72293428],
-    [33.35317413, 30.72293428]
-];
-
-var RASTER_COORDS_280 = [
-    [31.93095218, 34.5156862],
-    [37.86644267, 34.5156862],
-    [37.86644267, 29.42911589],
-    [31.93095218, 29.42911589]
-];
-
-
 mapboxgl.accessToken = 'pk.eyJ1IjoieXV2YWRtIiwiYSI6InlKdW56cVEifQ.Kp9mM9JFtja5dKeZxHg0DA';
 var mapStyle = {
     "version": 8,
@@ -46,10 +31,25 @@ var mapStyle = {
             "type": "vector",
             "url": "mapbox://mapbox.mapbox-streets-v6"
         },
-        "overlay": {
+        "radar_140": {
+            "type": "image",
+            "url": "/static/140.png",
+            "coordinates": [
+                [33.35317413, 33.27232471],
+                [36.32243686, 33.27232471],
+                [36.32243686, 30.72293428],
+                [33.35317413, 30.72293428]
+            ]
+        },
+        "radar_280": {
             "type": "image",
             "url": "/static/{{ latest_280 }}_280.png",
-            "coordinates": RASTER_COORDS_280
+            "coordinates": [
+                [31.93095218, 34.5156862],
+                [37.86644267, 34.5156862],
+                [37.86644267, 29.42911589],
+                [31.93095218, 29.42911589]
+            ]
         }
     },
     "sprite": "mapbox://sprites/mapbox/dark-v8",
@@ -83,10 +83,20 @@ var mapStyle = {
             "paint": {"fill-color": "#111122"}
         },
         {
-            "id": "overlay",
-            "source": "overlay",
+            "id": "radar_140",
+            "source": "radar_140",
             "type": "raster",
-            "paint": {"raster-opacity": 0.85}
+            "paint": {
+                "raster-opacity": 0.85
+            }
+        },
+        {
+            "id": "radar_280",
+            "source": "radar_280",
+            "type": "raster",
+            "paint": {
+                "raster-opacity": 0.85
+            }
         },
         {
             "id": "cities",
