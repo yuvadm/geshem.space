@@ -34,9 +34,11 @@ def home():
     try:
         latests = redis.pipeline().get('latest_140').get('latest_280').execute()
         latest_140, latest_280 = map(lambda x: x.decode(), latests)
+        ts = datetime.strptime(latest_280, '%Y%m%d_%H%M%S')
     except ConnectionError:
         latest_140, latest_280 = 'dev', 'dev'
-    return render_template('index.html', latest_140=latest_140, latest_280=latest_280)
+        ts = datetime.now()
+    return render_template('index.html', ts=ts, latest_140=latest_140, latest_280=latest_280)
 
 @app.after_request
 def update_images(response):
