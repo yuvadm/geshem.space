@@ -5,6 +5,7 @@ from datetime import datetime
 from flask import Flask, render_template
 from os import environ
 from pathlib import Path
+from pytz import utc, timezone
 from redis.exceptions import ConnectionError
 
 MAPS_JSON = 'http://map.govmap.gov.il/rainradar/radar.json'
@@ -34,7 +35,7 @@ def home():
     try:
         latests = redis.pipeline().get('latest_140').get('latest_280').execute()
         latest_140, latest_280 = map(lambda x: x.decode(), latests)
-        ts = datetime.strptime(latest_280, '%Y%m%d_%H%M%S')
+        ts = utc.localize(datetime.strptime(latest_280, '%Y%m%d_%H%M%S')).astimezone(timezone('Asia/Jerusalem'))
     except ConnectionError:
         latest_140, latest_280 = 'dev', 'dev'
         ts = datetime.now()
