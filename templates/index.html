@@ -33,7 +33,7 @@ var mapStyle = {
         },
         "radar_140": {
             "type": "image",
-            "url": "/static/140.png",
+            "url": "/static/{{ latest_140 }}_140.png",
             "coordinates": [
                 [33.35317413, 33.27232471],
                 [36.32243686, 33.27232471],
@@ -88,6 +88,9 @@ var mapStyle = {
             "type": "raster",
             "paint": {
                 "raster-opacity": 0.85
+            },
+            "layout": {
+                "visibility": "none"
             }
         },
         {
@@ -146,6 +149,19 @@ var map = new mapboxgl.Map({
     style: mapStyle,
     hash: false
 });
+
+map.on('zoom', function (x) {
+    var zoom = map.getZoom();
+    if (zoom > 7) {
+        map.getLayer('radar_140').layout.visibility='visible';
+        map.getLayer('radar_280').layout.visibility='none';
+    }
+    else {
+        map.getLayer('radar_140').layout.visibility='none';
+        map.getLayer('radar_280').layout.visibility='visible';
+    }
+})
+
 </script>
 
 </body>
