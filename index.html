@@ -5,15 +5,34 @@
     <title></title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.11.2/mapbox-gl.js'></script>
-      <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.11.2/mapbox-gl.css' rel='stylesheet' />
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.11.2/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="range.css">
     <style>
         body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
+        #map {
+           position:absolute; top:0; bottom:0; width:100%;
+           z-index: 1;
+        }
+        #slider {
+          z-index: 2;
+          position: absolute;
+          bottom: 20px;
+          left: 20px;
+        }
+
+        #slider input {
+          width: 60px;
+          margin: 0 auto;
+        }
     </style>
 </head>
 <body>
 
-<div id='map'></div>
+<div id='map'>
+  <div id="slider">
+    <input id="sliderInput" type="range" min="0" max="300" value="0"></input>
+  </div>
+</div>
 <script>
 
 var RASTER_COORDS_140 = [
@@ -37,8 +56,8 @@ var mapStyle = {
     "name": "Dark",
     "sources": {
         "mapbox": {
-            "type": "vector",
-            "url": "mapbox://mapbox.mapbox-streets-v6"
+          "type": "vector",
+          "url": "mapbox://mapbox.mapbox-streets-v6"
         }
     },
     "sprite": "mapbox://sprites/mapbox/dark-v8",
@@ -113,37 +132,62 @@ var map = new mapboxgl.Map({
     hash: false
 });
 
-function changeToImage(num){
-  map.addSource('overlay'+num,{
+var numImages = 6;
+
+function addSources(){
+  for (var i = 0; i < numImages; i++) {
+    mapStyle.sources["overlay_"+i+"_src"] = {
       "type": "image",
-      "url": "/img/280_"+num+".png",
+      "url": "/img/280_"+i+".png",
       "coordinates": RASTER_COORDS_280
-    }
-  );
-  if (map.getLayer("overlay")) {
-    map.removeSource(map.getLayer("overlay").source);
-    map.removeLayer('overlay');
-  }
-  map.addLayer({
-    "id": "overlay",
-    "source": "overlay"+num,
-    "type": "raster",
-    "paint": {"raster-opacity": 0.85}
-  },"cities");
-  map.update(true);
+    };
+  };
+  for (var i = 0; i < numImages; i++) {
+    mapStyle.layers.push({
+      "id": "overlay_"+i,
+      "source": "overlay_"+i+"_src",
+      "type": "raster",
+      "paint": {"raster-opacity": 0.2}
+    });
+  };
 }
+addSources();
 
-map.on('load', function(){
-  var count = 0;
-  var nextImage = function(){
-    changeToImage(count);
-    count = count+1;
-    if(count>4) count = 0;
+var slider =  document.getElementById('sliderInput');
+var sliderMax = 300;
+
+var stopPoints = [];
+for (var i = 0; i < numImages; i++) {
+  stopPoints.push(i*sliderMax/(numImages-1));
+};
+
+function refreshOpacities(){
+  for (var i = 0; i < numImages; i++) {
+    map.setPaintProperty("overlay_"+i,"raster-opacity",
+      (60-Math.abs(stopPoints[i]-slider.value))/100
+    );
   }
-
-  window.setInterval(nextImage, 1000);
+}
+map.on('load', function(){
+  function slideMove(){
+    slider.value = parseInt(slider.value)+3;
+    if (slider.value >= sliderMax){
+      slider.value = 0;
+    }
+    refreshOpacities();
+  }
+  window.setInterval(slideMove, 5);
 });
 
+function resizeSlider(){
+  slider.style.width = (window.innerWidth - 40)+'px';
+}
+window.onload = function(){ resizeSlider() };
+window.onresize = function(){ resizeSlider() };
+
+slider.addEventListener('input',function(){
+  refreshOpacities();
+});
 
 </script>
 
