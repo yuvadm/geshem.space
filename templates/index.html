@@ -106,6 +106,7 @@ var mapStyle = {
             "source": "mapbox",
             "source-layer": "place_label",
             "type": "symbol",
+            "filter": ["all", ["<=", "localrank", 6]],
             "layout": {
                 "text-field": "{name_en}",
                 "text-font": ["DIN Offc Pro Bold", "Arial Unicode MS Bold"],
