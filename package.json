@@ -7,8 +7,11 @@
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "mapbox-gl": "^0.12.2",
     "react": "^0.14.5",
-    "react-dom": "^0.14.5"
+    "react-dom": "^0.14.5",
+    "script-loader": "^0.6.1"
   },
   "devDependencies": {},
   "scripts": {
