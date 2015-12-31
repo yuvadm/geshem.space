@@ -24,7 +24,7 @@ def fetch_latest_images(local=False):
                 if redis.get('processed:{}'.format(ts)):
                     continue
                 else:
-                    redis.set('processed:{}'.format(ts))
+                    redis.set('processed:{}'.format(ts), '1')
             dt = datetime.strptime(ts, '%Y:%m:%d:%H:%M').strftime('%Y%m%d_%H%M%S')
             image = requests.get('http://' + url)
             if not local:
@@ -32,19 +32,12 @@ def fetch_latest_images(local=False):
             else:
                 dt = 'dev'
             filename = '{}_{}.png'.format(dt, res)
-            with open(str(STATIC_DIR / filename), 'wb+') as f:
+            with open(str(STATIC_DIR / 'img' / filename), 'wb+') as f:
                 f.write(image.content)
 
 @app.route('/')
 def home():
-    try:
-        latests = redis.pipeline().get('latest_140').get('latest_280').execute()
-        latest_140, latest_280 = map(lambda x: x.decode(), latests)
-        ts = utc.localize(datetime.strptime(latest_280, '%Y%m%d_%H%M%S')).astimezone(timezone('Asia/Jerusalem'))
-    except ConnectionError:
-        latest_140, latest_280 = 'dev', 'dev'
-        ts = datetime.now()
-    return render_template('index.html', ts=ts, latest_140=latest_140, latest_280=latest_280)
+    return render_template('index.html')
 
 @app.after_request
 def update_images(response):

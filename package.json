@@ -1,0 +1,27 @@
+{
+  "name": "geshem",
+  "version": "0.1.0",
+  "description": "A rain radar clone running on Mapbox GL",
+  "main": "geshem.js",
+  "dependencies": {
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "react": "^0.14.5",
+    "react-dom": "^0.14.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuvadm/geshem.git"
+  },
+  "author": "Yuval Adam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuvadm/geshem/issues"
+  },
+  "homepage": "https://github.com/yuvadm/geshem#readme"
+}
