@@ -17,9 +17,14 @@ redis = redis.from_url(environ.get('REDIS_URL', 'redis://localhost'))
 def fetch_latest_images(local=False):
     maps_json = requests.get(MAPS_JSON).json()
     for r in ['images140', 'images280']:
-        imgs = sorted(maps_json[r].items(), key=lambda x: x[0], reverse=True)[:1]  # only take latest
+        imgs = sorted(maps_json[r].items(), key=lambda x: x[0], reverse=True)
         res = r[-3:]
         for ts, url in imgs:
+            if not local:
+                if redis.get('processed:{}'.format(ts)):
+                    continue
+                else:
+                    redis.set('processed:{}'.format(ts))
             dt = datetime.strptime(ts, '%Y:%m:%d:%H:%M').strftime('%Y%m%d_%H%M%S')
             image = requests.get('http://' + url)
             if not local:
