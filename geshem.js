@@ -20,6 +20,10 @@ class GLMap extends React.Component {
     token: React.PropTypes.string  // mapbox auth token
   }
 
+  getInitialState () {
+    return window.imgs
+  }
+
   componentDidMount () {
     mapboxgl.accessToken = this.props.token
 
@@ -171,7 +175,7 @@ class Map extends React.Component {
       <GLMap
         view={view}
         token='pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' />
-      <Slider step={2} defaultValue={50} />
+      <Slider step={1} min={1} max={7} defaultValue={7} />
     </div>
   }
 }

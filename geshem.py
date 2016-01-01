@@ -48,11 +48,11 @@ def get_imgs():
         '140': img_140_files[:7],
         '280': img_280_files[:7]
     }
-    return jsonify(imgs)
+    return imgs
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index.html', imgs=get_imgs())
 
 
 @app.after_request

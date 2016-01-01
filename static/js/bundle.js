@@ -86,8 +86,17 @@
 	    }
 
 	    _createClass(GLMap, [{
-	        key: 'componentDidMount',
+	        key: 'getInitialState',
 	        // mapbox auth token
+	        value: function getInitialState() {
+	            return window.imgs;
+	        }
+
+	        // Adapted from Tim Welch's code that can be found at
+	        // https://github.com/twelch/react-mapbox-gl-seed/blob/4d78eb0/src/components/GLMap.js
+
+	    }, {
+	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            var _this2 = this;
 
@@ -127,10 +136,6 @@
 	                });
 	            });
 	        }
-
-	        // Adapted from Tim Welch's code that can be found at
-	        // https://github.com/twelch/react-mapbox-gl-seed/blob/4d78eb0/src/components/GLMap.js
-
 	    }, {
 	        key: 'componentWillUnmount',
 	        value: function componentWillUnmount() {
@@ -248,7 +253,7 @@
 	                _react2.default.createElement(GLMap, {
 	                    view: view,
 	                    token: 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' }),
-	                _react2.default.createElement(_rcSlider2.default, { step: 2, defaultValue: 50 })
+	                _react2.default.createElement(_rcSlider2.default, { step: 1, min: 1, max: 7, defaultValue: 7 })
 	            );
 	        }
 	    }]);
