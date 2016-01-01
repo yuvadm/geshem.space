@@ -2,8 +2,8 @@ import redis
 import requests
 
 from datetime import datetime
-from flask import Flask, render_template
-from os import environ
+from flask import Flask, jsonify, render_template
+from os import environ, listdir
 from pathlib import Path
 from pytz import utc, timezone
 from redis.exceptions import ConnectionError
@@ -21,10 +21,10 @@ def fetch_latest_images(local=False):
         res = r[-3:]
         for ts, url in imgs:
             if not local:
-                if redis.get('processed:{}'.format(ts)):
+                if redis.get('processed:{}:{}'.format(res, ts)):
                     continue
                 else:
-                    redis.set('processed:{}'.format(ts), '1')
+                    redis.set('processed:{}:{}'.format(res, ts), '1')
             dt = datetime.strptime(ts, '%Y:%m:%d:%H:%M').strftime('%Y%m%d_%H%M%S')
             image = requests.get('http://' + url)
             if not local:
@@ -35,9 +35,25 @@ def fetch_latest_images(local=False):
             with open(str(STATIC_DIR / 'img' / filename), 'wb+') as f:
                 f.write(image.content)
 
+@app.route('/imgs')
+def get_imgs():
+    img_files = sorted(
+        filter(
+            lambda f: f.endswith('.png'), listdir(str(STATIC_DIR / 'img'))
+        ), reverse=True
+    )
+    img_140_files = list(filter(lambda f: f.endswith('140.png'), img_files))
+    img_280_files = list(filter(lambda f: f.endswith('280.png'), img_files))
+    imgs = {
+        '140': img_140_files[:7],
+        '280': img_280_files[:7]
+    }
+    return jsonify(imgs)
+
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 @app.after_request
 def update_images(response):
