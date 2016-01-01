@@ -6,7 +6,9 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.js$/, exclude: /node_modules/, loader: 'babel?presets[]=react,presets[]=es2015,presets[]=stage-0' }
+            { test: /\.js$/, exclude: /node_modules/, loader: 'babel?presets[]=react,presets[]=es2015,presets[]=stage-0' },
+            { test: /\.css$/, loader: 'style!css' },
+            { test: /\.scss$/, loader: 'style!css!sass' }
         ]
     }
 }

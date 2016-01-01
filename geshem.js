@@ -1,9 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+import 'rc-slider/assets/index.css'
+import Slider from 'rc-slider'
+
 // Need to directly script-load instead of proper import since GL JS doesn't support webpack
 // https://github.com/mapbox/mapbox-gl-js/issues/1649
 require('script!mapbox-gl/dist/mapbox-gl.js')
+
+import './style.scss'
 
 class GLMap extends React.Component {
 
@@ -162,9 +167,12 @@ class Map extends React.Component {
         style: mapStyle,
         hash: false
     }
-    return <GLMap
+    return <div>
+      <GLMap
         view={view}
         token='pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' />
+      <Slider step={2} defaultValue={50} />
+    </div>
   }
 }
 
