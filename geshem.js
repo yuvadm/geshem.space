@@ -17,7 +17,50 @@ class GLMap extends React.Component {
 
   componentDidMount () {
     mapboxgl.accessToken = this.props.token
+
     this.map = new mapboxgl.Map(this.props.view)
+    this.map.on('style.load', () => {
+      this.map.addSource('radar-140', {
+        "type": "image",
+          "url": "/static/img/20160101_103000_140.png",
+          "coordinates": [
+            [33.35317413, 33.27232471],
+            [36.32243686, 33.27232471],
+            [36.32243686, 30.72293428],
+            [33.35317413, 30.72293428]
+          ]
+      })
+      this.map.addSource('radar-280', {
+        "type": "image",
+        "url": "/static/img/20160101_103000_280.png",
+        "coordinates": [
+          [31.93095218, 34.5156862],
+          [37.86644267, 34.5156862],
+          [37.86644267, 29.42911589],
+          [31.93095218, 29.42911589]
+        ]
+      })
+
+      this.map.addLayer({
+        "id": "radar-140",
+        "source": "radar-140",
+        "type": "raster",
+        "paint": {
+            "raster-opacity": 0.85
+        },
+        "layout": {
+            "visibility": "none"
+        }
+      })
+      this.map.addLayer({
+        "id": "radar-280",
+        "source": "radar-280",
+        "type": "raster",
+        "paint": {
+            "raster-opacity": 0.85
+        }
+      })
+    })
   }
 
   componentWillUnmount () {
@@ -39,26 +82,6 @@ class Map extends React.Component {
             "mapbox": {
                 "type": "vector",
                 "url": "mapbox://mapbox.mapbox-streets-v6"
-            },
-            "radar_140": {
-                "type": "image",
-                "url": "/static/{{ latest_140 }}_140.png",
-                "coordinates": [
-                    [33.35317413, 33.27232471],
-                    [36.32243686, 33.27232471],
-                    [36.32243686, 30.72293428],
-                    [33.35317413, 30.72293428]
-                ]
-            },
-            "radar_280": {
-                "type": "image",
-                "url": "/static/{{ latest_280 }}_280.png",
-                "coordinates": [
-                    [31.93095218, 34.5156862],
-                    [37.86644267, 34.5156862],
-                    [37.86644267, 29.42911589],
-                    [31.93095218, 29.42911589]
-                ]
             }
         },
         "sprite": "mapbox://sprites/mapbox/dark-v8",
@@ -90,25 +113,6 @@ class Map extends React.Component {
                 "source-layer": "water",
                 "type": "fill",
                 "paint": {"fill-color": "#111122"}
-            },
-            {
-                "id": "radar_140",
-                "source": "radar_140",
-                "type": "raster",
-                "paint": {
-                    "raster-opacity": 0.85
-                },
-                "layout": {
-                    "visibility": "none"
-                }
-            },
-            {
-                "id": "radar_280",
-                "source": "radar_280",
-                "type": "raster",
-                "paint": {
-                    "raster-opacity": 0.85
-                }
             },
             {
                 "id": "cities",
@@ -160,7 +164,7 @@ class Map extends React.Component {
     }
     return <GLMap
         view={view}
-        token='pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g'/>
+        token='pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' />
   }
 }
 
