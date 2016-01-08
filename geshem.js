@@ -20,55 +20,71 @@ class GLMap extends React.Component {
     token: React.PropTypes.string  // mapbox auth token
   }
 
-  getInitialState () {
-    return window.imgs
+  RASTER_COORDS = {
+    '140': [
+      [33.35317413, 33.27232471],
+      [36.32243686, 33.27232471],
+      [36.32243686, 30.72293428],
+      [33.35317413, 30.72293428]
+    ],
+    '280': [
+      [31.93095218, 34.5156862],
+      [37.86644267, 34.5156862],
+      [37.86644267, 29.42911589],
+      [31.93095218, 29.42911589]
+    ]
+  }
+
+  _addRadarSource (res, i, url) {
+    this.map.addSource('radar-' + res + '-' + i, {
+      "type": "image",
+      "url": "/static/img/" + url,
+      "coordinates": this.RASTER_COORDS[res]
+    })
+  }
+
+  _addRadarLayer (res, i) {
+    this.map.addLayer({
+      "id": 'radar-' + res + '-' + i,
+      "source": 'radar-' + res + '-' + i,
+      "type": "raster",
+      "paint": {
+          "raster-opacity": 0.85
+      },
+      "layout": {
+          "visibility": "none"
+      }
+    })
   }
 
   componentDidMount () {
     mapboxgl.accessToken = this.props.token
 
     this.map = new mapboxgl.Map(this.props.view)
-    this.map.on('style.load', () => {
-      this.map.addSource('radar-140', {
-        "type": "image",
-          "url": "/static/img/20160101_103000_140.png",
-          "coordinates": [
-            [33.35317413, 33.27232471],
-            [36.32243686, 33.27232471],
-            [36.32243686, 30.72293428],
-            [33.35317413, 30.72293428]
-          ]
-      })
-      this.map.addSource('radar-280', {
-        "type": "image",
-        "url": "/static/img/20160101_103000_280.png",
-        "coordinates": [
-          [31.93095218, 34.5156862],
-          [37.86644267, 34.5156862],
-          [37.86644267, 29.42911589],
-          [31.93095218, 29.42911589]
-        ]
-      })
 
-      this.map.addLayer({
-        "id": "radar-140",
-        "source": "radar-140",
-        "type": "raster",
-        "paint": {
-            "raster-opacity": 0.85
-        },
-        "layout": {
-            "visibility": "none"
-        }
-      })
-      this.map.addLayer({
-        "id": "radar-280",
-        "source": "radar-280",
-        "type": "raster",
-        "paint": {
-            "raster-opacity": 0.85
-        }
-      })
+    this.map.on('zoom', (e) => {
+      if (this.map.getZoom() > 7) {
+        this.map.getLayer('radar-140-0').setLayoutProperty('visibility', 'visible')
+        this.map.getLayer('radar-280-0').setLayoutProperty('visibility', 'none')
+      }
+      else {
+        this.map.getLayer('radar-140-0').setLayoutProperty('visibility', 'none')
+        this.map.getLayer('radar-280-0').setLayoutProperty('visibility', 'visible')
+      }
+    })
+
+    this.map.on('style.load', () => {
+      var i = 0;
+      for (let v of window.imgs['140']) {
+        this._addRadarSource('140', i, v)
+        this._addRadarLayer('140', i++)
+      }
+
+      i = 0;
+      for (let v of window.imgs['280']) {
+        this._addRadarSource('280', i, v)
+        this._addRadarLayer('280', i++)
+      }
     })
   }
 
@@ -83,6 +99,10 @@ class GLMap extends React.Component {
 }
 
 class Map extends React.Component {
+  onChangeHandler (e) {
+    console.log(e)
+  }
+
   render () {
     var mapStyle = {
         "version": 8,
@@ -171,11 +191,12 @@ class Map extends React.Component {
         style: mapStyle,
         hash: false
     }
+
     return <div>
       <GLMap
         view={view}
         token='pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' />
-      <Slider step={1} min={1} max={7} defaultValue={7} />
+      <Slider step={1} min={1} max={7} defaultValue={7} onChange={this.onChangeHandler} />
     </div>
   }
 }

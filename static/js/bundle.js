@@ -77,188 +77,258 @@
 	__webpack_require__(221);
 
 	var GLMap = (function (_React$Component) {
-	    _inherits(GLMap, _React$Component);
+	  _inherits(GLMap, _React$Component);
 
-	    function GLMap() {
-	        _classCallCheck(this, GLMap);
+	  function GLMap() {
+	    var _Object$getPrototypeO;
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(GLMap).apply(this, arguments));
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, GLMap);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
 	    }
 
-	    _createClass(GLMap, [{
-	        key: 'getInitialState',
-	        // mapbox auth token
-	        value: function getInitialState() {
-	            return window.imgs;
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(GLMap)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.RASTER_COORDS = {
+	      '140': [[33.35317413, 33.27232471], [36.32243686, 33.27232471], [36.32243686, 30.72293428], [33.35317413, 30.72293428]],
+	      '280': [[31.93095218, 34.5156862], [37.86644267, 34.5156862], [37.86644267, 29.42911589], [31.93095218, 29.42911589]]
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  // Adapted from Tim Welch's code that can be found at
+	  // https://github.com/twelch/react-mapbox-gl-seed/blob/4d78eb0/src/components/GLMap.js
+
+	  // mapbox auth token
+
+	  _createClass(GLMap, [{
+	    key: '_addRadarSource',
+	    value: function _addRadarSource(res, i, url) {
+	      this.map.addSource('radar-' + res + '-' + i, {
+	        "type": "image",
+	        "url": "/static/img/" + url,
+	        "coordinates": this.RASTER_COORDS[res]
+	      });
+	    }
+	  }, {
+	    key: '_addRadarLayer',
+	    value: function _addRadarLayer(res, i) {
+	      this.map.addLayer({
+	        "id": 'radar-' + res + '-' + i,
+	        "source": 'radar-' + res + '-' + i,
+	        "type": "raster",
+	        "paint": {
+	          "raster-opacity": 0.85
+	        },
+	        "layout": {
+	          "visibility": "none"
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+
+	      mapboxgl.accessToken = this.props.token;
+
+	      this.map = new mapboxgl.Map(this.props.view);
+
+	      this.map.on('zoom', function (e) {
+	        if (_this2.map.getZoom() > 7) {
+	          _this2.map.getLayer('radar-140-0').setLayoutProperty('visibility', 'visible');
+	          _this2.map.getLayer('radar-280-0').setLayoutProperty('visibility', 'none');
+	        } else {
+	          _this2.map.getLayer('radar-140-0').setLayoutProperty('visibility', 'none');
+	          _this2.map.getLayer('radar-280-0').setLayoutProperty('visibility', 'visible');
+	        }
+	      });
+
+	      this.map.on('style.load', function () {
+	        var i = 0;
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+
+	        try {
+	          for (var _iterator = window.imgs['140'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var v = _step.value;
+
+	            _this2._addRadarSource('140', i, v);
+	            _this2._addRadarLayer('140', i++);
+	          }
+	        } catch (err) {
+	          _didIteratorError = true;
+	          _iteratorError = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	              _iterator.return();
+	            }
+	          } finally {
+	            if (_didIteratorError) {
+	              throw _iteratorError;
+	            }
+	          }
 	        }
 
-	        // Adapted from Tim Welch's code that can be found at
-	        // https://github.com/twelch/react-mapbox-gl-seed/blob/4d78eb0/src/components/GLMap.js
+	        i = 0;
+	        var _iteratorNormalCompletion2 = true;
+	        var _didIteratorError2 = false;
+	        var _iteratorError2 = undefined;
 
-	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _this2 = this;
+	        try {
+	          for (var _iterator2 = window.imgs['280'][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	            var v = _step2.value;
 
-	            mapboxgl.accessToken = this.props.token;
-
-	            this.map = new mapboxgl.Map(this.props.view);
-	            this.map.on('style.load', function () {
-	                _this2.map.addSource('radar-140', {
-	                    "type": "image",
-	                    "url": "/static/img/20160101_103000_140.png",
-	                    "coordinates": [[33.35317413, 33.27232471], [36.32243686, 33.27232471], [36.32243686, 30.72293428], [33.35317413, 30.72293428]]
-	                });
-	                _this2.map.addSource('radar-280', {
-	                    "type": "image",
-	                    "url": "/static/img/20160101_103000_280.png",
-	                    "coordinates": [[31.93095218, 34.5156862], [37.86644267, 34.5156862], [37.86644267, 29.42911589], [31.93095218, 29.42911589]]
-	                });
-
-	                _this2.map.addLayer({
-	                    "id": "radar-140",
-	                    "source": "radar-140",
-	                    "type": "raster",
-	                    "paint": {
-	                        "raster-opacity": 0.85
-	                    },
-	                    "layout": {
-	                        "visibility": "none"
-	                    }
-	                });
-	                _this2.map.addLayer({
-	                    "id": "radar-280",
-	                    "source": "radar-280",
-	                    "type": "raster",
-	                    "paint": {
-	                        "raster-opacity": 0.85
-	                    }
-	                });
-	            });
+	            _this2._addRadarSource('280', i, v);
+	            _this2._addRadarLayer('280', i++);
+	          }
+	        } catch (err) {
+	          _didIteratorError2 = true;
+	          _iteratorError2 = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	              _iterator2.return();
+	            }
+	          } finally {
+	            if (_didIteratorError2) {
+	              throw _iteratorError2;
+	            }
+	          }
 	        }
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            this.map.remove();
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement('div', { id: 'map' });
-	        }
-	    }]);
+	      });
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.map.remove();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement('div', { id: 'map' });
+	    }
+	  }]);
 
-	    return GLMap;
+	  return GLMap;
 	})(_react2.default.Component);
 
 	GLMap.propTypes = {
-	    view: _react2.default.PropTypes.object, // default map view
-	    token: _react2.default.PropTypes.string };
+	  view: _react2.default.PropTypes.object, // default map view
+	  token: _react2.default.PropTypes.string };
 
 	var Map = (function (_React$Component2) {
-	    _inherits(Map, _React$Component2);
+	  _inherits(Map, _React$Component2);
 
-	    function Map() {
-	        _classCallCheck(this, Map);
+	  function Map() {
+	    _classCallCheck(this, Map);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Map).apply(this, arguments));
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Map).apply(this, arguments));
+	  }
+
+	  _createClass(Map, [{
+	    key: 'onChangeHandler',
+	    value: function onChangeHandler(e) {
+	      console.log(e);
 	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var mapStyle = {
+	        "version": 8,
+	        "name": "Dark",
+	        "sources": {
+	          "mapbox": {
+	            "type": "vector",
+	            "url": "mapbox://mapbox.mapbox-streets-v6"
+	          }
+	        },
+	        "sprite": "mapbox://sprites/mapbox/dark-v8",
+	        "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+	        "layers": [{
+	          "id": "background",
+	          "type": "background",
+	          "paint": { "background-color": "#111" }
+	        }, {
+	          "id": "boundaries",
+	          "source": "mapbox",
+	          "source-layer": "admin",
+	          "type": "line",
+	          "paint": { "line-color": "#797979" },
+	          "filter": ["all", ["<=", "admin_level", 2], ['==', 'maritime', 0]]
+	        }, {
+	          "id": "water",
+	          "source": "mapbox",
+	          "source-layer": "water",
+	          "type": "line",
+	          "paint": { "line-color": "#797979" }
+	        }, {
+	          "id": "water2",
+	          "source": "mapbox",
+	          "source-layer": "water",
+	          "type": "fill",
+	          "paint": { "fill-color": "#111122" }
+	        }, {
+	          "id": "cities",
+	          "source": "mapbox",
+	          "source-layer": "place_label",
+	          "type": "symbol",
+	          "filter": ["all", ["<=", "localrank", 6]],
+	          "layout": {
+	            "text-field": "{name_en}",
+	            "text-font": ["DIN Offc Pro Bold", "Arial Unicode MS Bold"],
+	            "text-size": { "stops": [[4, 9], [6, 12]] }
+	          },
+	          "paint": {
+	            "text-color": "#969696",
+	            "text-halo-width": 2,
+	            "text-halo-color": "rgba(0, 0, 0, 0.85)"
+	          }
+	        }, {
+	          "id": "states",
+	          "source": "mapbox",
+	          "source-layer": "state_label",
+	          "type": "symbol",
+	          "layout": {
+	            "text-transform": "uppercase",
+	            "text-field": "{name_en}",
+	            "text-font": ["DIN Offc Pro Bold", "Arial Unicode MS Bold"],
+	            "text-letter-spacing": 0.15,
+	            "text-max-width": 7,
+	            "text-size": { "stops": [[4, 10], [6, 14]] }
+	          },
+	          "filter": [">=", "area", 80000],
+	          "paint": {
+	            "text-color": "#969696",
+	            "text-halo-width": 2,
+	            "text-halo-color": "rgba(0, 0, 0, 0.85)"
+	          }
+	        }]
+	      };
+	      var view = {
+	        container: 'map',
+	        maxZoom: 10,
+	        minZoom: 5,
+	        zoom: 6.3,
+	        center: [35, 31.9],
+	        style: mapStyle,
+	        hash: false
+	      };
 
-	    _createClass(Map, [{
-	        key: 'render',
-	        value: function render() {
-	            var mapStyle = {
-	                "version": 8,
-	                "name": "Dark",
-	                "sources": {
-	                    "mapbox": {
-	                        "type": "vector",
-	                        "url": "mapbox://mapbox.mapbox-streets-v6"
-	                    }
-	                },
-	                "sprite": "mapbox://sprites/mapbox/dark-v8",
-	                "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
-	                "layers": [{
-	                    "id": "background",
-	                    "type": "background",
-	                    "paint": { "background-color": "#111" }
-	                }, {
-	                    "id": "boundaries",
-	                    "source": "mapbox",
-	                    "source-layer": "admin",
-	                    "type": "line",
-	                    "paint": { "line-color": "#797979" },
-	                    "filter": ["all", ["<=", "admin_level", 2], ['==', 'maritime', 0]]
-	                }, {
-	                    "id": "water",
-	                    "source": "mapbox",
-	                    "source-layer": "water",
-	                    "type": "line",
-	                    "paint": { "line-color": "#797979" }
-	                }, {
-	                    "id": "water2",
-	                    "source": "mapbox",
-	                    "source-layer": "water",
-	                    "type": "fill",
-	                    "paint": { "fill-color": "#111122" }
-	                }, {
-	                    "id": "cities",
-	                    "source": "mapbox",
-	                    "source-layer": "place_label",
-	                    "type": "symbol",
-	                    "filter": ["all", ["<=", "localrank", 6]],
-	                    "layout": {
-	                        "text-field": "{name_en}",
-	                        "text-font": ["DIN Offc Pro Bold", "Arial Unicode MS Bold"],
-	                        "text-size": { "stops": [[4, 9], [6, 12]] }
-	                    },
-	                    "paint": {
-	                        "text-color": "#969696",
-	                        "text-halo-width": 2,
-	                        "text-halo-color": "rgba(0, 0, 0, 0.85)"
-	                    }
-	                }, {
-	                    "id": "states",
-	                    "source": "mapbox",
-	                    "source-layer": "state_label",
-	                    "type": "symbol",
-	                    "layout": {
-	                        "text-transform": "uppercase",
-	                        "text-field": "{name_en}",
-	                        "text-font": ["DIN Offc Pro Bold", "Arial Unicode MS Bold"],
-	                        "text-letter-spacing": 0.15,
-	                        "text-max-width": 7,
-	                        "text-size": { "stops": [[4, 10], [6, 14]] }
-	                    },
-	                    "filter": [">=", "area", 80000],
-	                    "paint": {
-	                        "text-color": "#969696",
-	                        "text-halo-width": 2,
-	                        "text-halo-color": "rgba(0, 0, 0, 0.85)"
-	                    }
-	                }]
-	            };
-	            var view = {
-	                container: 'map',
-	                maxZoom: 10,
-	                minZoom: 5,
-	                zoom: 6.3,
-	                center: [35, 31.9],
-	                style: mapStyle,
-	                hash: false
-	            };
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(GLMap, {
-	                    view: view,
-	                    token: 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' }),
-	                _react2.default.createElement(_rcSlider2.default, { step: 1, min: 1, max: 7, defaultValue: 7 })
-	            );
-	        }
-	    }]);
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(GLMap, {
+	          view: view,
+	          token: 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' }),
+	        _react2.default.createElement(_rcSlider2.default, { step: 1, min: 1, max: 7, defaultValue: 7, onChange: this.onChangeHandler })
+	      );
+	    }
+	  }]);
 
-	    return Map;
+	  return Map;
 	})(_react2.default.Component);
 
 	_reactDom2.default.render(_react2.default.createElement(Map, null), document.getElementById('root'));
