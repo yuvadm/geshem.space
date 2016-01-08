@@ -35,6 +35,14 @@ class GLMap extends React.Component {
     ]
   }
 
+  constructor (props) {
+    super(props)
+    this.state = {
+      'res': '280',
+      'slider': 0
+    }
+  }
+
   _addRadarSource (res, i, url) {
     this.map.addSource('radar-' + res + '-' + i, {
       "type": "image",
@@ -49,11 +57,11 @@ class GLMap extends React.Component {
       "source": 'radar-' + res + '-' + i,
       "type": "raster",
       "paint": {
-          "raster-opacity": 0.85
+          "raster-opacity": 0
       },
-      "layout": {
-          "visibility": "none"
-      }
+      // "layout": {
+      //     "visibility": "none"
+      // }
     })
   }
 
@@ -88,6 +96,19 @@ class GLMap extends React.Component {
     })
   }
 
+  componentWillReceiveProps () {
+    this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0)
+    this.setState({
+      'res': '280',
+      'slider': this.props.slider
+    })
+  }
+
+  componentDidUpdate () {
+    this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0.85)
+    console.log(this.map.getLayer('radar-280-' + this.props.slider))
+  }
+
   componentWillUnmount () {
     this.map.remove()
   }
@@ -99,8 +120,17 @@ class GLMap extends React.Component {
 }
 
 class Map extends React.Component {
-  onChangeHandler (e) {
-    console.log(e)
+  onChangeHandler = (e) => {
+    this.setState({
+      'slider': 7-e
+    })
+  }
+
+  constructor (props) {
+    super(props);
+    this.state = {
+      'slider': 0
+    }
   }
 
   render () {
@@ -195,6 +225,7 @@ class Map extends React.Component {
     return <div>
       <GLMap
         view={view}
+        slider={this.state.slider}
         token='pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' />
       <Slider step={1} min={1} max={7} defaultValue={7} onChange={this.onChangeHandler} />
     </div>

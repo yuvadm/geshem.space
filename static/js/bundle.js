@@ -79,27 +79,25 @@
 	var GLMap = (function (_React$Component) {
 	  _inherits(GLMap, _React$Component);
 
-	  function GLMap() {
-	    var _Object$getPrototypeO;
-
-	    var _temp, _this, _ret;
-
-	    _classCallCheck(this, GLMap);
-
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(GLMap)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.RASTER_COORDS = {
-	      '140': [[33.35317413, 33.27232471], [36.32243686, 33.27232471], [36.32243686, 30.72293428], [33.35317413, 30.72293428]],
-	      '280': [[31.93095218, 34.5156862], [37.86644267, 34.5156862], [37.86644267, 29.42911589], [31.93095218, 29.42911589]]
-	    }, _temp), _possibleConstructorReturn(_this, _ret);
-	  }
-
 	  // Adapted from Tim Welch's code that can be found at
 	  // https://github.com/twelch/react-mapbox-gl-seed/blob/4d78eb0/src/components/GLMap.js
 
-	  // mapbox auth token
+	  function GLMap(props) {
+	    _classCallCheck(this, GLMap);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GLMap).call(this, props));
+
+	    _this.RASTER_COORDS = {
+	      '140': [[33.35317413, 33.27232471], [36.32243686, 33.27232471], [36.32243686, 30.72293428], [33.35317413, 30.72293428]],
+	      '280': [[31.93095218, 34.5156862], [37.86644267, 34.5156862], [37.86644267, 29.42911589], [31.93095218, 29.42911589]]
+	    };
+
+	    _this.state = {
+	      'res': '280',
+	      'slider': 0
+	    };
+	    return _this;
+	  } // mapbox auth token
 
 	  _createClass(GLMap, [{
 	    key: '_addRadarSource',
@@ -118,15 +116,15 @@
 	        "source": 'radar-' + res + '-' + i,
 	        "type": "raster",
 	        "paint": {
-	          "raster-opacity": 0.85
-	        },
-	        "layout": {
-	          "visibility": "none"
+	          "raster-opacity": 0
 	        }
 	      });
 	    }
 	  }, {
 	    key: 'componentDidMount',
+	    // "layout": {
+	    //     "visibility": "none"
+	    // }
 	    value: function componentDidMount() {
 	      var _this2 = this;
 
@@ -201,6 +199,21 @@
 	      });
 	    }
 	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps() {
+	      this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0);
+	      this.setState({
+	        'res': '280',
+	        'slider': this.props.slider
+	      });
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0.85);
+	      console.log(this.map.getLayer('radar-280-' + this.props.slider));
+	    }
+	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      this.map.remove();
@@ -222,18 +235,24 @@
 	var Map = (function (_React$Component2) {
 	  _inherits(Map, _React$Component2);
 
-	  function Map() {
+	  function Map(props) {
 	    _classCallCheck(this, Map);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Map).apply(this, arguments));
+	    var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Map).call(this, props));
+
+	    _this3.onChangeHandler = function (e) {
+	      _this3.setState({
+	        'slider': 7 - e
+	      });
+	    };
+
+	    _this3.state = {
+	      'slider': 0
+	    };
+	    return _this3;
 	  }
 
 	  _createClass(Map, [{
-	    key: 'onChangeHandler',
-	    value: function onChangeHandler(e) {
-	      console.log(e);
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var mapStyle = {
@@ -322,6 +341,7 @@
 	        null,
 	        _react2.default.createElement(GLMap, {
 	          view: view,
+	          slider: this.state.slider,
 	          token: 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' }),
 	        _react2.default.createElement(_rcSlider2.default, { step: 1, min: 1, max: 7, defaultValue: 7, onChange: this.onChangeHandler })
 	      );
