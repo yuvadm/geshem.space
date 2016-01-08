@@ -72,12 +72,20 @@ class GLMap extends React.Component {
 
     this.map.on('zoom', (e) => {
       if (this.map.getZoom() > 7) {
-        this.map.getLayer('radar-140-0').setLayoutProperty('visibility', 'visible')
-        this.map.getLayer('radar-280-0').setLayoutProperty('visibility', 'none')
+        this.map.setPaintProperty('radar-140-' + this.state.slider, 'raster-opacity', 0.85)
+        this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0)
+        this.setState({
+          'res': '140',
+          'slider': this.state.slider
+        })
       }
       else {
-        this.map.getLayer('radar-140-0').setLayoutProperty('visibility', 'none')
-        this.map.getLayer('radar-280-0').setLayoutProperty('visibility', 'visible')
+        this.map.setPaintProperty('radar-140-' + this.state.slider, 'raster-opacity', 0)
+        this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0.85)
+        this.setState({
+          'res': '280',
+          'slider': this.state.slider
+        })
       }
     })
 
@@ -97,16 +105,15 @@ class GLMap extends React.Component {
   }
 
   componentWillReceiveProps () {
-    this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0)
+    this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0)
     this.setState({
-      'res': '280',
+      'res': this.state.res,
       'slider': this.props.slider
     })
   }
 
   componentDidUpdate () {
-    this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0.85)
-    console.log(this.map.getLayer('radar-280-' + this.props.slider))
+    this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0.85)
   }
 
   componentWillUnmount () {

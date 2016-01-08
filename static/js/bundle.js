@@ -134,11 +134,19 @@
 
 	      this.map.on('zoom', function (e) {
 	        if (_this2.map.getZoom() > 7) {
-	          _this2.map.getLayer('radar-140-0').setLayoutProperty('visibility', 'visible');
-	          _this2.map.getLayer('radar-280-0').setLayoutProperty('visibility', 'none');
+	          _this2.map.setPaintProperty('radar-140-' + _this2.state.slider, 'raster-opacity', 0.85);
+	          _this2.map.setPaintProperty('radar-280-' + _this2.state.slider, 'raster-opacity', 0);
+	          _this2.setState({
+	            'res': '140',
+	            'slider': _this2.state.slider
+	          });
 	        } else {
-	          _this2.map.getLayer('radar-140-0').setLayoutProperty('visibility', 'none');
-	          _this2.map.getLayer('radar-280-0').setLayoutProperty('visibility', 'visible');
+	          _this2.map.setPaintProperty('radar-140-' + _this2.state.slider, 'raster-opacity', 0);
+	          _this2.map.setPaintProperty('radar-280-' + _this2.state.slider, 'raster-opacity', 0.85);
+	          _this2.setState({
+	            'res': '280',
+	            'slider': _this2.state.slider
+	          });
 	        }
 	      });
 
@@ -201,17 +209,16 @@
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps() {
-	      this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0);
+	      this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0);
 	      this.setState({
-	        'res': '280',
+	        'res': this.state.res,
 	        'slider': this.props.slider
 	      });
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
-	      this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0.85);
-	      console.log(this.map.getLayer('radar-280-' + this.props.slider));
+	      this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0.85);
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
