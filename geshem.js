@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -20,26 +22,26 @@ class GLMap extends React.Component {
     token: React.PropTypes.string  // mapbox auth token
   }
 
-  RASTER_COORDS = {
-    '140': [
-      [33.35317413, 33.27232471],
-      [36.32243686, 33.27232471],
-      [36.32243686, 30.72293428],
-      [33.35317413, 30.72293428]
-    ],
-    '280': [
-      [31.93095218, 34.5156862],
-      [37.86644267, 34.5156862],
-      [37.86644267, 29.42911589],
-      [31.93095218, 29.42911589]
-    ]
-  }
 
   constructor (props) {
     super(props)
     this.state = {
       'res': '280',
       'slider': 0
+    }
+    this.RASTER_COORDS = {
+      '140': [
+        [33.35317413, 33.27232471],
+        [36.32243686, 33.27232471],
+        [36.32243686, 30.72293428],
+        [33.35317413, 30.72293428]
+      ],
+      '280': [
+        [31.93095218, 34.5156862],
+        [37.86644267, 34.5156862],
+        [37.86644267, 29.42911589],
+        [31.93095218, 29.42911589]
+      ]
     }
   }
 
@@ -126,7 +128,6 @@ class GLMap extends React.Component {
 
 class Map extends React.Component {
   onChangeHandler = (e) => {
-    console.log('handle', e)
     this.setState({
       'slider': 7-e
     })
