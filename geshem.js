@@ -101,19 +101,17 @@ class GLMap extends React.Component {
         this._addRadarSource('280', i, v)
         this._addRadarLayer('280', i++)
       }
+      this.map.setPaintProperty('radar-280-0', 'raster-opacity', 0.85)
     })
   }
 
-  componentWillReceiveProps () {
+  componentWillReceiveProps (props) {
     this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0)
+    this.map.setPaintProperty('radar-' + this.state.res + '-' + props.slider, 'raster-opacity', 0.85)
     this.setState({
       'res': this.state.res,
-      'slider': this.props.slider
+      'slider': props.slider
     })
-  }
-
-  componentDidUpdate () {
-    this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0.85)
   }
 
   componentWillUnmount () {
@@ -128,6 +126,7 @@ class GLMap extends React.Component {
 
 class Map extends React.Component {
   onChangeHandler = (e) => {
+    console.log('handle', e)
     this.setState({
       'slider': 7-e
     })

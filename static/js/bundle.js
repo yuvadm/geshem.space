@@ -204,21 +204,20 @@
 	            }
 	          }
 	        }
+
+	        _this2.map.setPaintProperty('radar-280-0', 'raster-opacity', 0.85);
 	      });
 	    }
 	  }, {
 	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps() {
+	    value: function componentWillReceiveProps(props) {
+	      console.log('old' + this.state.slider, 'new' + props.slider);
 	      this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0);
+	      this.map.setPaintProperty('radar-' + this.state.res + '-' + props.slider, 'raster-opacity', 0.85);
 	      this.setState({
 	        'res': this.state.res,
-	        'slider': this.props.slider
+	        'slider': props.slider
 	      });
-	    }
-	  }, {
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate() {
-	      this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0.85);
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
@@ -248,6 +247,7 @@
 	    var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Map).call(this, props));
 
 	    _this3.onChangeHandler = function (e) {
+	      console.log('handle', e);
 	      _this3.setState({
 	        'slider': 7 - e
 	      });
