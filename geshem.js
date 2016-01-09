@@ -59,12 +59,16 @@ class GLMap extends React.Component {
       "source": 'radar-' + res + '-' + i,
       "type": "raster",
       "paint": {
-          "raster-opacity": 0
-      },
+          "raster-opacity": 0.85
+      }
       // "layout": {
       //     "visibility": "none"
       // }
     })
+  }
+
+  _removeRadarLayer (res, i) {
+    this.map.removeLayer('radar-' + res + '-' + i)
   }
 
   componentDidMount () {
@@ -74,16 +78,20 @@ class GLMap extends React.Component {
 
     this.map.on('zoom', (e) => {
       if (this.map.getZoom() > 7) {
-        this.map.setPaintProperty('radar-140-' + this.state.slider, 'raster-opacity', 0.85)
-        this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0)
+        // this.map.setPaintProperty('radar-140-' + this.state.slider, 'raster-opacity', 0.85)
+        // this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0)
+        this._removeRadarLayer('280', this.state.slider)
+        this._addRadarLayer('140', this.state.slider)
         this.setState({
           'res': '140',
           'slider': this.state.slider
         })
       }
       else {
-        this.map.setPaintProperty('radar-140-' + this.state.slider, 'raster-opacity', 0)
-        this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0.85)
+        // this.map.setPaintProperty('radar-140-' + this.state.slider, 'raster-opacity', 0)
+        // this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0.85)
+        this._removeRadarLayer('140', this.state.slider)
+        this._addRadarLayer('280', this.state.slider)
         this.setState({
           'res': '280',
           'slider': this.state.slider
@@ -94,22 +102,27 @@ class GLMap extends React.Component {
     this.map.on('style.load', () => {
       var i = 0;
       for (let v of window.imgs['140']) {
-        this._addRadarSource('140', i, v)
-        this._addRadarLayer('140', i++)
+        this._addRadarSource('140', i++, v)
+        // this._addRadarLayer('140', i++)
       }
 
       i = 0;
       for (let v of window.imgs['280']) {
-        this._addRadarSource('280', i, v)
-        this._addRadarLayer('280', i++)
+        this._addRadarSource('280', i++, v)
+        // this._addRadarLayer('280', i++)
       }
-      this.map.setPaintProperty('radar-280-0', 'raster-opacity', 0.85)
+      // this.map.setPaintProperty('radar-280-0', 'raster-opacity', 0.85)
+      this._addRadarLayer('280', '0')
     })
   }
 
   componentWillReceiveProps (props) {
-    this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0)
-    this.map.setPaintProperty('radar-' + this.state.res + '-' + props.slider, 'raster-opacity', 0.85)
+    // this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0)
+    // this.map.setPaintProperty('radar-' + this.state.res + '-' + props.slider, 'raster-opacity', 0.85)
+
+    this._removeRadarLayer(this.state.res, this.state.slider)
+    this._addRadarLayer(this.state.res, props.slider)
+
     this.setState({
       'res': this.state.res,
       'slider': props.slider

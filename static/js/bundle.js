@@ -119,15 +119,20 @@
 	        "source": 'radar-' + res + '-' + i,
 	        "type": "raster",
 	        "paint": {
-	          "raster-opacity": 0
+	          "raster-opacity": 0.85
 	        }
+	        // "layout": {
+	        //     "visibility": "none"
+	        // }
 	      });
 	    }
 	  }, {
+	    key: '_removeRadarLayer',
+	    value: function _removeRadarLayer(res, i) {
+	      this.map.removeLayer('radar-' + res + '-' + i);
+	    }
+	  }, {
 	    key: 'componentDidMount',
-	    // "layout": {
-	    //     "visibility": "none"
-	    // }
 	    value: function componentDidMount() {
 	      var _this2 = this;
 
@@ -137,15 +142,19 @@
 
 	      this.map.on('zoom', function (e) {
 	        if (_this2.map.getZoom() > 7) {
-	          _this2.map.setPaintProperty('radar-140-' + _this2.state.slider, 'raster-opacity', 0.85);
-	          _this2.map.setPaintProperty('radar-280-' + _this2.state.slider, 'raster-opacity', 0);
+	          // this.map.setPaintProperty('radar-140-' + this.state.slider, 'raster-opacity', 0.85)
+	          // this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0)
+	          _this2._removeRadarLayer('280', _this2.state.slider);
+	          _this2._addRadarLayer('140', _this2.state.slider);
 	          _this2.setState({
 	            'res': '140',
 	            'slider': _this2.state.slider
 	          });
 	        } else {
-	          _this2.map.setPaintProperty('radar-140-' + _this2.state.slider, 'raster-opacity', 0);
-	          _this2.map.setPaintProperty('radar-280-' + _this2.state.slider, 'raster-opacity', 0.85);
+	          // this.map.setPaintProperty('radar-140-' + this.state.slider, 'raster-opacity', 0)
+	          // this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0.85)
+	          _this2._removeRadarLayer('140', _this2.state.slider);
+	          _this2._addRadarLayer('280', _this2.state.slider);
 	          _this2.setState({
 	            'res': '280',
 	            'slider': _this2.state.slider
@@ -163,8 +172,8 @@
 	          for (var _iterator = window.imgs['140'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	            var v = _step.value;
 
-	            _this2._addRadarSource('140', i, v);
-	            _this2._addRadarLayer('140', i++);
+	            _this2._addRadarSource('140', i++, v);
+	            // this._addRadarLayer('140', i++)
 	          }
 	        } catch (err) {
 	          _didIteratorError = true;
@@ -190,9 +199,10 @@
 	          for (var _iterator2 = window.imgs['280'][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
 	            var v = _step2.value;
 
-	            _this2._addRadarSource('280', i, v);
-	            _this2._addRadarLayer('280', i++);
+	            _this2._addRadarSource('280', i++, v);
+	            // this._addRadarLayer('280', i++)
 	          }
+	          // this.map.setPaintProperty('radar-280-0', 'raster-opacity', 0.85)
 	        } catch (err) {
 	          _didIteratorError2 = true;
 	          _iteratorError2 = err;
@@ -208,14 +218,18 @@
 	          }
 	        }
 
-	        _this2.map.setPaintProperty('radar-280-0', 'raster-opacity', 0.85);
+	        _this2._addRadarLayer('280', '0');
 	      });
 	    }
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(props) {
-	      this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0);
-	      this.map.setPaintProperty('radar-' + this.state.res + '-' + props.slider, 'raster-opacity', 0.85);
+	      // this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0)
+	      // this.map.setPaintProperty('radar-' + this.state.res + '-' + props.slider, 'raster-opacity', 0.85)
+
+	      this._removeRadarLayer(this.state.res, this.state.slider);
+	      this._addRadarLayer(this.state.res, props.slider);
+
 	      this.setState({
 	        'res': this.state.res,
 	        'slider': props.slider
@@ -351,7 +365,7 @@
 	          view: view,
 	          slider: this.state.slider,
 	          token: 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' }),
-	        _react2.default.createElement(_rcSlider2.default, { step: 1, min: 1, max: 7, defaultValue: 7, onChange: this.onChangeHandler })
+	        _react2.default.createElement(_rcSlider2.default, { step: 1, min: 1, max: 7, defaultValue: 7, tipFormatter: null, onChange: this.onChangeHandler })
 	      );
 	    }
 	  }]);
@@ -31285,7 +31299,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0; }\n  body #datetime {\n    position: fixed;\n    color: #ee8877;\n    z-index: 100;\n    font-family: monospace;\n    padding: 5px; }\n  body #date {\n    font-size: 0.7em; }\n  body #map {\n    position: absolute;\n    top: 0;\n    bottom: 0;\n    width: 100%; }\n  body .rc-slider {\n    position: fixed;\n    bottom: 100px;\n    width: 80%;\n    margin: 0 auto;\n    margin-left: 10%; }\n    body .rc-slider .rc-slider-handle {\n      border: 2px solid #a82009;\n      background-color: #888; }\n    body .rc-slider .rc-slider-track {\n      background-color: #a82009; }\n", ""]);
+	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0; }\n  body #datetime {\n    position: fixed;\n    color: #ee8877;\n    z-index: 100;\n    font-family: monospace;\n    padding: 5px; }\n  body #date {\n    font-size: 0.7em; }\n  body #map {\n    position: absolute;\n    top: 0;\n    bottom: 0;\n    width: 100%; }\n  body .rc-slider {\n    position: fixed;\n    bottom: 50px;\n    width: 80%;\n    margin: 0 auto;\n    margin-left: 10%; }\n    body .rc-slider .rc-slider-handle {\n      border: 2px solid #bababa;\n      background-color: #bababa;\n      margin-left: -12px;\n      margin-top: -13px;\n      width: 30px;\n      height: 30px; }\n    body .rc-slider .rc-slider-track {\n      background-color: #bababa; }\n", ""]);
 
 	// exports
 
