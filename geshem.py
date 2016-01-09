@@ -2,8 +2,8 @@ import redis
 import requests
 
 from datetime import datetime
-from flask import Flask, render_template
-from os import environ
+from flask import Flask, jsonify, render_template
+from os import environ, listdir
 from pathlib import Path
 from pytz import utc, timezone
 from redis.exceptions import ConnectionError
@@ -17,9 +17,14 @@ redis = redis.from_url(environ.get('REDIS_URL', 'redis://localhost'))
 def fetch_latest_images(local=False):
     maps_json = requests.get(MAPS_JSON).json()
     for r in ['images140', 'images280']:
-        imgs = sorted(maps_json[r].items(), key=lambda x: x[0], reverse=True)[:1]  # only take latest
+        imgs = sorted(maps_json[r].items(), key=lambda x: x[0], reverse=True)
         res = r[-3:]
         for ts, url in imgs:
+            if not local:
+                if redis.get('processed:{}:{}'.format(res, ts)):
+                    continue
+                else:
+                    redis.set('processed:{}:{}'.format(res, ts), '1')
             dt = datetime.strptime(ts, '%Y:%m:%d:%H:%M').strftime('%Y%m%d_%H%M%S')
             image = requests.get('http://' + url)
             if not local:
@@ -27,19 +32,28 @@ def fetch_latest_images(local=False):
             else:
                 dt = 'dev'
             filename = '{}_{}.png'.format(dt, res)
-            with open(str(STATIC_DIR / filename), 'wb+') as f:
+            with open(str(STATIC_DIR / 'img' / filename), 'wb+') as f:
                 f.write(image.content)
+
+@app.route('/imgs')
+def get_imgs():
+    img_files = sorted(
+        filter(
+            lambda f: f.endswith('.png'), listdir(str(STATIC_DIR / 'img'))
+        ), reverse=True
+    )
+    img_140_files = list(filter(lambda f: f.endswith('140.png'), img_files))
+    img_280_files = list(filter(lambda f: f.endswith('280.png'), img_files))
+    imgs = {
+        '140': img_140_files[:7],
+        '280': img_280_files[:7]
+    }
+    return imgs
 
 @app.route('/')
 def home():
-    try:
-        latests = redis.pipeline().get('latest_140').get('latest_280').execute()
-        latest_140, latest_280 = map(lambda x: x.decode(), latests)
-        ts = utc.localize(datetime.strptime(latest_280, '%Y%m%d_%H%M%S')).astimezone(timezone('Asia/Jerusalem'))
-    except ConnectionError:
-        latest_140, latest_280 = 'dev', 'dev'
-        ts = datetime.now()
-    return render_template('index.html', ts=ts, latest_140=latest_140, latest_280=latest_280)
+    return render_template('index.html', imgs=get_imgs())
+
 
 @app.after_request
 def update_images(response):

@@ -1,0 +1,38 @@
+body {
+    margin:0;
+    padding:0;
+    #datetime {
+        position:fixed;
+        color: #ee8877;
+        z-index: 100;
+        font-family: monospace;
+        padding: 5px;
+    }
+    #date {
+        font-size: 0.7em;
+    }
+    #map {
+        position:absolute;
+        top:0;
+        bottom:0;
+        width:100%;
+    }
+    .rc-slider {
+        position: fixed;
+        bottom: 50px;
+        width: 80%;
+        margin: 0 auto;
+        margin-left: 10%;
+        .rc-slider-handle {
+            border: 2px solid #bababa;
+            background-color: #bababa;
+            margin-left: -12px;
+            margin-top: -13px;
+            width: 30px;
+            height: 30px;
+        }
+        .rc-slider-track {
+            background-color: #bababa;
+        }
+    }
+}
