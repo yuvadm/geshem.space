@@ -121,9 +121,6 @@
 	        "paint": {
 	          "raster-opacity": 0.85
 	        }
-	        // "layout": {
-	        //     "visibility": "none"
-	        // }
 	      });
 	    }
 	  }, {
@@ -142,8 +139,6 @@
 
 	      this.map.on('zoom', function (e) {
 	        if (_this2.map.getZoom() > 7) {
-	          // this.map.setPaintProperty('radar-140-' + this.state.slider, 'raster-opacity', 0.85)
-	          // this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0)
 	          _this2._removeRadarLayer('280', _this2.state.slider);
 	          _this2._addRadarLayer('140', _this2.state.slider);
 	          _this2.setState({
@@ -151,8 +146,6 @@
 	            'slider': _this2.state.slider
 	          });
 	        } else {
-	          // this.map.setPaintProperty('radar-140-' + this.state.slider, 'raster-opacity', 0)
-	          // this.map.setPaintProperty('radar-280-' + this.state.slider, 'raster-opacity', 0.85)
 	          _this2._removeRadarLayer('140', _this2.state.slider);
 	          _this2._addRadarLayer('280', _this2.state.slider);
 	          _this2.setState({
@@ -173,7 +166,6 @@
 	            var v = _step.value;
 
 	            _this2._addRadarSource('140', i++, v);
-	            // this._addRadarLayer('140', i++)
 	          }
 	        } catch (err) {
 	          _didIteratorError = true;
@@ -200,9 +192,7 @@
 	            var v = _step2.value;
 
 	            _this2._addRadarSource('280', i++, v);
-	            // this._addRadarLayer('280', i++)
 	          }
-	          // this.map.setPaintProperty('radar-280-0', 'raster-opacity', 0.85)
 	        } catch (err) {
 	          _didIteratorError2 = true;
 	          _iteratorError2 = err;
@@ -224,9 +214,6 @@
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(props) {
-	      // this.map.setPaintProperty('radar-' + this.state.res + '-' + this.state.slider, 'raster-opacity', 0)
-	      // this.map.setPaintProperty('radar-' + this.state.res + '-' + props.slider, 'raster-opacity', 0.85)
-
 	      this._removeRadarLayer(this.state.res, this.state.slider);
 	      this._addRadarLayer(this.state.res, props.slider);
 
