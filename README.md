@@ -20,4 +20,16 @@ Then just run:
 $ python geshem.py
 ```
 
+For doing JS/SCSS work you'll need to init the JS stack:
+
+```bash
+$ npm install 
+```
+
+and pack all the assets before testing and/or deploying:
+
+```bash
+$ webpack
+```
+
 Make sure you have a stupid `redis-server` running on localhost to enjoy some sane caching.
