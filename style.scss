@@ -19,16 +19,20 @@ body {
     }
     .rc-slider {
         position: fixed;
-        bottom: 100px;
+        bottom: 50px;
         width: 80%;
         margin: 0 auto;
         margin-left: 10%;
         .rc-slider-handle {
-            border: 2px solid rgb(168, 32, 9);
-            background-color: #888;
+            border: 2px solid #bababa;
+            background-color: #bababa;
+            margin-left: -12px;
+            margin-top: -13px;
+            width: 30px;
+            height: 30px;
         }
         .rc-slider-track {
-            background-color: rgb(168, 32, 9);
+            background-color: #bababa;
         }
     }
 }

@@ -234,7 +234,7 @@ class Map extends React.Component {
         view={view}
         slider={this.state.slider}
         token='pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpaWRuaWFxazAwMTJ2b2tyZGRmaWpsNWYifQ.qf_V3CFP_NZtLjk5luNM4g' />
-      <Slider step={1} min={1} max={7} defaultValue={7} onChange={this.onChangeHandler} />
+      <Slider step={1} min={1} max={7} defaultValue={7} tipFormatter={null} onChange={this.onChangeHandler} />
     </div>
   }
 }
