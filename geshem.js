@@ -20,8 +20,7 @@ class GLMap extends React.Component {
   static propTypes = {
     view: React.PropTypes.object,  // default map view
     token: React.PropTypes.string  // mapbox auth token
-  }
-
+  };
 
   constructor (props) {
     super(props)
@@ -131,7 +130,7 @@ class Map extends React.Component {
     this.setState({
       'slider': 7-e
     })
-  }
+  };
 
   constructor (props) {
     super(props);
@@ -178,7 +177,7 @@ class Map extends React.Component {
                 "source": "mapbox",
                 "source-layer": "water",
                 "type": "fill",
-                "paint": {"fill-color": "#111122"}
+                "paint": {"fill-color": "#112233"}
             },
             {
                 "id": "cities",

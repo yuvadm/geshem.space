@@ -23,16 +23,22 @@ body {
         width: 80%;
         margin: 0 auto;
         margin-left: 10%;
+        height: 40px;
         .rc-slider-handle {
-            border: 2px solid #bababa;
-            background-color: #bababa;
-            margin-left: -12px;
-            margin-top: -13px;
-            width: 30px;
-            height: 30px;
+            border: 2px solid #922490;
+            background-color: #922490;
+            width: 40px;
+            height: 40px;
+            margin-top: 0px;
+            margin-left: -20px;
+            border-radius: 20%;
         }
         .rc-slider-track {
+            height: 40px;
             background-color: #bababa;
+        }
+        .rc-slider-step {
+            height: 40px;
         }
     }
 }
