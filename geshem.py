@@ -35,7 +35,6 @@ def fetch_latest_images(local=False):
             with open(str(STATIC_DIR / 'img' / filename), 'wb+') as f:
                 f.write(image.content)
 
-@app.route('/imgs')
 def get_imgs():
     img_files = sorted(
         filter(
@@ -50,10 +49,13 @@ def get_imgs():
     }
     return imgs
 
+@app.route('/imgs')
+def imgs():
+    return jsonify(get_imgs())
+
 @app.route('/')
 def home():
     return render_template('index.html', imgs=get_imgs())
-
 
 @app.after_request
 def update_images(response):
@@ -66,6 +68,10 @@ def update_images(response):
         if app.debug:
             fetch_latest_images(local=True)
     return response
+
+@app.context_processor
+def inject_debug():
+    return dict(debug=app.debug)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
