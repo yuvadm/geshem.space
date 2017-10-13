@@ -14,9 +14,6 @@
     ga('send', 'pageview');
   </script>
   {% endif %}
-  <script src="{{ url_for('static', filename='js/vue' + ('.min' if debug else '') + '.js') }}"></script>
-  <script src='https://api.mapbox.com/mapbox-gl-js/v0.40.1/mapbox-gl.js'></script>
-  <link href='https://api.mapbox.com/mapbox-gl-js/v0.40.1/mapbox-gl.css' rel='stylesheet' />
 </head>
 <body style="margin: 0;">
   <script>window.imgs = {{ imgs|safe }};</script>
