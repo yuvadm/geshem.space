@@ -11,6 +11,11 @@
     "vue": "^2.4.4"
   },
   "devDependencies": {
-    "brunch": "^2.10.11"
+    "babel-brunch": "^6.1.1",
+    "babel-preset-env": "^1.6.0",
+    "brunch": "^2.10.11",
+    "sass-brunch": "^2.10.4",
+    "vue-loader": "^13.3.0",
+    "vue-template-compiler": "^2.5.0"
   }
 }

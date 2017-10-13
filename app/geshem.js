@@ -1,4 +1,5 @@
 import mapboxgl from 'mapbox-gl';
+import Vue from 'vue';
 
 Vue.component('root', {
   template: '<div>A custom component!</div>'
