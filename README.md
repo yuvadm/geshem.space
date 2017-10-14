@@ -23,7 +23,7 @@ $ python geshem.py
 For doing JS/SCSS work you'll need to init the JS stack:
 
 ```bash
-$ npm install 
+$ yarn install 
 ```
 
 and pack all the assets before testing and/or deploying:
