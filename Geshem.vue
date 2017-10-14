@@ -7,3 +7,9 @@ export default {
 name: 'geshem'
 }
 </script>
+
+<style lang="scss">
+  #geshem {
+    position: absolute;
+  }
+</style>

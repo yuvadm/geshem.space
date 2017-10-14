@@ -1,4 +1,4 @@
-//import mapboxgl from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 import Vue from 'vue';
 import Geshem from './Geshem.vue'
 
@@ -26,52 +26,49 @@ var app = new Vue({
   }
 });
 
-// mapboxgl.accessToken = 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZmkwbHcifQ.UHtLngbKm9O8945pJm23Nw';
-// var map = new mapboxgl.Map({
-//   container: 'map',
-//   style: 'mapbox://styles/mapbox/dark-v9',
-//   container: 'map',
-//   maxZoom: 10,
-//   minZoom: 5,
-//   zoom: 6.3,
-//   center: [35, 31.9],
-//   hash: false
-// });
+mapboxgl.accessToken = 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZmkwbHcifQ.UHtLngbKm9O8945pJm23Nw';
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/dark-v9',
+  container: 'map',
+  maxZoom: 10,
+  minZoom: 5,
+  zoom: 6.3,
+  center: [35, 31.9],
+  hash: false
+});
 
-// function addRadarSource(res, i, url) {
-//   map.addSource('radar-' + res + '-' + i, {
-//     type: 'image',
-//     url: '/static/img/' + url,
-//     coordinates: app.rasterCoords[res]
-//   })
-// }
+function addRadarSource(res, i, url) {
+  map.addSource('radar-' + res + '-' + i, {
+    type: 'image',
+    url: '/static/img/' + url,
+    coordinates: app.rasterCoords[res]
+  })
+}
 
-// function addRadarLayer(res, i) {
-//   map.addLayer({
-//     id: 'radar-' + res + '-' + i,
-//     source: 'radar-' + res + '-' + i,
-//     type: 'raster',
-//     paint: {
-//       'raster-opacity': 0.85
-//     }
-//   })
-// }
+function addRadarLayer(res, i) {
+  map.addLayer({
+    id: 'radar-' + res + '-' + i,
+    source: 'radar-' + res + '-' + i,
+    type: 'raster',
+    paint: {
+      'raster-opacity': 0.85
+    }
+  })
+}
 
-// function removeRadarLayer(res, i) {
-//   map.removeLayer('radar-' + res + '-' + i)
-// }
+function removeRadarLayer(res, i) {
+  map.removeLayer('radar-' + res + '-' + i)
+}
 
-// map.on('style.load', function () {
-//   var i = 0;
-//   while (i < app.imgs['140'].length) {
-//     addRadarSource('140', i, app.imgs['140'][i++])
-//   }
-//   var i = 0;
-//   while (i < app.imgs['280'].length) {
-//     addRadarSource('280', i, app.imgs['280'][i++])
-//   }
-//   addRadarLayer('280', 0)
-// })
-
-
-
+map.on('style.load', function () {
+  var i = 0;
+  while (i < app.imgs['140'].length) {
+    addRadarSource('140', i, app.imgs['140'][i++])
+  }
+  var i = 0;
+  while (i < app.imgs['280'].length) {
+    addRadarSource('280', i, app.imgs['280'][i++])
+  }
+  addRadarLayer('280', 0)
+})
