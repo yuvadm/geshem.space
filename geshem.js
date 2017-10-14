@@ -1,6 +1,6 @@
 import mapboxgl from 'mapbox-gl';
 import Vue from 'vue';
-import Geshem from './Geshem.vue'
+import Geshem from './Geshem.vue';
 
 var app = new Vue({
   el: '#app',
@@ -8,7 +8,6 @@ var app = new Vue({
   data: {
     imgs: window.imgs,
     res: 280,
-    slider: 0,
     rasterCoords: {
       140: [
         [33.35317413, 33.27232471],

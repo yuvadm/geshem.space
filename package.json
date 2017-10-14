@@ -8,7 +8,8 @@
   "license": "MIT",
   "dependencies": {
     "mapbox-gl": "^0.40.1",
-    "vue": "^2.4.4"
+    "vue": "^2.4.4",
+    "vue-slider-component": "^2.4.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
