@@ -1,8 +1,12 @@
 <template>
   <div id="geshem">
-    <div id="date">{{ date }}</div>
-    <div id="time">{{ time }}</div>
-    <vue-slider ref="slider" v-model="slider" :min=1 :max=7></vue-slider>
+    <div id="datetime">
+      <div id="date">{{ date }}</div>
+      <div id="time">{{ time }}</div>
+    </div>
+    <div id="slider">
+      <vue-slider ref="slider" v-model="slider" :min=1 :max=7></vue-slider>
+    </div>
   </div>
 </template>
 
@@ -48,11 +52,14 @@
     computed: {
       date: function () {
         var d = this.imgs[this.res][7-this.slider].substr(0, 8);
-        return `${d.substr(0, 4)}-${d.substr(4, 2)}-${d.substr(6, 2)}`;
+        return `${d.substr(6, 2)}-${d.substr(4, 2)}-${d.substr(0, 4)}`;
       },
       time: function () {
         var t = this.imgs[this.res][7-this.slider].substr(9, 6);
         return `${t.substr(0, 2)}:${t.substr(2, 2)}`;
+      },
+      curImg: function () {
+        return 7 - this.slider;
       }
     },
     created: function () {
@@ -67,11 +74,22 @@
           vm.addRadarSource('280', i, vm.imgs['280'][i++])
         }
         vm.addRadarLayer('280', 0)
-      })
+      });
+      this.map.on('zoom', function () {
+        var zoomIn = vm.map.getZoom() > 7;
+        var from = zoomIn ? '280' : '140';
+        var to = zoomIn ? '140' : '280';
+        if (to != vm.res) {
+          console.log(`Zoom event from ${from} to ${to}`);
+          vm.removeRadarLayer(from, vm.curImg);
+          vm.addRadarLayer(to, vm.curImg);
+          vm.res = to;
+        }
+      });
     },
     methods: {
       addRadarSource: function(res, i, url) {
-        this.map.addSource('radar-' + res + '-' + i, {
+        this.map.addSource(`radar-${res}-${i}`, {
           type: 'image',
           url: '/static/img/' + url,
           coordinates: this.rasterCoords[res]
@@ -79,8 +97,8 @@
       },
       addRadarLayer: function(res, i) {
         this.map.addLayer({
-          id: 'radar-' + res + '-' + i,
-          source: 'radar-' + res + '-' + i,
+          id: `radar-${res}-${i}`,
+          source: `radar-${res}-${i}`,
           type: 'raster',
           paint: {
             'raster-opacity': 0.85
@@ -88,7 +106,7 @@
         })
       },
       removeRadarLayer: function(res, i) {
-        this.map.removeLayer('radar-' + res + '-' + i)
+        this.map.removeLayer(`radar-${res}-${i}`)
       }
     },
     watch: {
@@ -102,14 +120,23 @@
 
 <style lang="scss">
   #geshem {
-    position: absolute;
-  }
-  #date {
-    color: white;
-    font-size: 1.2em;
-  }
-  #time {
-    color: white;
-    font-size: 1.6em;
+    #datetime {
+      position: absolute;
+      margin: 20px 0px 0px 20px;
+      color: white;
+      font-family: monospace;
+      #date {
+        font-size: 1.4em;
+      }
+      #time {
+        font-size: 1.8em;
+      }
+    }
+    #slider {
+      position: absolute;
+      bottom: 10vh;
+      width: 30vw;
+      margin-left: 35vw;
+    }
   }
 </style>
