@@ -61,7 +61,8 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
       compress: {
-        warnings: false
+        warnings: false,
+        comparisons: false // workaround for https://github.com/mapbox/mapbox-gl-js/issues/4359
       }
     }),
     new webpack.LoaderOptionsPlugin({
