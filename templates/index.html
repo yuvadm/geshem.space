@@ -18,9 +18,7 @@
 <body style="margin: 0;">
   <script>window.imgs = {{ imgs|safe }};</script>
   <div id="map" style="position:absolute; top:0; bottom:0; width:100%;"></div>
-  <div id="app" style="position:absolute;">
-    <root></root>
-  </div>
+  <div id="app" style="position:absolute;"></div>
   <script src="{{ url_for('static', filename='js/build.js') }}"></script>
 </body>
 </html>
