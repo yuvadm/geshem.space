@@ -5,7 +5,7 @@
       <div id="time">{{ time }}</div>
     </div>
     <div id="slider">
-      <vue-slider ref="slider" v-model="slider" :min=1 :max=7></vue-slider>
+      <vue-slider ref="slider" v-model="slider" :min=1 :max=7 :height=20 :dot-size=45 :tooltip=false></vue-slider>
     </div>
   </div>
 </template>
@@ -134,9 +134,13 @@
     }
     #slider {
       position: absolute;
-      bottom: 10vh;
+      bottom: 8vh;
       width: 30vw;
       margin-left: 35vw;
+      @media only screen and (max-device-width: 812px) {
+        width: 80vw;
+        margin-left: 8vw;
+      }
     }
   }
 </style>
