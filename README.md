@@ -29,7 +29,7 @@ $ yarn install
 and pack all the assets before testing and/or deploying:
 
 ```bash
-$ webpack
+$ NODE_ENV=production webpack
 ```
 
 Make sure you have a stupid `redis-server` running on localhost to enjoy some sane caching.
