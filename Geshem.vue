@@ -1,7 +1,7 @@
 <template>
   <div id="geshem">
-    <div id="date">14-10-2017</div>
-    <div id="time">21:58</div>
+    <div id="date">{{ date }}</div>
+    <div id="time">{{ time }}</div>
     <vue-slider ref="slider" v-model="slider" :min=1 :max=7></vue-slider>
   </div>
 </template>
@@ -43,6 +43,16 @@
           center: [35, 31.9],
           hash: false
         })
+      }
+    },
+    computed: {
+      date: function () {
+        var d = this.imgs[this.res][7-this.slider].substr(0, 8);
+        return `${d.substr(0, 4)}-${d.substr(4, 2)}-${d.substr(6, 2)}`;
+      },
+      time: function () {
+        var t = this.imgs[this.res][7-this.slider].substr(9, 6);
+        return `${t.substr(0, 2)}:${t.substr(2, 2)}`;
       }
     },
     created: function () {
