@@ -70,9 +70,11 @@ function fetchImages() {
   })
 }
 
+app.set('port', (process.env.PORT || 3000));
 app.set('view engine', 'pug')
+app.set('views', __dirname + '/views');
 
-app.use('/static', express.static('static'))
+app.use('/static', express.static(__dirname + 'static'))
 
 app.use('/', function (req, res, next){
   res.on('finish', function(){
@@ -122,6 +124,6 @@ app.get('/', function (req, res) {
   res.render('index', { prod: process.env.NODE_ENV === 'production' })
 })
 
-app.listen(3000, function () {
-  console.log('Starting geshem.space server')
+app.listen(app.get('port'), function () {
+  console.log('Starting geshem.space server on port', app.get('port'))
 })
