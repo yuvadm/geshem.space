@@ -6,7 +6,7 @@ app.set('view engine', 'pug')
 app.use('/static', express.static('static'))
 
 app.get('/', function (req, res) {
-  res.render('index', { title: 'Hey', message: 'Hello there!' })
+  res.render('index', { prod: process.env.NODE_ENV === 'production' })
 })
 
 app.listen(3000, function () {
