@@ -7,9 +7,12 @@
   "author": "Yuval Adam <_@yuv.al>",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.138.0",
     "express": "^4.16.2",
     "mapbox-gl": "^0.40.1",
     "pug": "^2.0.0-rc.4",
+    "redis": "^2.8.0",
+    "request": "^2.83.0",
     "vue": "^2.4.4",
     "vue-slider-component": "^2.4.3"
   },
