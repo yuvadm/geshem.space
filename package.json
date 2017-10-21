@@ -7,7 +7,9 @@
   "author": "Yuval Adam <_@yuv.al>",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.16.2",
     "mapbox-gl": "^0.40.1",
+    "pug": "^2.0.0-rc.4",
     "vue": "^2.4.4",
     "vue-slider-component": "^2.4.3"
   },
