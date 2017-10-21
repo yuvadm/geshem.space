@@ -112,7 +112,7 @@
         console.log('Adding radar source', res, i, url);
         this.map.addSource(`radar-${res}-${i}`, {
           type: 'image',
-          url: 'http://imgs.geshem.space/' + url,
+          url: '//imgs.geshem.space/' + url,
           coordinates: this.rasterCoords[res]
         })
       },
