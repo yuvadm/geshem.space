@@ -1,35 +1,28 @@
 # Geshem
 
-A rain radar clone running on Mapbox GL, see it live at: [http://geshem.space](http://geshem.space)
+An interactive rain radar clone running on Mapbox GL, see it live at: [https://geshem.space](https://geshem.space)
 
 ## Dev
 
- - Python 3.5
+ - Node + Yarn
  - Redis (optional, recommended)
 
-Setup a virtualenv:
-
+Install dependencies:
 ```bash
-$ mkvirtualenv -p `which python3` geshem
-$ pip install -r requirements.txt
+$ yarn install
 ```
 
-Then just run:
-
+Run a local cache:
 ```bash
-$ python geshem.py
+$ redis-server
 ```
 
-For doing JS/SCSS work you'll need to init the JS stack:
-
+Run a webpack watch process:
 ```bash
-$ yarn install 
+$ webpack --watch
 ```
 
-and pack all the assets before testing and/or deploying:
-
+Run the server:
 ```bash
-$ NODE_ENV=production webpack
+$ node server.js
 ```
-
-Make sure you have a stupid `redis-server` running on localhost to enjoy some sane caching.
