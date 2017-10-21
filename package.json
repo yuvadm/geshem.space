@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.138.0",
+    "axios": "^0.16.2",
     "express": "^4.16.2",
     "mapbox-gl": "^0.40.1",
     "moment": "^2.19.1",

@@ -74,7 +74,7 @@ app.set('port', (process.env.PORT || 3000));
 app.set('view engine', 'pug')
 app.set('views', __dirname + '/views');
 
-app.use('/static', express.static(__dirname + 'static'))
+app.use('/static', express.static(__dirname + '/static'))
 
 app.use('/', function (req, res, next){
   res.on('finish', function(){
