@@ -4,6 +4,8 @@ const app = express()
 const redis = require('redis')
 const client = redis.createClient(process.env.REDIS_URL)
 
+const moment = require('moment')
+
 const request = require('request')
 const aws = require('aws-sdk')
 const s3 = new aws.S3()
@@ -38,7 +40,7 @@ function fetchImages() {
                   console.log(`Uploading to bucket`)
                   s3.putObject({
                     Bucket: 'imgs.geshem.space',
-                    Key: `${r}/${d}/${t}.png`,
+                    Key: `${d}/${t}/${r}.png`,
                     ContentType: response.headers['content-type'],
                     ContentLength: response.headers['content-length'],
                     Body: body,
@@ -49,7 +51,10 @@ function fetchImages() {
                       client.del(key)
                     }
                     else {
-                      client.set(key, data.ETag.slice(1, -1))
+                      client.multi([
+                        ['set', key, data.ETag.slice(1, -1)],
+                        ['del', 'images:latest']
+                      ]).exec()
                     }
                   })
                 }
@@ -86,6 +91,32 @@ app.use('/', function (req, res, next){
   })
   next()
 });
+
+app.get('/imgs', function (req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  client.get('images:latest', (err, reply) => {
+    if (err) {
+      console.log(err)
+    }
+    else if (!reply) {
+      s3.listObjectsV2({
+        Bucket: 'imgs.geshem.space',
+        //StartAfter: moment().subtract(1, 'days').format('YYYYMMDD')
+      }, (err, data) => {
+        const imgs = data.Contents.slice(-20).map( (d) => d.Key)
+        const imgres = JSON.stringify({
+          '140': imgs.filter( (d) => d.endsWith('140.png') ),
+          '280': imgs.filter( (d) => d.endsWith('280.png') )
+        })
+        client.set('images:latest', imgres)
+        res.send(imgres)
+      })
+    }
+    else {
+      res.send(reply)
+    }
+  })
+})
 
 app.get('/', function (req, res) {
   res.render('index', { prod: process.env.NODE_ENV === 'production' })
