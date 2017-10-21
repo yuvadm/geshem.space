@@ -12,7 +12,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --config ./webpack.config.js --progress --colors",
     "start": "node ./server.js"
-  }
+  },
   "dependencies": {
     "aws-sdk": "^2.138.0",
     "express": "^4.16.2",
