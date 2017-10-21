@@ -23,9 +23,7 @@
     "request": "^2.83.0",
     "vue": "^2.4.4",
     "vue-slider-component": "^2.4.3",
-    "webpack": "^3.8.1"
-  },
-  "devDependencies": {
+    "webpack": "^3.8.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
