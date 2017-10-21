@@ -22,7 +22,8 @@
     "redis": "^2.8.0",
     "request": "^2.83.0",
     "vue": "^2.4.4",
-    "vue-slider-component": "^2.4.3"
+    "vue-slider-component": "^2.4.3",
+    "webpack": "^3.8.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -34,8 +35,7 @@
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",
     "vue-loader": "^13.3.0",
-    "vue-template-compiler": "^2.5.2",
-    "webpack": "^3.7.1"
+    "vue-template-compiler": "^2.5.2"
   },
   "private": false
 }
