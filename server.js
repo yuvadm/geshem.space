@@ -9,7 +9,7 @@ const aws = require('aws-sdk')
 const s3 = new aws.S3()
 
 function fetchImages() {
-  console.log('Running fetchImages()')
+  console.debug('Running fetchImages()')
   request('http://map.govmap.gov.il/rainradar/radar.json', (error, response, body) => {
     if (error) {
       console.log(error)
@@ -24,7 +24,7 @@ function fetchImages() {
           const key = `fetched:${url}`
           client.get(key, (err, reply) => {
             if (!reply && reply != 'fetching') {
-              console.log(`Fetching ${url}`)
+              console.debug(`Fetching ${url}`)
               client.set(key, 'fetching')
               request({ url: url, encoding: null }, (error, response, body) => {
                 if (err) {
@@ -56,7 +56,7 @@ function fetchImages() {
               })
             }
             else {
-              console.log(`No need to fetch ${url}`)
+              console.debug(`No need to fetch ${url}`)
             }
           })
         })
@@ -80,7 +80,7 @@ app.use('/', function (req, res, next){
         fetchImages()
       }
       else {
-        console.log('Skipping fetch, waiting 60 seconds max')
+        console.debug('Skipping fetch, waiting 60 seconds max')
       }
     })
   })
