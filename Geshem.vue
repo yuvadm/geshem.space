@@ -109,7 +109,6 @@
         vm.addRadarLayer('280', 9)
       },
       addRadarSource: function(res, i, url) {
-        console.log('Adding radar source', res, i, url);
         this.map.addSource(`radar-${res}-${i}`, {
           type: 'image',
           url: '//imgs.geshem.space/' + url,
