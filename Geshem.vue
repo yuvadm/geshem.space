@@ -5,7 +5,7 @@
       <div id="time">{{ time }}</div>
     </div>
     <div id="slider">
-      <vue-slider ref="slider" v-model="slider" :min=1 :max=7 :height=20 :dot-size=45 :tooltip=false></vue-slider>
+      <vue-slider ref="slider" v-model="slider" :min=0 :max=9 :height=20 :dot-size=45 :tooltip=false></vue-slider>
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@
       return {
         imgs: null,
         res: 280,
-        slider: 7,
+        slider: 9,
         rasterCoords: {
           140: [
             [33.35317413, 33.27232471],
@@ -54,16 +54,13 @@
     computed: {
       date: function () {
         if (!this.imgs) { return '' };
-        var d = this.imgs[this.res][7-this.slider].substr(0, 8);
+        var d = this.imgs[this.res][this.slider].substr(0, 8);
         return `${d.substr(6, 2)}-${d.substr(4, 2)}-${d.substr(0, 4)}`;
       },
       time: function () {
         if (!this.imgs) { return '' };
-        var t = this.imgs[this.res][7-this.slider].substr(9, 6);
+        var t = this.imgs[this.res][this.slider].substr(9, 6);
         return `${t.substr(0, 2)}:${t.substr(2, 2)}`;
-      },
-      curImg: function () {
-        return 7 - this.slider;
       }
     },
     mounted: function () {
@@ -92,8 +89,8 @@
           var from = zoomIn ? '280' : '140';
           var to = zoomIn ? '140' : '280';
           if (to != vm.res) {
-            vm.removeRadarLayer(from, vm.curImg);
-            vm.addRadarLayer(to, vm.curImg);
+            vm.removeRadarLayer(from, vm.slider);
+            vm.addRadarLayer(to, vm.slider);
             vm.res = to;
           }
         });
@@ -109,9 +106,10 @@
         while (i < vm.imgs['280'].length) {
           vm.addRadarSource('280', i, vm.imgs['280'][i++])
         }
-        vm.addRadarLayer('280', 0)
+        vm.addRadarLayer('280', 9)
       },
       addRadarSource: function(res, i, url) {
+        console.log('Adding radar source', res, i, url);
         this.map.addSource(`radar-${res}-${i}`, {
           type: 'image',
           url: 'http://imgs.geshem.space/' + url,
