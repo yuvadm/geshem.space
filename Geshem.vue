@@ -129,7 +129,10 @@
           source: `radar-${res}-${i}`,
           type: 'raster',
           paint: {
-            'raster-opacity': 0
+            'raster-opacity': 0,
+            'raster-opacity-transition': {
+              'duration': 0
+            }
           }
         })
       },
