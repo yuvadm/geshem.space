@@ -127,3 +127,7 @@ app.get('/', function (req, res) {
 app.listen(app.get('port'), function () {
   console.log('Starting geshem.space server on port', app.get('port'))
 })
+
+// poor man's background task
+// run fetchImages() every minute
+setInterval(fetchImages, 1000 * 60);
