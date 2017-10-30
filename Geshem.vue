@@ -95,8 +95,8 @@
           var from = zoomIn ? '280' : '140';
           var to = zoomIn ? '140' : '280';
           if (to != vm.res) {
-            vm.removeRadarLayer(from, vm.slider);
-            vm.addRadarLayer(to, vm.slider);
+            vm.hideRadarLayer(from, vm.slider);
+            vm.showRadarLayer(to, vm.slider);
             vm.res = to;
           }
         });
@@ -106,13 +106,15 @@
         var vm = this;
         var i = 0;
         while (i < vm.imgs['140'].length) {
-          vm.addRadarSource('140', i, vm.imgs['140'][i++])
+          vm.addRadarSource('140', i, vm.imgs['140'][i])
+          vm.addRadarLayer('140', i++)
         }
         var i = 0;
         while (i < vm.imgs['280'].length) {
-          vm.addRadarSource('280', i, vm.imgs['280'][i++])
+          vm.addRadarSource('280', i, vm.imgs['280'][i])
+          vm.addRadarLayer('280', i++)
         }
-        vm.addRadarLayer('280', 9)
+        vm.showRadarLayer('280', 9)
       },
       addRadarSource: function(res, i, url) {
         this.map.addSource(`radar-${res}-${i}`, {
@@ -127,9 +129,15 @@
           source: `radar-${res}-${i}`,
           type: 'raster',
           paint: {
-            'raster-opacity': 0.85
+            'raster-opacity': 0
           }
         })
+      },
+      showRadarLayer: function(res, i) {
+        this.map.setPaintProperty(`radar-${res}-${i}`, 'raster-opacity', 0.85);
+      },
+      hideRadarLayer: function(res, i) {
+        this.map.setPaintProperty(`radar-${res}-${i}`, 'raster-opacity', 0);
       },
       removeRadarLayer: function(res, i) {
         this.map.removeLayer(`radar-${res}-${i}`)
@@ -137,8 +145,8 @@
     },
     watch: {
       slider: function (to, from) {
-        this.removeRadarLayer(this.res, from);
-        this.addRadarLayer(this.res, to);
+        this.hideRadarLayer(this.res, from);
+        this.showRadarLayer(this.res, to);
       }
     }
   }
