@@ -14,6 +14,8 @@
   import axios from 'axios';
   import vueSlider from 'vue-slider-component';
   import mapboxgl from 'mapbox-gl';
+  import moment from 'moment-timezone';
+
   export default {
     name: 'geshem',
     components: {
@@ -52,15 +54,19 @@
       }
     },
     computed: {
+      datetime: function () {
+        if (!this.imgs) { return '' };
+        var d = this.imgs[this.res][this.slider].substr(0, 13);
+        var md = moment.utc(d, 'YYYYMMDD/HHmm').tz('Asia/Jerusalem');
+        return md
+      },
       date: function () {
         if (!this.imgs) { return '' };
-        var d = this.imgs[this.res][this.slider].substr(0, 8);
-        return `${d.substr(6, 2)}-${d.substr(4, 2)}-${d.substr(0, 4)}`;
+        return this.datetime.format('YYYY-MM-DD');
       },
       time: function () {
         if (!this.imgs) { return '' };
-        var t = this.imgs[this.res][this.slider].substr(9, 6);
-        return `${t.substr(0, 2)}:${t.substr(2, 2)}`;
+        return this.datetime.format('HH:mm');
       }
     },
     mounted: function () {
