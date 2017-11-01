@@ -103,7 +103,7 @@ app.get('/imgs', function (req, res) {
     else if (!reply) {
       s3.listObjectsV2({
         Bucket: 'imgs.geshem.space',
-        //StartAfter: moment().subtract(1, 'days').format('YYYYMMDD')
+        StartAfter: moment().subtract(1, 'days').format('YYYYMMDD')
       }, (err, data) => {
         const imgs = data.Contents.slice(-20).map( (d) => d.Key)
         const imgres = JSON.stringify({
