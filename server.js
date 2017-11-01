@@ -11,7 +11,7 @@ const aws = require('aws-sdk')
 const s3 = new aws.S3()
 
 function fetchImages() {
-  console.debug('Running fetchImages()')
+  console.log('Running fetchImages()')
   request('http://map.govmap.gov.il/rainradar/radar.json', (error, response, body) => {
     if (error) {
       console.log(error)
@@ -26,7 +26,7 @@ function fetchImages() {
           const key = `fetched:${url}`
           client.get(key, (err, reply) => {
             if (!reply && reply != 'fetching') {
-              console.debug(`Fetching ${url}`)
+              console.log(`Fetching ${url}`)
               client.set(key, 'fetching')
               request({ url: url, encoding: null }, (error, response, body) => {
                 if (err) {
@@ -110,7 +110,7 @@ app.get('/imgs', function (req, res) {
           '140': imgs.filter( (d) => d.endsWith('140.png') ),
           '280': imgs.filter( (d) => d.endsWith('280.png') )
         })
-        client.set('images:latest', imgres)
+        client.setex('images:latest', 60 * 5, imgres)
         res.send(imgres)
       })
     }
