@@ -1,34 +1,32 @@
 {
   "name": "geshem",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Geshem.space Rain Radar",
   "main": "geshem.js",
   "repository": "https://github.com/yuvadm/geshem",
   "author": "Yuval Adam <_@yuv.al>",
   "license": "MIT",
   "engines": {
-    "node": "8.7.0"
+    "node": ">90.0"
   },
   "scripts": {
-    "heroku-postbuild": "NODE_ENV=production webpack --config ./webpack.config.js --progress --colors"
+    "build": "NODE_ENV=production webpack --config ./webpack.config.js --progress --colors",
+    "deploystatic": "whoami",
+    "deploycron": "serverless deploy -f update",
+    "invokecron": "serverless invoke -l -f update"
   },
   "dependencies": {
-    "aws-sdk": "^2.138.0",
     "axios": "^0.16.2",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
-    "express": "^4.16.2",
     "file-loader": "^1.1.5",
     "mapbox-gl": "^0.40.1",
     "moment": "^2.19.1",
     "moment-timezone": "^0.5.13",
     "node-sass": "^4.5.3",
-    "pug": "^2.0.0-rc.4",
-    "redis": "^2.8.0",
-    "request": "^2.83.0",
     "sass-loader": "^6.0.6",
     "vue": "^2.4.4",
     "vue-loader": "^13.3.0",
