@@ -3,14 +3,15 @@
 An interactive rain radar clone running on Mapbox GL, see it live at: [https://geshem.space](https://geshem.space)
 
 The entire service is served off of static assets located in S3 buckets:
- - A staticmain index page, JS bundle and other static assets that are uploaded upon deploy
+ - A static main index page, JS bundle and other static assets that are uploaded upon deploy
  - Radar images that collected and indexed every minute by a recurring task running on AWS Lambda
 
 ## Prerequisites
 
  - Node.js
  - Yarn
- - Serverless
+ - Serverless, for deploying the AWS Lambda task
+ - AWS CLI, for static asset deployment to S3
 
 ## Dev
 

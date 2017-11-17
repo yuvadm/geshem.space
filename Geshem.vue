@@ -71,7 +71,7 @@
     },
     mounted: function () {
       var vm = this;
-      axios.get('/imgs').then((res) => {
+      axios.get('//imgs.geshem.space/imgs.json').then((res) => {
         vm.imgs = res.data;
         if (vm.mapLoaded) {
           vm.loadSources();
