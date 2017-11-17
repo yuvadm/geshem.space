@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "NODE_ENV=production webpack --config ./webpack.config.js --progress --colors",
-    "deploystatic": "whoami",
+    "deploystatic": "aws s3 sync --acl public-read static s3://geshem.space",
     "deploycron": "serverless deploy -f update",
     "invokecron": "serverless invoke -l -f update"
   },

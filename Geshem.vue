@@ -56,7 +56,7 @@
     computed: {
       datetime: function () {
         if (!this.imgs) { return '' };
-        var d = this.imgs[this.res][this.slider].substr(0, 13);
+        var d = this.imgs[this.res][this.slider].substr(5, 13);
         var md = moment.utc(d, 'YYYYMMDD/HHmm').tz('Asia/Jerusalem');
         return md
       },
@@ -71,12 +71,18 @@
     },
     mounted: function () {
       var vm = this;
-      axios.get('//imgs.geshem.space/imgs.json').then((res) => {
+      axios({
+        url: '//imgs.geshem.space/imgs.json',
+        method: 'get',
+        withCredentials: true
+      }).then((res) => {
         vm.imgs = res.data;
         if (vm.mapLoaded) {
           vm.loadSources();
         }
-      })
+      }).catch(function(error) {
+                console.log(error)
+            })
     },
     created: function () {
       this.initMap();

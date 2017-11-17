@@ -3,8 +3,9 @@
 An interactive rain radar clone running on Mapbox GL, see it live at: [https://geshem.space](https://geshem.space)
 
 The entire service is served off of static assets located in S3 buckets:
- - A static main index page, JS bundle and other static assets that are uploaded upon deploy
- - Radar images that collected and indexed every minute by a recurring task running on AWS Lambda
+
+ - A static main index page, JS bundle and other static assets that are uploaded upon deploy, Vue.js-based
+ - Radar images that are collected and indexed every minute by a recurring task running on AWS Lambda, written in Python
 
 ## Prerequisites
 
@@ -31,7 +32,7 @@ $ yarn run build
 Deploy new static assets to S3:
 
 ```bash
-$ yarn run deploy_static
+$ yarn run deploystatic
 ```
 
 ### Cron Task
@@ -39,11 +40,13 @@ $ yarn run deploy_static
 #### Deploy
 
 ```bash
-$ yarn run deploy_cron
+$ yarn run deploycron
 ```
 
 #### Invoke
 
+For testing the cron task:
+
 ```bash
-$ yarn run invoke_cron
+$ yarn run invokecron
 ```
