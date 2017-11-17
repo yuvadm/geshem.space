@@ -16,5 +16,8 @@ var/
 .installed.cfg
 *.egg
 
+__pycache__
+*.pyc
+
 # Serverless directories
 .serverless

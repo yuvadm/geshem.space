@@ -37,7 +37,7 @@ def geshem_update():
 
             if latest_keys:
                 if key not in latest_keys:
-                    client.put_object(Bucket=BUCKET, Key=key, Body=img)
+                    client.put_object(Bucket=BUCKET, Key=key, Body=img, ContentType='image/png', CacheControl='public, max-age=31536000')
                     latest_keys.append(key)
                     response += 'Put {}, '.format(key)
                 else:
@@ -57,7 +57,7 @@ def geshem_update():
             keys = sorted(list(filter(lambda k: k.endswith('{}.png'.format(r)), latest_keys)))[-10:]
             index[r] = keys
         client.put_object(Bucket=BUCKET, Key='imgs.json', Body=json.dumps(index),
-                          ContentType='application/json', Expires=datetime.utcnow() + timedelta(minutes=1))
+                          ContentType='application/json', CacheControl='public, max-age=60')
 
     return response
 
