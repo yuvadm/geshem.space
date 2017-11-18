@@ -21,7 +21,7 @@ def geshem_update():
 
     try:
         latest_imgs = client.list_objects_v2(Bucket=BUCKET, Prefix=IMG_PREFIX, StartAfter=IMG_PREFIX + yesterday)['Contents']
-        latest_keys = [i.Key for i in latest_imgs]
+        latest_keys = [i['Key'] for i in latest_imgs]
     except KeyError:
         latest_keys = []
 
