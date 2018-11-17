@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import axios from 'axios';
 import mapboxgl from 'mapbox-gl';
 
-import './App.css';
+import './Geshem.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'rc-slider/assets/index.css';
 
@@ -13,7 +13,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZ
 const IMGS_BASE_URL = 'https://imgs.geshem.space/'
 
 
-class App extends Component {
+class Geshem extends Component {
 
   constructor(props) {
     super(props);
@@ -203,4 +203,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Geshem;
