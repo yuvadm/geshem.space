@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "description": "Geshem.space Rain Radar",
   "main": "geshem.js",
-  "repository": "https://github.com/yuvadm/geshem",
+  "repository": "https://github.com/yuvadm/geshem.space",
   "author": "Yuval Adam <_@yuv.al>",
   "license": "MIT",
   "private": false,

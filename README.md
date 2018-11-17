@@ -4,8 +4,8 @@ An interactive rain radar clone running on Mapbox GL, see it live at: [https://g
 
 The entire service is served off of static assets located in S3 buckets:
 
- - A static main index page, JS bundle and other static assets that are uploaded upon deploy, Vue.js-based
- - Radar images that are collected and indexed every minute by a recurring task running on AWS Lambda, written in Python
+ - A static main index page, React-based JS bundle and other static assets that are uploaded upon deploy
+ - Radar images that are collected and indexed every minute by a Python recurring task running on AWS Lambda
 
 ## Prerequisites
 
