@@ -27,8 +27,11 @@ body {
   bottom: 8vh;
   width: 30vw;
   margin-left: 35vw;
-  /* @media only screen and (max-device-width: 812px) {
+}
+
+@media only screen and (max-device-width: 812px) {
+  #slider {
     width: 80vw;
     margin-left: 8vw;
-  } */
+  }
 }
