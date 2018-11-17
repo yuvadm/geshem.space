@@ -16,17 +16,19 @@ The entire service is served off of static assets located in S3 buckets:
 
 ## Dev
 
-### Static Assets
+Install dependencies and run dev server:
 
-Install dependencies:
 ```bash
 $ yarn install
+$ yarn start
 ```
+
+### Deploy
 
 Build the JS bundle:
 
 ```bash
-$ yarn run build
+$ yarn build
 ```
 
 Deploy new static assets to S3:

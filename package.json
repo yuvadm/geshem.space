@@ -1,38 +1,37 @@
 {
   "name": "geshem",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Geshem.space Rain Radar",
   "main": "geshem.js",
   "repository": "https://github.com/yuvadm/geshem",
   "author": "Yuval Adam <_@yuv.al>",
   "license": "MIT",
-  "engines": {
-    "node": ">90.0"
+  "private": false,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "luxon": "^1.7.1",
+    "mapbox-gl": "^0.51.0",
+    "rc-slider": "^8.6.3",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-scripts": "2.1.1"
   },
   "scripts": {
-    "build": "NODE_ENV=production webpack --config ./webpack.config.js --progress --colors",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "deploystatic": "aws s3 sync --acl public-read static s3://geshem.space",
     "deploycron": "serverless deploy -f update",
     "invokecron": "serverless invoke -l -f update"
   },
-  "dependencies": {
-    "axios": "^0.16.2",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.0",
-    "cross-env": "^5.0.5",
-    "css-loader": "^0.28.7",
-    "file-loader": "^1.1.5",
-    "mapbox-gl": "^0.40.1",
-    "moment": "^2.19.1",
-    "moment-timezone": "^0.5.13",
-    "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.6",
-    "vue": "^2.4.4",
-    "vue-loader": "^13.3.0",
-    "vue-slider-component": "^2.4.3",
-    "vue-template-compiler": "^2.5.2",
-    "webpack": "^3.8.1"
+  "eslintConfig": {
+    "extends": "react-app"
   },
-  "private": false
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
