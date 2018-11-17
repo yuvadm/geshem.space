@@ -21,7 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploystatic": "aws s3 sync --acl public-read static s3://geshem.space",
+    "deploystatic": "aws s3 sync --acl public-read build s3://geshem.space",
     "deploycron": "serverless deploy -f update",
     "invokecron": "serverless invoke -l -f update"
   },
