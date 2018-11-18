@@ -1,4 +1,4 @@
-# Geshem
+# Geshem 🌧️
 
 An interactive rain radar clone running on Mapbox GL, see it live at: [https://geshem.space](https://geshem.space)
 
