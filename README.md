@@ -1,5 +1,7 @@
 # Geshem 🌧️
 
+![https://geshem.space](https://i.imgur.com/tt5hFqg.png)
+
 An interactive rain radar clone running on Mapbox GL, see it live at: [https://geshem.space](https://geshem.space)
 
 The entire service is served off of static assets located in S3 buckets:
