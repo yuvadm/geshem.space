@@ -42,6 +42,25 @@ class Geshem extends Component {
     };
   }
 
+  getGeolocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const {longitude, latitude} = pos.coords;
+        this.setState({
+          lng: longitude,
+          lat: latitude,
+          zoom: 11
+        });
+        if (this.state.mapLoaded) {
+          this.map.jumpTo({
+            center: [longitude, latitude],
+            zoom: 11
+          });
+        }
+      })
+    }
+  }
+
   loadSources() {
     const { imgs } = this.state;
     let i = 0;
@@ -148,6 +167,7 @@ class Geshem extends Component {
   }
 
   componentDidMount() {
+    this.getGeolocation();
     this.loadRadarData();
     this.initMap();
   }
@@ -183,7 +203,6 @@ class Geshem extends Component {
     }
 
     const datetime = this.getDateTime();
-    console.log(datetime);
     const date = datetime ? datetime.toFormat('y-MM-dd') : '';
     const time = datetime ? datetime.toFormat('HH:mm') : '';
 
