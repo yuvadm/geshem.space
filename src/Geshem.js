@@ -203,7 +203,7 @@ class Geshem extends Component {
     }
 
     const datetime = this.getDateTime();
-    const date = datetime ? datetime.toFormat('y-MM-dd') : '';
+    const date = datetime ? datetime.toFormat('dd-MM-y') : '';
     const time = datetime ? datetime.toFormat('HH:mm') : '';
 
     return (
