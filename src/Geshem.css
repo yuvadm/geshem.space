@@ -11,15 +11,17 @@
   color: white;
   font-family: monospace;
 }
+
 #date {
   font-size: 1.4em;
 }
+
 #time {
   font-size: 1.8em;
 }
 
 #slider {
-  position: absolute;
+  position: fixed;
   bottom: 8vh;
   width: 30vw;
   margin-left: 35vw;
