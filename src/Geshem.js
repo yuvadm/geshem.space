@@ -167,7 +167,7 @@ class Geshem extends Component {
   }
 
   componentDidMount() {
-    this.getGeolocation();
+    // this.getGeolocation();
     this.loadRadarData();
     this.initMap();
   }
