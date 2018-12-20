@@ -2,21 +2,41 @@ import boto3
 import json
 import urllib3
 
+import dateutil.parser as dp
+import xml.etree.ElementTree as ET
+
 from datetime import datetime, timedelta
 from io import StringIO
 
 
+
+BUCKET = 'imgs.geshem.space'
+
+http = urllib3.PoolManager()
+s3 = boto3.resource('s3')
+client = boto3.client('s3')
+yesterday = (datetime.utcnow().date() - timedelta(days=1)).strftime('%Y%m%d')
+
+def jordan_update():
+    SOURCE_XML = 'http://212.35.78.67:8383/data/212JOC_rain_intensity.dpsri_dBR.xml'
+    IMG_PREFIX = 'jordan/'
+
+    res = http.request('GET', SOURCE_XML).data.decode('utf-8')
+    root = ET.fromstring(res)
+
+    try:
+        latest_imgs = client.list_objects_v2(Bucket=BUCKET, Prefix=IMG_PREFIX, StartAfter=IMG_PREFIX + yesterday)['Contents']
+        latest_keys = [i['Key'] for i in latest_imgs]
+    except KeyError:
+        latest_keys = []
+
+
+
 def geshem_update():
     MAPS_JSON = 'http://map.govmap.gov.il/rainradar/radar.json'
-    BUCKET = 'imgs.geshem.space'
     IMG_PREFIX = 'imgs/'
 
-    http = urllib3.PoolManager()
-    s3 = boto3.resource('s3')
-    client = boto3.client('s3')
     maps_json = json.loads(http.request('GET', MAPS_JSON).data.decode('utf-8'))
-
-    yesterday = (datetime.utcnow().date() - timedelta(days=1)).strftime('%Y%m%d')
     response = ''
 
     try:
@@ -65,15 +85,16 @@ def geshem_update():
 def update(event, context):
 
     res = geshem_update()
+    jres = jordan_update()
 
     body = {
-        "message": "SUCCESS: \n" + res,
-        "input": event
+        'message': f'SUCCESS: {res}, {jres}',
+        'input': event
     }
 
     response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
+        'statusCode': 200,
+        'body': json.dumps(body)
     }
 
     return response
