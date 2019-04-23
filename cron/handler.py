@@ -25,7 +25,7 @@ def geshem_update():
     except KeyError:
         latest_keys = []
 
-    for r in ['images140', 'images280']:
+    for r in ['images280']:
         imgs = sorted(maps_json[r].items(), key=lambda x: x[0], reverse=True)
         res = r[-3:]
         for ts, url in imgs:
@@ -53,7 +53,7 @@ def geshem_update():
 
     if latest_keys:
         index = {}
-        for r in ['140', '280']:
+        for r in ['280']:
             keys = sorted(list(filter(lambda k: k.endswith('{}.png'.format(r)), latest_keys)))[-10:]
             index[r] = keys
         client.put_object(Bucket=BUCKET, Key='imgs.json', Body=json.dumps(index),
