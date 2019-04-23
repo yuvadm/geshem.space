@@ -26,12 +26,6 @@ class Geshem extends Component {
       lat: 31.9,
       zoom: 6.3,
       rasterCoords: {
-        140: [
-          [33.35317413, 33.27232471],
-          [36.32243686, 33.27232471],
-          [36.32243686, 30.72293428],
-          [33.35317413, 30.72293428]
-        ],
         280: [
           [31.93095218, 34.5156862],
           [37.86644267, 34.5156862],
@@ -64,11 +58,6 @@ class Geshem extends Component {
   loadSources() {
     const { imgs } = this.state;
     let i = 0;
-    while (i < imgs['140'].length) {
-      this.addRadarSource('140', i, imgs['140'][i])
-      this.addRadarLayer('140', i++)
-    }
-    i = 0;
     while (i < imgs['280'].length) {
       this.addRadarSource('280', i, imgs['280'][i])
       this.addRadarLayer('280', i++)
@@ -151,17 +140,6 @@ class Geshem extends Component {
       });
       if (this.state.imgs !== null) {
         this.loadSources();
-      }
-    });
-
-    this.map.on('zoom', () => {
-      const zoomIn = this.map.getZoom() > 7;
-      const from = zoomIn ? '280' : '140';
-      const to = zoomIn ? '140' : '280';
-      if (to !== this.state.res) {
-        this.hideRadarLayer(from, this.state.slider);
-        this.showRadarLayer(to, this.state.slider);
-        this.setState({ res: to });
       }
     });
   }
