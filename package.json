@@ -1,6 +1,6 @@
 {
   "name": "geshem",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Geshem.space Rain Radar",
   "main": "geshem.js",
   "repository": "https://github.com/yuvadm/geshem.space",
