@@ -28,7 +28,7 @@ class Geshem extends Component {
 
   constructor(props) {
     super(props);
-    const playback = props.match.params.date;
+    const playback = props.match.params.date || window.location.search.slice(-8) || false;
     this.state = {
       mapLoaded: false,
       imgs: null,
