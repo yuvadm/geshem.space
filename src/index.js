@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Geshem from './Geshem';
+import App from './Geshem';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<Geshem />, document.getElementById('root'));
+console.log()
+
+ReactDOM.render(<App />, document.getElementById('root'));
 
 serviceWorker.unregister();

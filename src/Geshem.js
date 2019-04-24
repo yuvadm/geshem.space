@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import Slider from 'rc-slider';
 import { DateTime } from 'luxon';
 import axios from 'axios';
@@ -13,15 +14,27 @@ mapboxgl.accessToken = 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZ
 const IMGS_BASE_URL = 'https://imgs.geshem.space/'
 
 
+function App() {
+  return (
+    <Router>
+      <Route exact path="/" component={Geshem} />
+      <Route path="/history/:date" component={Geshem} />
+    </Router>
+  );
+}
+
+
 class Geshem extends Component {
 
   constructor(props) {
     super(props);
+    const playback = props.match.params.date;
     this.state = {
       mapLoaded: false,
       imgs: null,
+      playback: playback,
       res: 280,
-      slider: 9,
+      slider: playback ? 143 : 9,
       lng: 35,
       lat: 31.9,
       zoom: 6.3,
@@ -63,6 +76,23 @@ class Geshem extends Component {
       this.addRadarLayer('280', i++)
     }
     this.showRadarLayer('280', 9)
+  }
+
+  loadPlaybackData() {
+    const date = this.state.playback;
+    const hours = [...Array(24).keys()].map(h => `${String(h).padStart(2, '0')}`);
+    const minutes = [...Array(6).keys()].map(m => `${String(m * 10).padStart(2, '0')}`);
+    const paths = hours.reduce((acc, h) => acc.concat(
+      minutes.map(
+        m => `imgs/${date}/${h}${m}/280.png`
+      )
+    ), []);
+    this.setState({
+      imgs: {'280': paths}
+    });
+    if (this.state.mapLoaded) {
+      this.loadSources();
+    }
   }
 
   loadRadarData() {
@@ -146,7 +176,12 @@ class Geshem extends Component {
 
   componentDidMount() {
     // this.getGeolocation();
-    this.loadRadarData();
+    if (this.state.playback) {
+      this.loadPlaybackData();
+    }
+    else {
+      this.loadRadarData();
+    }
     this.initMap();
   }
 
@@ -192,7 +227,7 @@ class Geshem extends Component {
           <div id="time">{ time }</div>
         </div>
         <div id="slider">
-          <Slider mix={0} max={9} defaultValue={this.state.slider} handleStyle={handleStyle}
+          <Slider mix={0} max={this.state.playback ? 143 : 9} defaultValue={this.state.slider} handleStyle={handleStyle}
             railStyle={railStyle} trackStyle={trackStyle} onChange={(val) => this.onChangeSlider(val)}/>
         </div>
       </div>
@@ -200,4 +235,4 @@ class Geshem extends Component {
   }
 }
 
-export default Geshem;
+export default App;
