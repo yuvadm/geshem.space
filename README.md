@@ -54,3 +54,7 @@ For testing the cron task:
 ```bash
 $ yarn run invokecron
 ```
+
+## Architecture
+
+For some architectural notes on the deployment process go read https://yuv.al/blog/an-architecture-for-periodically-updating-static-websites/
