@@ -38,8 +38,8 @@ def scrape_fallback(res, http, url):
     }
 
     res = http.request('GET', url, headers=headers)
-    ck = res.headers['Set-Cookie']
-    headers['Cookie'] = ck
+    if 'Set-Cookie' in res.headers:
+        headers['Cookie'] = res.headers['Set-Cookie']
     res = http.request('GET', url, headers=headers)
 
     resdat = res.data.decode('utf-8')
