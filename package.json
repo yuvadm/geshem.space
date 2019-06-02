@@ -25,8 +25,8 @@
     "eject": "react-scripts eject",
     "deploystatic": "aws s3 sync --acl public-read build s3://geshem.space",
     "serverless": "cd cron; serverless",
-    "deploycron": "serverless deploy -f update",
-    "invokecron": "serverless invoke -l -f update"
+    "deploycron": "cd cron; serverless deploy -f update",
+    "invokecron": "cd cron; serverless invoke -l -f update"
   },
   "eslintConfig": {
     "extends": "react-app"
