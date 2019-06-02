@@ -1,10 +1,50 @@
 import boto3
 import json
+import math
+import re
 import urllib3
 
 from datetime import datetime, timedelta
 from io import StringIO
+from json.decoder import JSONDecodeError
 
+def challenge_res(c):
+    cs = str(c)
+    chrs = list(cs)
+    ints = list(map(int, chrs))
+    ld = ints[-1]
+    ints = sorted(ints)
+    md = ints[0]
+    sv1 = (2 * ints[2]) + ints[1]
+    sv2 = int(str(2 * ints[2]) + str(ints[1]))
+    mp = (ints[0] + 2) ** ints[1]
+    x = (int(c) * 3) + sv1
+    y = math.cos(math.pi * sv2)
+    ans = x * y
+    ans -= mp
+    ans += (md - ld)
+    ans = str(int(ans)) + str(sv2)
+    return ans
+
+def scrape_fallback(res, http, url):
+    c = re.search(r'Challenge=(\d+)', res)[1]
+    cid = re.search(r'ChallengeId=(\d+)', res)[1]
+    cr = challenge_res(c)
+
+    headers = {
+        'X-AA-Challenge': c,
+        'X-AA-Challenge-ID': cid,
+        'X-AA-Challenge-Result': cr
+    }
+
+    res = http.request('GET', url, headers=headers)
+    ck = res.headers['Set-Cookie']
+    headers['Cookie'] = ck
+    res = http.request('GET', url, headers=headers)
+
+    resdat = res.data.decode('utf-8')
+    maps_json = json.loads(resdat)
+    return maps_json
 
 def geshem_update():
     MAPS_JSON = 'http://map.govmap.gov.il/rainradar/radar.json'
@@ -14,7 +54,14 @@ def geshem_update():
     http = urllib3.PoolManager()
     s3 = boto3.resource('s3')
     client = boto3.client('s3')
-    maps_json = json.loads(http.request('GET', MAPS_JSON).data.decode('utf-8'))
+
+    res = http.request('GET', MAPS_JSON)
+    resdat = res.data.decode('utf-8')
+
+    try:
+        maps_json = json.loads(resdat)
+    except JSONDecodeError:
+        maps_json = scrape_fallback(resdat, http, MAPS_JSON)
 
     yesterday = (datetime.utcnow().date() - timedelta(days=1)).strftime('%Y%m%d')
     response = ''
