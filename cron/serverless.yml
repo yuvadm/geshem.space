@@ -2,7 +2,7 @@ service: cron
 
 provider:
   name: aws
-  runtime: python3.6
+  runtime: python3.7
   region: eu-west-1
   memorySize: 128
   timeout: 20

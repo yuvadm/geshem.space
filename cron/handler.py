@@ -1,126 +1,111 @@
 import boto3
 import json
-import math
 import re
-import urllib3
 
 from datetime import datetime, timedelta
-from io import StringIO
-from json.decoder import JSONDecodeError
+from ftplib import FTP
+from io import BytesIO
+from os import environ
 
-def challenge_res(c):
-    cs = str(c)
-    chrs = list(cs)
-    ints = list(map(int, chrs))
-    ld = ints[-1]
-    ints = sorted(ints)
-    md = ints[0]
-    sv1 = (2 * ints[2]) + ints[1]
-    sv2 = int(str(2 * ints[2]) + str(ints[1]))
-    mp = (ints[0] + 2) ** ints[1]
-    x = (int(c) * 3) + sv1
-    y = math.cos(math.pi * sv2)
-    ans = x * y
-    ans -= mp
-    ans += (md - ld)
-    ans = str(int(ans)) + str(sv2)
-    return ans
 
-def scrape_fallback(res, http, url):
-    c = re.search(r'Challenge=(\d+)', res)[1]
-    cid = re.search(r'ChallengeId=(\d+)', res)[1]
-    cr = challenge_res(c)
+class GeshemUpdate():
 
-    headers = {
-        'X-AA-Challenge': c,
-        'X-AA-Challenge-ID': cid,
-        'X-AA-Challenge-Result': cr
-    }
+    def __init__(self):
+        self.ftp = None
+        self.s3 = boto3.client('s3')
+        self.BUCKET = 'imgs.geshem.space'
+        self.IMG_PREFIX = 'imgs/'
 
-    res = http.request('GET', url, headers=headers)
-    if 'Set-Cookie' in res.headers:
-        headers['Cookie'] = res.headers['Set-Cookie']
-    res = http.request('GET', url, headers=headers)
+    def __enter__(self):
+        self.init_ftp()
+        return self
 
-    resdat = res.data.decode('utf-8')
-    maps_json = json.loads(resdat)
-    return maps_json
+    def __exit__(self, *args):
+        if self.ftp:
+            self.ftp.quit()
 
-def geshem_update():
-    MAPS_JSON = 'http://map.govmap.gov.il/rainradar/radar.json'
-    BUCKET = 'imgs.geshem.space'
-    IMG_PREFIX = 'imgs/'
+    def init_ftp(self):
+        host = environ.get("FTP_HOST")
+        username = environ.get("FTP_USERNAME")
+        password = environ.get("FTP_PASSWORD")
+        if all([host, username, password]):
+            self.ftp = FTP(host)
+            self.ftp.login(username, password)
+            self.ftp.cwd("From_IMS")
+            print("Logged in to FTP server...")
 
-    http = urllib3.PoolManager()
-    s3 = boto3.resource('s3')
-    client = boto3.client('s3')
+    def get_latest_ftp_images(self):
+        return sorted(list(self.ftp.nlst()))[-10:]
 
-    res = http.request('GET', MAPS_JSON)
-    resdat = res.data.decode('utf-8')
-
-    try:
-        maps_json = json.loads(resdat)
-    except JSONDecodeError:
-        maps_json = scrape_fallback(resdat, http, MAPS_JSON)
-
-    yesterday = (datetime.utcnow().date() - timedelta(days=1)).strftime('%Y%m%d')
-    response = ''
-
-    try:
-        latest_imgs = client.list_objects_v2(Bucket=BUCKET, Prefix=IMG_PREFIX, StartAfter=IMG_PREFIX + yesterday)['Contents']
-        latest_keys = [i['Key'] for i in latest_imgs]
-    except KeyError:
+    def get_latest_bucket_keys(self):
         latest_keys = []
+        yesterday = (datetime.utcnow().date() - timedelta(days=1)).strftime('%Y%m%d')
 
-    for r in ['images280']:
-        imgs = sorted(maps_json[r].items(), key=lambda x: x[0], reverse=True)
-        res = r[-3:]
-        for ts, url in imgs:
-            dt = datetime.strptime(ts, '%Y:%m:%d:%H:%M')
-            d = dt.strftime('%Y%m%d')
-            t = dt.strftime('%H%M')
-            img = http.request('GET', url).data
-            key = '{}{}/{}/{}.png'.format(IMG_PREFIX, d, t, res)
+        try:
+            latest_imgs = self.s3.list_objects_v2(Bucket=self.BUCKET, Prefix=self.IMG_PREFIX, StartAfter=self.IMG_PREFIX + yesterday)['Contents']
+            latest_keys = [i['Key'] for i in latest_imgs]
+        except KeyError:
+            pass
 
-            if latest_keys:
-                if key not in latest_keys:
-                    client.put_object(Bucket=BUCKET, Key=key, Body=img, ContentType='image/png', CacheControl='public, max-age=31536000')
-                    latest_keys.append(key)
-                    response += 'Put {}, '.format(key)
-                else:
-                    response += 'Skipping {}, '.format(key)
-            else:
-                try:
-                    _ = client.head_object(Bucket=BUCKET, Key=key)
-                    response += 'Skipping {}, '.format(key)
-                except:
-                    client.put_object(Bucket=BUCKET, Key=key, Body=img)
-                    latest_keys.append(key)
-                    response += 'Put {}, '.format(key)
+        return latest_keys
 
-    if latest_keys:
-        index = {}
-        for r in ['280']:
-            keys = sorted(list(filter(lambda k: k.endswith('{}.png'.format(r)), latest_keys)))[-10:]
-            index[r] = keys
-        client.put_object(Bucket=BUCKET, Key='imgs.json', Body=json.dumps(index),
-                          ContentType='application/json', CacheControl='public, max-age=60')
+    def fetch_missing_images(self):
+        ftp_imgs = self.get_latest_ftp_images()
+        s3_imgs = self.get_latest_bucket_keys()
+        updated = False
 
-    return response
+        for img in ftp_imgs:
+            key = self.key_from_filename(img)
+            if key not in s3_imgs:
+                self.fetch_image(img, key)
+                updated = True
+
+        return updated
+
+    def fetch_image(self, img_name, key):
+        img = BytesIO()
+        print(f"Downloading {img_name} from FTP")
+        self.ftp.retrbinary(f"RETR {img_name}", img.write)
+        img.seek(0)
+        print(f"Uploading to {key}")
+        self.s3.put_object(Bucket=self.BUCKET, Key=key, Body=img, ContentType='image/png', CacheControl='public, max-age=31536000')
+
+    def key_from_filename(self, filename):
+        _name, date = filename.split(".")[0].split("_")
+        res = 280
+        # date conversion isn't really needed but we do it anyway just to make sure
+        dt = datetime.strptime(date, '%Y%m%d%H%M')
+        d = dt.strftime('%Y%m%d')
+        t = dt.strftime('%H%M')
+        return f'{self.IMG_PREFIX}{d}/{t}/{res}.png'
+
+    def generate_json(self):
+        latest_keys = self.get_latest_bucket_keys()
+        keys = sorted(list(filter(lambda k: k.endswith('280.png'), latest_keys)))[-10:]
+        index = json.dumps({'280': keys})
+        self.s3.put_object(Bucket=self.BUCKET, Key='imgs.json', Body=index, ContentType='application/json', CacheControl='public, max-age=60')
+
+    def run(self):
+        updated = self.fetch_missing_images()
+        if updated:
+            self.generate_json()
+        return f"Updated: {updated}"
 
 
 def update(event, context):
-
-    res = geshem_update()
-
+    with GeshemUpdate() as gu:
+        res = gu.run()
     body = {
         "message": "SUCCESS: \n" + res,
         "input": event
     }
-
     response = {
         "statusCode": 200,
         "body": json.dumps(body)
     }
-
     return response
+
+
+if __name__ == "__main__":
+    with GeshemUpdate() as gu:
+        res = gu.run()
