@@ -9,9 +9,6 @@ import Map from './Map'
 import './Geshem.css';
 import 'rc-slider/assets/index.css';
 
-
-const IMGS_BASE_URL = 'https://imgs.geshem.space/'
-
 function App() {
   return (
     <Router>
@@ -100,7 +97,6 @@ class OldGeshem extends Component {
 
   loadRadarData() {
     axios({
-      url: IMGS_BASE_URL + 'imgs.json',
       method: 'get',
     }).then((res) => {
       this.setState({
@@ -117,7 +113,7 @@ class OldGeshem extends Component {
   addRadarSource(res, i, url) {
     this.map.addSource(`radar-${res}-${i}`, {
       type: 'image',
-      url: IMGS_BASE_URL + url,
+      // url: IMGS_BASE_URL + url,
       coordinates: this.state.rasterCoords[res]
     })
   }
