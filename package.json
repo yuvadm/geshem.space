@@ -11,12 +11,12 @@
   "dependencies": {
     "axios": "^0.19.0",
     "luxon": "^1.7.1",
-    "mapbox-gl": "^0.51.0",
-    "rc-slider": "^8.6.3",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
-    "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.1"
+    "mapbox-gl": "^1.4.1",
+    "rc-slider": "^8.7.1",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-mapbox-gl": "^4.6.1",
+    "react-scripts": "3.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -31,12 +31,18 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
     "serverless": "^1.44.1"
   }
