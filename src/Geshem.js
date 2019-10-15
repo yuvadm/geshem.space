@@ -12,9 +12,10 @@ import './Geshem.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'rc-slider/assets/index.css';
 
+const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZmkwbHcifQ.UHtLngbKm9O8945pJm23Nw';
+
 const Map = ReactMapboxGl({
-  accessToken:
-    'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZmkwbHcifQ.UHtLngbKm9O8945pJm23Nw',
+  accessToken: MAPBOX_ACCESS_TOKEN,
   minZoom: 5,
   maxZoom: 10,
   hash: false,
