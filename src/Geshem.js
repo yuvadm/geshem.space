@@ -1,15 +1,24 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import React, { useState, Component } from 'react';
+import { BrowserRouter as Router, Route } from "react-router-dom"
+;
 import Slider from 'rc-slider';
 import { DateTime } from 'luxon';
 import axios from 'axios';
+
 import mapboxgl from 'mapbox-gl';
+import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
 
 import './Geshem.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'rc-slider/assets/index.css';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZmkwbHcifQ.UHtLngbKm9O8945pJm23Nw';
+const Map = ReactMapboxGl({
+  accessToken:
+    'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZmkwbHcifQ.UHtLngbKm9O8945pJm23Nw',
+  minZoom: 5,
+  maxZoom: 10,
+  hash: false,
+});
 
 const IMGS_BASE_URL = 'https://imgs.geshem.space/'
 
@@ -23,8 +32,21 @@ function App() {
   );
 }
 
+function Geshem() {
+  const [center, setCenter] = useState([35, 31.9]);
+  const [zoom, setZoom] = useState([6.3]);
 
-class Geshem extends Component {
+  return (
+    <Map style="mapbox://styles/mapbox/dark-v9" center={center} zoom={zoom}
+      containerStyle={{
+        height: '100vh',
+        width: '100vw'
+      }}
+    ></Map>
+  );
+}
+
+class OldGeshem extends Component {
 
   constructor(props) {
     super(props);
@@ -153,16 +175,6 @@ class Geshem extends Component {
 
   initMap() {
     const { lng, lat, zoom } = this.state;
-
-    this.map = new mapboxgl.Map({
-      container: this.mapContainer,
-      style: 'mapbox://styles/mapbox/dark-v9',
-      maxZoom: 10,
-      minZoom: 5,
-      center: [lng, lat],
-      zoom: zoom,
-      hash: false
-    });
 
     this.map.on('style.load', () => {
       this.setState({
