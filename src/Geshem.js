@@ -51,7 +51,7 @@ function Geshem(props) {
 
     if (playback) buildPlayback();
     else fetchImages();
-  }, []);
+  }, [playback]);
 
   return (
     <>
