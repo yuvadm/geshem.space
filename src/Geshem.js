@@ -38,12 +38,8 @@ function Geshem(props) {
   return (
     <>
       <Map images={images} slider={slider} />
-      <div id="datetime">
-        <DateTime images={images} slider={slider} />
-      </div>
-      <div id="slider">
-        <Slider slider={slider} playback={playback} setSlider={setSlider} />
-      </div>
+      <DateTime images={images} slider={slider} />
+      <Slider slider={slider} playback={playback} setSlider={setSlider} />
     </>
   );
 }

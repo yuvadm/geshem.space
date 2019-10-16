@@ -16,10 +16,10 @@ function DateTime(props) {
   const time = datetime ? datetime.toFormat("HH:mm") : "";
 
   return (
-    <>
+    <div id="datetime">
       <div id="date">{date}</div>
       <div id="time">{time}</div>
-    </>
+    </div>
   );
 }
 

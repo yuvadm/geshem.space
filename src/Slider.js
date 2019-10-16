@@ -20,15 +20,17 @@ function Slider(props) {
   };
 
   return (
-    <RcSlider
-      mix={0}
-      max={props.playback ? 143 : 9}
-      defaultValue={props.slider}
-      handleStyle={handleStyle}
-      railStyle={railStyle}
-      trackStyle={trackStyle}
-      onChange={val => props.setSlider(val)}
-    />
+    <div id="slider">
+      <RcSlider
+        mix={0}
+        max={props.playback ? 143 : 9}
+        defaultValue={props.slider}
+        handleStyle={handleStyle}
+        railStyle={railStyle}
+        trackStyle={trackStyle}
+        onChange={val => props.setSlider(val)}
+      />
+    </div>
   );
 }
 
