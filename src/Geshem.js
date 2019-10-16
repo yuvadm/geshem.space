@@ -32,7 +32,25 @@ function Geshem(props) {
       const imgs = await res.json();
       setImages(imgs["280"]);
     };
-    fetchImages();
+
+    const buildPlayback = async () => {
+      const date = playback;
+      const hours = [...Array(24).keys()].map(
+        h => `${String(h).padStart(2, "0")}`
+      );
+      const minutes = [...Array(6).keys()].map(
+        m => `${String(m * 10).padStart(2, "0")}`
+      );
+      const paths = hours.reduce(
+        (acc, h) =>
+          acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/280.png`)),
+        []
+      );
+      setImages(paths);
+    };
+
+    if (playback) buildPlayback();
+    else fetchImages();
   }, []);
 
   return (
@@ -62,38 +80,6 @@ class OldGeshem extends Component {
         }
       });
     }
-  }
-
-  loadPlaybackData() {
-    const date = this.state.playback;
-    const hours = [...Array(24).keys()].map(
-      h => `${String(h).padStart(2, "0")}`
-    );
-    const minutes = [...Array(6).keys()].map(
-      m => `${String(m * 10).padStart(2, "0")}`
-    );
-    const paths = hours.reduce(
-      (acc, h) => acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/280.png`)),
-      []
-    );
-    this.setState({
-      imgs: { "280": paths }
-    });
-    if (this.state.mapLoaded) {
-      this.loadSources();
-    }
-  }
-
-  render() {
-    return (
-      <div id="geshem">
-        <div
-          id="map"
-          ref={el => (this.mapContainer = el)}
-          className="absolute top right left bottom"
-        />
-      </div>
-    );
   }
 }
 
