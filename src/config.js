@@ -1,8 +1,9 @@
 const DEVELOPMENT = process.env.NODE_ENV === "development";
 
-const IMAGES_BASE_URL = DEVELOPMENT ? '' : 'https://imgs.geshem.space';
+const IMAGES_BASE_URL = DEVELOPMENT ? "" : "https://imgs.geshem.space";
 
-const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZmkwbHcifQ.UHtLngbKm9O8945pJm23Nw';
+const MAPBOX_ACCESS_TOKEN =
+  "pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZmkwbHcifQ.UHtLngbKm9O8945pJm23Nw";
 
 const IMAGE_COORDINATES = [
   [31.7503896894, 34.4878044232],

@@ -1,13 +1,14 @@
-import React, { useState, Component } from 'react';
+import React, { useState, useEffect, Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Slider from 'rc-slider';
-import { DateTime } from 'luxon';
-import axios from 'axios';
+import Slider from "rc-slider";
+import { DateTime } from "luxon";
+import axios from "axios";
 
-import Map from './Map'
+import Map from "./Map";
+import { IMAGES_BASE_URL } from "./config";
 
-import './Geshem.css';
-import 'rc-slider/assets/index.css';
+import "./Geshem.css";
+import "rc-slider/assets/index.css";
 
 function App() {
   return (
@@ -19,16 +20,25 @@ function App() {
 }
 
 function Geshem() {
-  return (
-    <Map />
-  )
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const res = await fetch(`${IMAGES_BASE_URL}/imgs.json`);
+      const imgs = await res.json();
+      setImages(imgs["280"]);
+    };
+    fetchImages();
+  }, []);
+
+  return <Map images={images} />;
 }
 
 class OldGeshem extends Component {
-
   constructor(props) {
     super(props);
-    const playback = props.match.params.date || window.location.search.slice(-8) || false;
+    const playback =
+      props.match.params.date || window.location.search.slice(-8) || false;
     this.state = {
       mapLoaded: false,
       imgs: null,
@@ -45,14 +55,14 @@ class OldGeshem extends Component {
           [37.7157066403, 29.4538271687],
           [31.9347389087, 29.4373462909]
         ]
-      },
+      }
     };
   }
 
   getGeolocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const {longitude, latitude} = pos.coords;
+      navigator.geolocation.getCurrentPosition(pos => {
+        const { longitude, latitude } = pos.coords;
         this.setState({
           lng: longitude,
           lat: latitude,
@@ -64,31 +74,34 @@ class OldGeshem extends Component {
             zoom: 11
           });
         }
-      })
+      });
     }
   }
 
   loadSources() {
     const { imgs } = this.state;
     let i = 0;
-    while (i < imgs['280'].length) {
-      this.addRadarSource('280', i, imgs['280'][i])
-      this.addRadarLayer('280', i++)
+    while (i < imgs["280"].length) {
+      this.addRadarSource("280", i, imgs["280"][i]);
+      this.addRadarLayer("280", i++);
     }
-    this.showRadarLayer('280', 9)
+    this.showRadarLayer("280", 9);
   }
 
   loadPlaybackData() {
     const date = this.state.playback;
-    const hours = [...Array(24).keys()].map(h => `${String(h).padStart(2, '0')}`);
-    const minutes = [...Array(6).keys()].map(m => `${String(m * 10).padStart(2, '0')}`);
-    const paths = hours.reduce((acc, h) => acc.concat(
-      minutes.map(
-        m => `imgs/${date}/${h}${m}/280.png`
-      )
-    ), []);
+    const hours = [...Array(24).keys()].map(
+      h => `${String(h).padStart(2, "0")}`
+    );
+    const minutes = [...Array(6).keys()].map(
+      m => `${String(m * 10).padStart(2, "0")}`
+    );
+    const paths = hours.reduce(
+      (acc, h) => acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/280.png`)),
+      []
+    );
     this.setState({
-      imgs: {'280': paths}
+      imgs: { "280": paths }
     });
     if (this.state.mapLoaded) {
       this.loadSources();
@@ -97,51 +110,31 @@ class OldGeshem extends Component {
 
   loadRadarData() {
     axios({
-      method: 'get',
-    }).then((res) => {
-      this.setState({
-        imgs: res.data
-      })
-      if (this.state.mapLoaded) {
-        this.loadSources();
-      }
-    }).catch(function(error) {
-      console.log(error)
+      method: "get"
     })
-  }
-
-  addRadarSource(res, i, url) {
-    this.map.addSource(`radar-${res}-${i}`, {
-      type: 'image',
-      // url: IMGS_BASE_URL + url,
-      coordinates: this.state.rasterCoords[res]
-    })
-  }
-
-  addRadarLayer(res, i) {
-    this.map.addLayer({
-      id: `radar-${res}-${i}`,
-      source: `radar-${res}-${i}`,
-      type: 'raster',
-      paint: {
-        'raster-opacity': 0,
-        'raster-opacity-transition': {
-          'duration': 0
+      .then(res => {
+        this.setState({
+          imgs: res.data
+        });
+        if (this.state.mapLoaded) {
+          this.loadSources();
         }
-      }
-    })
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   }
 
   showRadarLayer(res, i) {
-    this.map.setPaintProperty(`radar-${res}-${i}`, 'raster-opacity', 0.85);
+    this.map.setPaintProperty(`radar-${res}-${i}`, "raster-opacity", 0.85);
   }
 
   hideRadarLayer(res, i) {
-    this.map.setPaintProperty(`radar-${res}-${i}`, 'raster-opacity', 0);
+    this.map.setPaintProperty(`radar-${res}-${i}`, "raster-opacity", 0);
   }
 
   removeRadarLayer(res, i) {
-    this.map.removeLayer(`radar-${res}-${i}`)
+    this.map.removeLayer(`radar-${res}-${i}`);
   }
 
   onChangeSlider(val) {
@@ -153,7 +146,7 @@ class OldGeshem extends Component {
   initMap() {
     const { lng, lat, zoom } = this.state;
 
-    this.map.on('style.load', () => {
+    this.map.on("style.load", () => {
       this.setState({
         mapLoaded: true
       });
@@ -167,22 +160,23 @@ class OldGeshem extends Component {
     // this.getGeolocation();
     if (this.state.playback) {
       this.loadPlaybackData();
-    }
-    else {
+    } else {
       this.loadRadarData();
     }
     this.initMap();
   }
 
   getDateTime() {
-    const {imgs, res, slider} = this.state;
+    const { imgs, res, slider } = this.state;
 
     if (imgs === null) {
       return null;
     }
 
     const ds = imgs[res][slider].substr(5, 13);
-    return DateTime.fromFormat(ds, 'yyyyMMdd/HHmm', {zone: 'utc'}).setZone('Asia/Jerusalem');
+    return DateTime.fromFormat(ds, "yyyyMMdd/HHmm", { zone: "utc" }).setZone(
+      "Asia/Jerusalem"
+    );
   }
 
   render() {
@@ -192,32 +186,43 @@ class OldGeshem extends Component {
       border: 0,
       marginTop: -10,
       marginLeft: -20,
-      boxShadow: '.5px .5px 2px 1px rgba(0,0,0,.32)'
-    }
+      boxShadow: ".5px .5px 2px 1px rgba(0,0,0,.32)"
+    };
 
     const railStyle = {
       height: 20,
-      backgroundColor: '#3498db'
-    }
+      backgroundColor: "#3498db"
+    };
 
-    const trackStyle={
-      display: 'none'
-    }
+    const trackStyle = {
+      display: "none"
+    };
 
     const datetime = this.getDateTime();
-    const date = datetime ? datetime.toFormat('dd-MM-y') : '';
-    const time = datetime ? datetime.toFormat('HH:mm') : '';
+    const date = datetime ? datetime.toFormat("dd-MM-y") : "";
+    const time = datetime ? datetime.toFormat("HH:mm") : "";
 
     return (
       <div id="geshem">
-        <div id="map" ref={el => this.mapContainer = el} className="absolute top right left bottom" />
+        <div
+          id="map"
+          ref={el => (this.mapContainer = el)}
+          className="absolute top right left bottom"
+        />
         <div id="datetime">
-          <div id="date">{ date }</div>
-          <div id="time">{ time }</div>
+          <div id="date">{date}</div>
+          <div id="time">{time}</div>
         </div>
         <div id="slider">
-          <Slider mix={0} max={this.state.playback ? 143 : 9} defaultValue={this.state.slider} handleStyle={handleStyle}
-            railStyle={railStyle} trackStyle={trackStyle} onChange={(val) => this.onChangeSlider(val)}/>
+          <Slider
+            mix={0}
+            max={this.state.playback ? 143 : 9}
+            defaultValue={this.state.slider}
+            handleStyle={handleStyle}
+            railStyle={railStyle}
+            trackStyle={trackStyle}
+            onChange={val => this.onChangeSlider(val)}
+          />
         </div>
       </div>
     );
