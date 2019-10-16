@@ -88,47 +88,6 @@ class OldGeshem extends Component {
     }
   }
 
-  showRadarLayer(res, i) {
-    this.map.setPaintProperty(`radar-${res}-${i}`, "raster-opacity", 0.85);
-  }
-
-  hideRadarLayer(res, i) {
-    this.map.setPaintProperty(`radar-${res}-${i}`, "raster-opacity", 0);
-  }
-
-  removeRadarLayer(res, i) {
-    this.map.removeLayer(`radar-${res}-${i}`);
-  }
-
-  onChangeSlider(val) {
-    this.hideRadarLayer(this.state.res, this.state.slider);
-    this.setState({ slider: val });
-    this.showRadarLayer(this.state.res, val);
-  }
-
-  initMap() {
-    const { lng, lat, zoom } = this.state;
-
-    this.map.on("style.load", () => {
-      this.setState({
-        mapLoaded: true
-      });
-      if (this.state.imgs !== null) {
-        this.loadSources();
-      }
-    });
-  }
-
-  componentDidMount() {
-    // this.getGeolocation();
-    if (this.state.playback) {
-      this.loadPlaybackData();
-    } else {
-      this.loadRadarData();
-    }
-    this.initMap();
-  }
-
   render() {
     return (
       <div id="geshem">

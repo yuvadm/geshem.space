@@ -45,7 +45,7 @@ function Map(props) {
               sourceId={id}
               type="raster"
               paint={{
-                "raster-opacity": i == props.slider ? 1 : 0,
+                "raster-opacity": i == props.slider ? 0.85 : 0,
                 "raster-opacity-transition": {
                   duration: 0
                 }
