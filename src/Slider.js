@@ -7,7 +7,6 @@ function Slider(props) {
     width: 40,
     border: 0,
     marginTop: -10,
-    marginLeft: -20,
     boxShadow: ".5px .5px 2px 1px rgba(0,0,0,.32)"
   };
 
