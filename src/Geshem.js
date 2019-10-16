@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { DateTime } from "luxon";
-import axios from "axios";
 
 import Map from "./Map";
 import Slider from "./Slider";
+import DateTime from "./Datetime";
+
 import { IMAGES_BASE_URL } from "./config";
 
 import "./Geshem.css";
@@ -21,7 +21,7 @@ function App() {
 
 function Geshem(props) {
   const [images, setImages] = useState([]);
-  const [playback, setPlayback] = useState(
+  const [playback] = useState(
     props.match.params.date || window.location.search.slice(-8) || false
   );
   const [slider, setSlider] = useState(playback ? 143 : 9);
@@ -38,6 +38,9 @@ function Geshem(props) {
   return (
     <>
       <Map images={images} slider={slider} />
+      <div id="datetime">
+        <DateTime images={images} slider={slider} />
+      </div>
       <div id="slider">
         <Slider slider={slider} playback={playback} setSlider={setSlider} />
       </div>
@@ -126,24 +129,7 @@ class OldGeshem extends Component {
     this.initMap();
   }
 
-  getDateTime() {
-    const { imgs, res, slider } = this.state;
-
-    if (imgs === null) {
-      return null;
-    }
-
-    const ds = imgs[res][slider].substr(5, 13);
-    return DateTime.fromFormat(ds, "yyyyMMdd/HHmm", { zone: "utc" }).setZone(
-      "Asia/Jerusalem"
-    );
-  }
-
   render() {
-    const datetime = this.getDateTime();
-    const date = datetime ? datetime.toFormat("dd-MM-y") : "";
-    const time = datetime ? datetime.toFormat("HH:mm") : "";
-
     return (
       <div id="geshem">
         <div
@@ -151,10 +137,6 @@ class OldGeshem extends Component {
           ref={el => (this.mapContainer = el)}
           className="absolute top right left bottom"
         />
-        <div id="datetime">
-          <div id="date">{date}</div>
-          <div id="time">{time}</div>
-        </div>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import ReactMapboxGl, { Layer, Source } from "react-mapbox-gl";
 
 import { MAPBOX_ACCESS_TOKEN, IMAGE_COORDINATES } from "./config";
@@ -13,8 +13,8 @@ const Mapbox = ReactMapboxGl({
 });
 
 function Map(props) {
-  const [center, setCenter] = useState([35, 31.9]);
-  const [zoom, setZoom] = useState([6.3]);
+  const [center] = useState([35, 31.9]);
+  const [zoom] = useState([6.3]);
 
   return (
     <Mapbox
