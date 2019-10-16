@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import ReactMapboxGl, { Layer, Source } from "react-mapbox-gl";
 
 import { MAPBOX_ACCESS_TOKEN, IMAGE_COORDINATES } from "./config";
@@ -29,9 +29,10 @@ function Map(props) {
       {props.images.map((img, i) => {
         const id = `radar-280-${i}`;
         return (
-          <>
+          <Fragment key={`image-${id}`}>
             <Source
               id={id}
+              key={`source-${id}`}
               tileJsonSource={{
                 type: "image",
                 url: img,
@@ -40,16 +41,17 @@ function Map(props) {
             />
             <Layer
               id={id}
+              key={`layer-${id}`}
               sourceId={id}
               type="raster"
               paint={{
-                "raster-opacity": i == 0 ? 1 : 0,
+                "raster-opacity": i == props.slider ? 1 : 0,
                 "raster-opacity-transition": {
                   duration: 0
                 }
               }}
             />
-          </>
+          </Fragment>
         );
       })}
     </Mapbox>

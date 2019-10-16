@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Slider from "rc-slider";
 import { DateTime } from "luxon";
 import axios from "axios";
 
 import Map from "./Map";
+import Slider from "./Slider";
 import { IMAGES_BASE_URL } from "./config";
 
 import "./Geshem.css";
@@ -19,8 +19,12 @@ function App() {
   );
 }
 
-function Geshem() {
+function Geshem(props) {
   const [images, setImages] = useState([]);
+  const [playback, setPlayback] = useState(
+    props.match.params.date || window.location.search.slice(-8) || false
+  );
+  const [slider, setSlider] = useState(playback ? 143 : 9);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -31,34 +35,17 @@ function Geshem() {
     fetchImages();
   }, []);
 
-  return <Map images={images} />;
+  return (
+    <>
+      <Map images={images} slider={slider} />
+      <div id="slider">
+        <Slider slider={slider} playback={playback} setSlider={setSlider} />
+      </div>
+    </>
+  );
 }
 
 class OldGeshem extends Component {
-  constructor(props) {
-    super(props);
-    const playback =
-      props.match.params.date || window.location.search.slice(-8) || false;
-    this.state = {
-      mapLoaded: false,
-      imgs: null,
-      playback: playback,
-      res: 280,
-      slider: playback ? 143 : 9,
-      lng: 35,
-      lat: 31.9,
-      zoom: 6.3,
-      rasterCoords: {
-        280: [
-          [31.7503896894, 34.4878044232],
-          [37.8574239563, 34.5078463729],
-          [37.7157066403, 29.4538271687],
-          [31.9347389087, 29.4373462909]
-        ]
-      }
-    };
-  }
-
   getGeolocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
@@ -76,16 +63,6 @@ class OldGeshem extends Component {
         }
       });
     }
-  }
-
-  loadSources() {
-    const { imgs } = this.state;
-    let i = 0;
-    while (i < imgs["280"].length) {
-      this.addRadarSource("280", i, imgs["280"][i]);
-      this.addRadarLayer("280", i++);
-    }
-    this.showRadarLayer("280", 9);
   }
 
   loadPlaybackData() {
@@ -106,23 +83,6 @@ class OldGeshem extends Component {
     if (this.state.mapLoaded) {
       this.loadSources();
     }
-  }
-
-  loadRadarData() {
-    axios({
-      method: "get"
-    })
-      .then(res => {
-        this.setState({
-          imgs: res.data
-        });
-        if (this.state.mapLoaded) {
-          this.loadSources();
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
   }
 
   showRadarLayer(res, i) {
@@ -180,24 +140,6 @@ class OldGeshem extends Component {
   }
 
   render() {
-    const handleStyle = {
-      height: 40,
-      width: 40,
-      border: 0,
-      marginTop: -10,
-      marginLeft: -20,
-      boxShadow: ".5px .5px 2px 1px rgba(0,0,0,.32)"
-    };
-
-    const railStyle = {
-      height: 20,
-      backgroundColor: "#3498db"
-    };
-
-    const trackStyle = {
-      display: "none"
-    };
-
     const datetime = this.getDateTime();
     const date = datetime ? datetime.toFormat("dd-MM-y") : "";
     const time = datetime ? datetime.toFormat("HH:mm") : "";
@@ -212,17 +154,6 @@ class OldGeshem extends Component {
         <div id="datetime">
           <div id="date">{date}</div>
           <div id="time">{time}</div>
-        </div>
-        <div id="slider">
-          <Slider
-            mix={0}
-            max={this.state.playback ? 143 : 9}
-            defaultValue={this.state.slider}
-            handleStyle={handleStyle}
-            railStyle={railStyle}
-            trackStyle={trackStyle}
-            onChange={val => this.onChangeSlider(val)}
-          />
         </div>
       </div>
     );
