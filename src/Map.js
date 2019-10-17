@@ -1,7 +1,11 @@
 import React, { Fragment, useState } from "react";
 import ReactMapboxGl, { Layer, Source } from "react-mapbox-gl";
 
-import { MAPBOX_ACCESS_TOKEN, IMAGE_COORDINATES } from "./config";
+import {
+  MAPBOX_ACCESS_TOKEN,
+  IMAGE_COORDINATES,
+  IMAGES_BASE_URL
+} from "./config";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -35,7 +39,7 @@ function Map(props) {
               key={`source-${id}`}
               tileJsonSource={{
                 type: "image",
-                url: img,
+                url: `${IMAGES_BASE_URL}/${img}`,
                 coordinates: IMAGE_COORDINATES
               }}
             />
