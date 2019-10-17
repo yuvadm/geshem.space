@@ -49,8 +49,16 @@ function Geshem(props) {
       setImages(paths);
     };
 
+    let timer;
     if (playback) buildPlayback();
-    else fetchImages();
+    else {
+      fetchImages();
+      timer = setInterval(fetchImages, 60 * 1000);
+    };
+
+    return () => {
+      if (timer !== undefined) clearInterval(timer);
+    }
   }, [playback]);
 
   return (
