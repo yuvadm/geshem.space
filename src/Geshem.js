@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Map from "./Map";
@@ -62,24 +62,22 @@ function Geshem(props) {
   );
 }
 
-class OldGeshem extends Component {
-  getGeolocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(pos => {
-        const { longitude, latitude } = pos.coords;
-        this.setState({
-          lng: longitude,
-          lat: latitude,
+function getGeolocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const { longitude, latitude } = pos.coords;
+      this.setState({
+        lng: longitude,
+        lat: latitude,
+        zoom: 11
+      });
+      if (this.state.mapLoaded) {
+        this.map.jumpTo({
+          center: [longitude, latitude],
           zoom: 11
         });
-        if (this.state.mapLoaded) {
-          this.map.jumpTo({
-            center: [longitude, latitude],
-            zoom: 11
-          });
-        }
-      });
-    }
+      }
+    });
   }
 }
 
