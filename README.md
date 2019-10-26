@@ -9,6 +9,8 @@ The entire service is served off of static assets located in S3 buckets:
  - A static main index page, React-based JS bundle and other static assets that are uploaded upon deploy
  - Radar images that are collected and indexed every minute by a Python recurring task running on AWS Lambda
 
+For some architectural notes on the deployment process go read https://yuv.al/blog/an-architecture-for-periodically-updating-static-websites/
+
 ## Prerequisites
 
  - Node.js
@@ -54,7 +56,3 @@ For testing the cron task:
 ```bash
 $ yarn run invokecron
 ```
-
-## Architecture
-
-For some architectural notes on the deployment process go read https://yuv.al/blog/an-architecture-for-periodically-updating-static-websites/
