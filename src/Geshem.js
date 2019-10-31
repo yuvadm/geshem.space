@@ -22,43 +22,30 @@ function App() {
 function Geshem(props) {
   const [images, setImages] = useState([]);
   const [playback] = useState(
-    props.match.params.date || window.location.search.slice(-8) || false
-  );
+    props.match.params.date || new URL(window.location).searchParams.get('history') || false
+  )
   const [slider, setSlider] = useState(playback ? 143 : 9);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      const res = await fetch(`${IMAGES_BASE_URL}/imgs.json`);
-      const imgs = await res.json();
-      setImages(imgs["280"]);
-    };
+    const fetchImages = async () => setImages(await (
+      fetch(`${IMAGES_BASE_URL}/imgs.json`)
+        .then(res => res.json())
+        .then(imgs => imgs['280'])
+      ))
+    
 
-    const buildPlayback = async () => {
-      const date = playback;
-      const hours = [...Array(24).keys()].map(
-        h => `${String(h).padStart(2, "0")}`
-      );
-      const minutes = [...Array(6).keys()].map(
-        m => `${String(m * 10).padStart(2, "0")}`
-      );
-      const paths = hours.reduce(
-        (acc, h) =>
-          acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/280.png`)),
-        []
-      );
-      setImages(paths);
-    };
+    const buildPlayback = async () => setImages(
+      Array(24)
+        .fill([0,1,2,3,4,5])
+        .flatMap((m, h) => 
+          m.map((_, m) => `imgs/${playback}/${h<10?`0${h}`:h}${m}0/280.png`)
+        )
+    )
 
-    let timer;
-    if (playback) buildPlayback();
-    else {
-      fetchImages();
-      timer = setInterval(fetchImages, 60 * 1000);
-    };
+    return playback ?
+      (buildPlayback(), () => void 0) :
+      (fetchImages(), ((timer) => () => clearTimer(timer))(setInterval(fetchImages, 60 * 1000))
 
-    return () => {
-      if (timer !== undefined) clearInterval(timer);
-    }
   }, [playback]);
 
   return (
@@ -67,7 +54,7 @@ function Geshem(props) {
       <DateTime images={images} slider={slider} />
       <Slider slider={slider} playback={playback} setSlider={setSlider} />
     </>
-  );
+  )
 }
 
 function getGeolocation() {
