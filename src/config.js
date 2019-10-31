@@ -1,6 +1,6 @@
 const hostname = window && window.location && window.location.hostname;
 
-const PRODUCTION = hostname.includes("geshem.space");
+const PRODUCTION = hostname.includes("geshem");
 
 const IMAGES_BASE_URL = PRODUCTION ? "https://imgs.geshem.space" : "";
 
