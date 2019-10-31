@@ -33,20 +33,17 @@ function Geshem(props) {
         .then(imgs => imgs['280'])
       ))
     
-
     const buildPlayback = async () => setImages(
-      Array(24)
-        .fill([0,1,2,3,4,5])
-        .flatMap((m, h) => 
-          m.map((_, m) => `imgs/${playback}/${h<10?`0${h}`:h}${m}0/280.png`)
-        )
+      Array(24*6)
+        .fill((i) => `imgs/${playback}/${`${parseInt(i/6, 10)%24}`.padStart(2, '0')}${i%6}0/280.png`)
+        .map((f,i) => f(i))
     )
-
+    
     return playback ?
       (buildPlayback(), () => void 0) :
       (fetchImages(), ((timer) => () => clearTimer(timer))(setInterval(fetchImages, 60 * 1000))
 
-  }, [playback]);
+  }, [playback])
 
   return (
     <>
