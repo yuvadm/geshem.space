@@ -35,8 +35,8 @@ function Geshem(props) {
     
     const buildPlayback = async () => setImages(
       Array(24*6)
-        .fill((i) => `imgs/${playback}/${`${parseInt(i/6, 10)%24}`.padStart(2, '0')}${i%6}0/280.png`)
-        .map((f,i) => f(i))
+        .fill('')
+        .map((_,i) => `imgs/${playback}/${`${parseInt(i/6, 10)%24}`.padStart(2, '0')}${i%6}0/280.png`)
     )
     
     return playback ?
