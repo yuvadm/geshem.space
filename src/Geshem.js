@@ -27,11 +27,12 @@ function Geshem(props) {
   const [slider, setSlider] = useState(playback ? 143 : 9);
 
   useEffect(() => {
-    const fetchImages = async () => setImages(await (
+    const fetchImages = async () => 
       fetch(`${IMAGES_BASE_URL}/imgs.json`)
         .then(res => res.json())
         .then(imgs => imgs['280'])
-      ))
+        .then(setImages)
+    )
     
     const buildPlayback = async () => setImages(
       Array(24*6)
