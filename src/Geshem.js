@@ -22,16 +22,18 @@ function App() {
 function Geshem(props) {
   const [images, setImages] = useState([]);
   const [playback] = useState(
-    props.match.params.date || window.location.search.slice(-8) || false
+    props.match.params.date ||
+      new URL(window.location).searchParams.get("history") ||
+      false
   );
   const [slider, setSlider] = useState(playback ? 143 : 9);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      const res = await fetch(`${IMAGES_BASE_URL}/imgs.json`);
-      const imgs = await res.json();
-      setImages(imgs["280"]);
-    };
+    const fetchImages = async () =>
+      fetch(`${IMAGES_BASE_URL}/imgs.json`)
+        .then(res => res.json())
+        .then(imgs => imgs["280"])
+        .then(setImages);
 
     const buildPlayback = async () => {
       const date = playback;
@@ -54,11 +56,11 @@ function Geshem(props) {
     else {
       fetchImages();
       timer = setInterval(fetchImages, 60 * 1000);
-    };
+    }
 
     return () => {
       if (timer !== undefined) clearInterval(timer);
-    }
+    };
   }, [playback]);
 
   return (
