@@ -22,44 +22,29 @@ function App() {
 function Geshem(props) {
   const [images, setImages] = useState([]);
   const [playback] = useState(
-    props.match.params.date || window.location.search.slice(-8) || false
-  );
+    props.match.params.date || new URL(window.location).searchParams.get('history') || false
+  )
   const [slider, setSlider] = useState(playback ? 143 : 9);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      const res = await fetch(`${IMAGES_BASE_URL}/imgs.json`);
-      const imgs = await res.json();
-      setImages(imgs["280"]);
-    };
+    const fetchImages = async () => 
+      fetch(`${IMAGES_BASE_URL}/imgs.json`)
+        .then(res => res.json())
+        .then(imgs => imgs['280'])
+        .then(setImages)
+    )
+    
+    const buildPlayback = async () => setImages(
+      Array(24*6)
+        .fill('')
+        .map((_,i) => `imgs/${playback}/${`${parseInt(i/6, 10)%24}`.padStart(2, '0')}${i%6}0/280.png`)
+    )
+    
+    return playback ?
+      (buildPlayback(), () => void 0) :
+      (fetchImages(), ((timer) => () => clearTimer(timer))(setInterval(fetchImages, 60 * 1000))
 
-    const buildPlayback = async () => {
-      const date = playback;
-      const hours = [...Array(24).keys()].map(
-        h => `${String(h).padStart(2, "0")}`
-      );
-      const minutes = [...Array(6).keys()].map(
-        m => `${String(m * 10).padStart(2, "0")}`
-      );
-      const paths = hours.reduce(
-        (acc, h) =>
-          acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/280.png`)),
-        []
-      );
-      setImages(paths);
-    };
-
-    let timer;
-    if (playback) buildPlayback();
-    else {
-      fetchImages();
-      timer = setInterval(fetchImages, 60 * 1000);
-    };
-
-    return () => {
-      if (timer !== undefined) clearInterval(timer);
-    }
-  }, [playback]);
+  }, [playback])
 
   return (
     <>
@@ -67,7 +52,7 @@ function Geshem(props) {
       <DateTime images={images} slider={slider} />
       <Slider slider={slider} playback={playback} setSlider={setSlider} />
     </>
-  );
+  )
 }
 
 function getGeolocation() {
