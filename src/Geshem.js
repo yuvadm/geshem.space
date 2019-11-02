@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import Map from "./Map";
 import Slider from "./Slider";
 import DateTime from "./Datetime";
+import Info from "./Info";
 
 import { IMAGES_BASE_URL } from "./config";
 
@@ -68,6 +69,7 @@ function Geshem(props) {
       <Map images={images} slider={slider} />
       <DateTime images={images} slider={slider} />
       <Slider slider={slider} playback={playback} setSlider={setSlider} />
+      <Info />
     </>
   );
 }
