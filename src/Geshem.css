@@ -31,6 +31,17 @@
   background: #777;
 }
 
+#info-eng {
+  width: 50%;
+  float: left;
+}
+
+#info-heb {
+  width: 50%;
+  direction: rtl;
+  float: right;
+}
+
 #date {
   font-size: 1.4em;
 }
