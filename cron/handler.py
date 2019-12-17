@@ -1,9 +1,12 @@
-import boto3
 import json
 import re
 
+import boto3
+import requests
+
+from requests_ntlm import HttpNtlmAuth
+
 from datetime import datetime, timedelta
-from ftplib import FTP
 from io import BytesIO
 from os import environ
 
@@ -11,31 +14,20 @@ from os import environ
 class GeshemUpdate():
 
     def __init__(self):
-        self.ftp = None
         self.s3 = boto3.client('s3')
         self.BUCKET = 'imgs.geshem.space'
         self.IMG_PREFIX = 'imgs/'
 
-    def __enter__(self):
-        self.init_ftp()
-        return self
+        self.BASE_URL = environ.get("BASE_URL")
+        self.NTLM_AUTH = (environ.get("AUTH_USER"), environ.get("AUTH_PASS"))
 
-    def __exit__(self, *args):
-        if self.ftp:
-            self.ftp.quit()
+        self.session = requests.Session()
+        self.session.auth = HttpNtlmAuth(*self.NTLM_AUTH)
 
-    def init_ftp(self):
-        host = environ.get("FTP_HOST")
-        username = environ.get("FTP_USERNAME")
-        password = environ.get("FTP_PASSWORD")
-        if all([host, username, password]):
-            self.ftp = FTP(host)
-            self.ftp.login(username, password)
-            self.ftp.cwd("From_IMS")
-            print("Logged in to FTP server...")
-
-    def get_latest_ftp_images(self):
-        return sorted(list(self.ftp.nlst()))[-10:]
+    def get_latest_images(self):
+        imgres = self.session.get(self.BASE_URL)
+        imgs = list(set(re.findall(r"radar280comp_\d+.png", imgres.text)))
+        return sorted(imgs[-10:])
 
     def get_latest_bucket_keys(self):
         latest_keys = []
@@ -50,7 +42,7 @@ class GeshemUpdate():
         return latest_keys
 
     def fetch_missing_images(self):
-        ftp_imgs = self.get_latest_ftp_images()
+        ftp_imgs = self.get_latest_images()
         s3_imgs = self.get_latest_bucket_keys()
         updated = False
 
@@ -63,10 +55,8 @@ class GeshemUpdate():
         return updated
 
     def fetch_image(self, img_name, key):
-        img = BytesIO()
-        print(f"Downloading {img_name} from FTP")
-        self.ftp.retrbinary(f"RETR {img_name}", img.write)
-        img.seek(0)
+        print(f"Downloading {img_name} from web server")
+        img = self.session.get(f"{self.BASE_URL}/{img_name}").content
         print(f"Uploading to {key}")
         self.s3.put_object(Bucket=self.BUCKET, Key=key, Body=img, ContentType='image/png', CacheControl='public, max-age=31536000')
 
