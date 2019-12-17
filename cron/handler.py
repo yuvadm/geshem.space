@@ -42,11 +42,11 @@ class GeshemUpdate():
         return latest_keys
 
     def fetch_missing_images(self):
-        ftp_imgs = self.get_latest_images()
+        imgs = self.get_latest_images()
         s3_imgs = self.get_latest_bucket_keys()
         updated = False
 
-        for img in ftp_imgs:
+        for img in imgs:
             key = self.key_from_filename(img)
             if key not in s3_imgs:
                 self.fetch_image(img, key)
