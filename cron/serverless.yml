@@ -19,9 +19,6 @@ functions:
     handler: handler.update
     events:
       - schedule: rate(1 minute)
-    package:
-      include:
-        - venv/lib/python3.8/site-packages/**
 
 plugins:
   - serverless-python-requirements
