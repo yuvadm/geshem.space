@@ -36,14 +36,10 @@ Deployment is handled transparently via Netlify.
 
 ```bash
 $ cd cron
-$ python -m venv venv
-$ source venv/bin/activate
-$ pip install requests-ntlm
+$ pipenv install
 ```
 
 #### Deploy
-
-The `venv` must be populated with packages before deployment, then:
 
 ```bash
 $ yarn run deploycron
