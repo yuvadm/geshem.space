@@ -1,4 +1,4 @@
-service: cron
+service: geshem
 
 provider:
   name: aws
