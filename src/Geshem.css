@@ -25,10 +25,18 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  /* bring your own prefixes */
   transform: translate(-50%, -50%);
-  padding: 30px;
+  padding: 15px 30px;
   background: #777;
+  max-height: 40vh;
+  overflow-y: scroll;
+}
+
+@media only screen and (max-device-width: 812px) {
+  #info-modal {
+    padding: 0px 12px;
+    width: 70vw;
+  }
 }
 
 #info-eng {
@@ -62,4 +70,9 @@
     width: 80vw;
     margin-left: 8vw;
   }
+}
+
+a,
+a:visited {
+  color: #79b0d4;
 }
