@@ -27,7 +27,7 @@ class GeshemUpdate():
     def get_latest_images(self):
         imgres = self.session.get(self.BASE_URL)
         imgs = list(set(re.findall(r"radar280comp_\d+.png", imgres.text)))
-        return sorted(imgs[-10:])
+        return sorted(imgs)[-10:]
 
     def get_latest_bucket_keys(self):
         latest_keys = []
