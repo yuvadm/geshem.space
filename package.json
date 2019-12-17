@@ -45,7 +45,7 @@
     ]
   },
   "devDependencies": {
-    "serverless": "^1.44.1"
+    "serverless": "^1.59.3"
   },
   "proxy": "https://imgs.geshem.space/"
 }
