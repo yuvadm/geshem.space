@@ -2,7 +2,7 @@ service: cron
 
 provider:
   name: aws
-  runtime: python3.7
+  runtime: python3.8
   region: eu-west-1
   memorySize: 128
   timeout: 20
@@ -19,3 +19,6 @@ functions:
     handler: handler.update
     events:
       - schedule: rate(1 minute)
+    package:
+      include:
+        - venv/lib/python3.8/site-packages/**
