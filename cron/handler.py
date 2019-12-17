@@ -83,8 +83,7 @@ class GeshemUpdate():
 
 
 def update(event, context):
-    with GeshemUpdate() as gu:
-        res = gu.run()
+    res = GeshemUpdate().run()
     body = {
         "message": "SUCCESS: \n" + res,
         "input": event
@@ -97,5 +96,4 @@ def update(event, context):
 
 
 if __name__ == "__main__":
-    with GeshemUpdate() as gu:
-        res = gu.run()
+    GeshemUpdate().run()
