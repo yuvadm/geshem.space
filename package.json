@@ -45,7 +45,8 @@
     ]
   },
   "devDependencies": {
-    "serverless": "^1.59.3"
+    "serverless": "^1.59.3",
+    "serverless-python-requirements": "^5.0.1"
   },
   "proxy": "https://imgs.geshem.space/"
 }
