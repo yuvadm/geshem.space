@@ -23,8 +23,8 @@ function Geshem(props) {
   const [images, setImages] = useState([]);
   const [playback] = useState(
     props.match.params.date ||
-      new URL(window.location).searchParams.get("history") ||
-      false
+    new URL(window.location).searchParams.get("history") ||
+    false
   );
   const [slider, setSlider] = useState(playback ? 143 : 9);
 
