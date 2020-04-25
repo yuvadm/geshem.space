@@ -22,8 +22,8 @@ For some architectural notes on the deployment process go read https://yuv.al/bl
 Install dependencies and run dev server:
 
 ```bash
-$ yarn install
-$ yarn start
+$ npm install
+$ npm start
 ```
 
 ### Deploy
@@ -42,7 +42,7 @@ $ pipenv install
 #### Deploy
 
 ```bash
-$ yarn run deploycron
+$ npm run deploycron
 ```
 
 #### Invoke
@@ -50,5 +50,5 @@ $ yarn run deploycron
 For testing the cron task:
 
 ```bash
-$ yarn run invokecron
+$ npm run invokecron
 ```
