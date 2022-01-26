@@ -25,5 +25,6 @@
   #slider {
     width: 80vw;
     margin-left: 8vw;
+    z-index: 10;
   }
 }
