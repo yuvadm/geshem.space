@@ -25,7 +25,7 @@ class GeshemUpdate():
         self.session.auth = HttpNtlmAuth(*self.NTLM_AUTH)
 
     def get_latest_images(self):
-        imgres = self.session.get(self.BASE_URL)
+        imgres = self.session.get(self.BASE_URL, verify=False)
         imgs = list(set(re.findall(r"radar280comp_\d+.png", imgres.text)))
         return sorted(imgs)[-10:]
 
