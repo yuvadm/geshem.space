@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 
 import Map from "./Map";
 import Slider from "./Slider";
@@ -12,18 +12,22 @@ import "rc-slider/assets/index.css";
 
 function App() {
   return (
-    <Router>
-      <Route exact path="/" component={Geshem} />
-      <Route path="/history/:date" component={Geshem} />
-    </Router>
+    <BrowserRouter>
+      <Route path="/" element={<Geshem />} />
+      <Route path="/history/:date" element={<Geshem />} />
+    </BrowserRouter>
   );
 }
 
-function Geshem(props) {
-  const [images, setImages] = useState([]);
+interface GeshemProps {
+  date?: string
+}
+
+function Geshem({ date }: GeshemProps) {
+  const [images, setImages] = useState<string[]>([]);
   const [playback] = useState(
-    props.match.params.date ||
-    new URL(window.location).searchParams.get("history") ||
+    date ||
+    new URL(window.location.toString()).searchParams.get("history") ||
     false
   );
   const [slider, setSlider] = useState(playback ? 143 : 9);
@@ -37,13 +41,13 @@ function Geshem(props) {
 
     const buildPlayback = async () => {
       const date = playback;
-      const hours = [...Array(24).keys()].map(
+      const hours = Array.from(Array(24).keys()).map(
         h => `${String(h).padStart(2, "0")}`
       );
-      const minutes = [...Array(6).keys()].map(
+      const minutes = Array.from(Array(6).keys()).map(
         m => `${String(m * 10).padStart(2, "0")}`
       );
-      const paths = hours.reduce(
+      const paths = hours.reduce<string[]>(
         (acc, h) =>
           acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/280.png`)),
         []
@@ -51,11 +55,11 @@ function Geshem(props) {
       setImages(paths);
     };
 
-    let timer;
+    let timer: number;
     if (playback) buildPlayback();
     else {
       fetchImages();
-      timer = setInterval(fetchImages, 60 * 1000);
+      timer = window.setInterval(fetchImages, 60 * 1000);
     }
 
     return () => {
