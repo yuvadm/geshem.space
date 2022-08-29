@@ -76,23 +76,4 @@ function Geshem({ date }: GeshemProps) {
   );
 }
 
-function getGeolocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(pos => {
-      const { longitude, latitude } = pos.coords;
-      this.setState({
-        lng: longitude,
-        lat: latitude,
-        zoom: 11
-      });
-      if (this.state.mapLoaded) {
-        this.map.jumpTo({
-          center: [longitude, latitude],
-          zoom: 11
-        });
-      }
-    });
-  }
-}
-
 export default App;
