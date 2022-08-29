@@ -17,9 +17,10 @@ interface MapProps {
 
 function Map({ slider, images }: MapProps) {
   const mapContainer = useRef(null);
-  const map = useRef(null);
-  const [center] = useState<mapboxgl.LngLatLike>([35, 31.9]);
-  const [zoom] = useState([6.3]);
+  const map = useRef<mapboxgl.Map>(null);
+  const [lng, setLng] = useState(35);
+  const [lat, setLat] = useState(31.9);
+  const [zoom, setZoom] = useState(6.3);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -27,11 +28,20 @@ function Map({ slider, images }: MapProps) {
       accessToken: MAPBOX_ACCESS_TOKEN,
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/dark-v9",
-      center,
-      zoom,
+      center: [lng, lat],
+      zoom: zoom,
       minZoom: 5,
       maxZoom: 10,
       hash: false,
+    });
+  });
+
+  useEffect(() => {
+    if (!map.current) return; // wait for map to initialize
+    map.current.on('move', () => {
+      setLng(map.current.getCenter().lng.toFixed(4));
+      setLat(map.current.getCenter().lat.toFixed(4));
+      setZoom(map.current.getZoom().toFixed(2));
     });
   });
 
