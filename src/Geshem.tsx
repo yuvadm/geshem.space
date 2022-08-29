@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Map from "./Map";
 import Slider from "./Slider";
@@ -13,8 +13,10 @@ import "rc-slider/assets/index.css";
 function App() {
   return (
     <BrowserRouter>
-      <Route path="/" element={<Geshem />} />
-      <Route path="/history/:date" element={<Geshem />} />
+      <Routes>
+        <Route path="/" element={<Geshem />} />
+        <Route path="/history/:date" element={<Geshem />} />
+      </Routes>
     </BrowserRouter>
   );
 }
