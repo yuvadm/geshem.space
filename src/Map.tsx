@@ -1,6 +1,6 @@
-import React, { Fragment, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // @ts-ignore
-import { mapboxgl, LngLatLike } from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
 import {
   MAPBOX_ACCESS_TOKEN,
@@ -18,15 +18,15 @@ interface MapProps {
 function Map({ slider, images }: MapProps) {
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [center] = useState<LngLatLike>([35, 31.9]);
+  const [center] = useState<mapboxgl.LngLatLike>([35, 31.9]);
   const [zoom] = useState([6.3]);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
-    map.current = new mapboxgl({
+    map.current = new mapboxgl.Map({
       accessToken: MAPBOX_ACCESS_TOKEN,
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v11',
+      style: "mapbox://styles/mapbox/dark-v9",
       center,
       zoom,
       minZoom: 5,
@@ -37,20 +37,15 @@ function Map({ slider, images }: MapProps) {
 
   return (
     <div>
-      <div ref={mapContainer} className="map-container" />
+      <div ref={mapContainer} className="map-container" style={{
+        height: "100vh",
+        width: "100vw"
+      }} />
     </div>
   );
 
   // return (
-  //   <Mapbox
-  //     style="mapbox://styles/mapbox/dark-v9"
-  //     center={center}
-  //     zoom={zoom}
-  //     containerStyle={{
-  //       height: "100vh",
-  //       width: "100vw"
-  //     }}
-  //   >
+  //   <Mapbox >
   //     {images.map((img, i) => {
   //       const id = `radar-280-${i}`;
   //       return (
