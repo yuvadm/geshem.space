@@ -1,5 +1,6 @@
-import React, { Fragment, useState } from "react";
-import ReactMapboxGl, { Layer, Source } from "react-mapbox-gl";
+import React, { Fragment, useState, useEffect, useRef } from "react";
+// @ts-ignore
+import { mapboxgl, LngLatLike } from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
 import {
   MAPBOX_ACCESS_TOKEN,
@@ -9,57 +10,77 @@ import {
 
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const Mapbox = ReactMapboxGl({
-  accessToken: MAPBOX_ACCESS_TOKEN,
-  minZoom: 5,
-  maxZoom: 10,
-  hash: false
-});
+interface MapProps {
+  slider: number,
+  images: string[],
+}
 
-function Map(props) {
-  const [center] = useState([35, 31.9]);
+function Map({ slider, images }: MapProps) {
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const [center] = useState<LngLatLike>([35, 31.9]);
   const [zoom] = useState([6.3]);
 
+  useEffect(() => {
+    if (map.current) return; // initialize map only once
+    map.current = new mapboxgl({
+      accessToken: MAPBOX_ACCESS_TOKEN,
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center,
+      zoom,
+      minZoom: 5,
+      maxZoom: 10,
+      hash: false,
+    });
+  });
+
   return (
-    <Mapbox
-      style="mapbox://styles/mapbox/dark-v9"
-      center={center}
-      zoom={zoom}
-      containerStyle={{
-        height: "100vh",
-        width: "100vw"
-      }}
-    >
-      {props.images.map((img, i) => {
-        const id = `radar-280-${i}`;
-        return (
-          <Fragment key={`image-${id}`}>
-            <Source
-              id={id}
-              key={`source-${id}`}
-              tileJsonSource={{
-                type: "image",
-                url: `${IMAGES_BASE_URL}/${img}`,
-                coordinates: IMAGE_COORDINATES
-              }}
-            />
-            <Layer
-              id={id}
-              key={`layer-${id}`}
-              sourceId={id}
-              type="raster"
-              paint={{
-                "raster-opacity": i === props.slider ? 0.85 : 0,
-                "raster-opacity-transition": {
-                  duration: 0
-                }
-              }}
-            />
-          </Fragment>
-        );
-      })}
-    </Mapbox>
+    <div>
+      <div ref={mapContainer} className="map-container" />
+    </div>
   );
+
+  // return (
+  //   <Mapbox
+  //     style="mapbox://styles/mapbox/dark-v9"
+  //     center={center}
+  //     zoom={zoom}
+  //     containerStyle={{
+  //       height: "100vh",
+  //       width: "100vw"
+  //     }}
+  //   >
+  //     {images.map((img, i) => {
+  //       const id = `radar-280-${i}`;
+  //       return (
+  //         <Fragment key={`image-${id}`}>
+  //           {/* <Source
+  //             id={id}
+  //             key={`source-${id}`}
+  //             tileJsonSource={{
+  //               type: "image",
+  //               url: `${IMAGES_BASE_URL}/${img}`,
+  //               coordinates: IMAGE_COORDINATES
+  //             }}
+  //           />
+  //           <Layer
+  //             id={id}
+  //             key={`layer-${id}`}
+  //             sourceId={id}
+  //             type="raster"
+  //             paint={{
+  //               "raster-opacity": i === slider ? 0.85 : 0,
+  //               "raster-opacity-transition": {
+  //                 duration: 0
+  //               }
+  //             }}
+  //           /> */}
+  //         </Fragment>
+  //       );
+  //     })}
+  //   </Mapbox>
+  // );
 }
 
 export default Map;
