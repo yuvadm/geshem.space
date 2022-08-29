@@ -28,7 +28,7 @@ function Geshem({ date }: GeshemProps) {
   const [playback] = useState(
     date ||
     new URL(window.location.toString()).searchParams.get("history") ||
-    false
+    undefined
   );
   const [slider, setSlider] = useState(playback ? 143 : 9);
 

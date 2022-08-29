@@ -1,7 +1,16 @@
 import React from "react";
-import RcSlider from "rc-slider";
+import RcSlider, { SliderProps, SliderRef } from 'rc-slider/lib/Slider';
 
-function Slider(props) {
+// use workaround from: https://github.com/react-component/slider/issues/835#issuecomment-1201805736
+const CustomSlider = RcSlider as React.ForwardRefExoticComponent<SliderProps<number> & React.RefAttributes<SliderRef>>;
+
+interface GeshemSliderProps {
+  playback?: string,
+  slider: number,
+  setSlider: React.Dispatch<React.SetStateAction<number>>
+}
+
+function Slider({ playback, slider, setSlider }: GeshemSliderProps) {
   const handleStyle = {
     height: 40,
     width: 40,
@@ -21,14 +30,14 @@ function Slider(props) {
 
   return (
     <div id="slider">
-      <RcSlider
-        mix={0}
-        max={props.playback ? 143 : 9}
-        defaultValue={props.slider}
+      <CustomSlider
+        min={0}
+        max={playback ? 143 : 9}
+        defaultValue={slider}
         handleStyle={handleStyle}
         railStyle={railStyle}
         trackStyle={trackStyle}
-        onChange={val => props.setSlider(val)}
+        onChange={val => setSlider(val)}
       />
     </div>
   );
