@@ -22,6 +22,8 @@ function Map({ slider, images }: MapProps) {
   const [lat, setLat] = useState(31.9);
   const [zoom, setZoom] = useState(6.3);
 
+  const prevImages = useRef({ images }).current;
+
   useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
@@ -44,6 +46,11 @@ function Map({ slider, images }: MapProps) {
       setZoom(map.current.getZoom().toFixed(2));
     });
   });
+
+  useEffect(() => {
+    // handle layer updates
+    console.log(images)
+  }, [images]);
 
   return (
     <div>
