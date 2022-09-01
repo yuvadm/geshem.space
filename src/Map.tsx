@@ -21,12 +21,37 @@ export function Map({ slider, images }: MapProps) {
   const [lng, setLng] = useState(35);
   const [lat, setLat] = useState(31.9);
   const [zoom, setZoom] = useState(6.3);
+  const [loaded, setLoaded] = useState(false);
 
   const prevImages = useRef(images).current;
   const prevSlider = useRef(slider).current;
 
-  const updateLayers = useCallback(() => {
+  useEffect(() => {
+    if (map.current) return;
+    map.current = new mapboxgl.Map({
+      accessToken: MAPBOX_ACCESS_TOKEN,
+      container: mapContainer.current,
+      style: "mapbox://styles/mapbox/dark-v9",
+      center: [lng, lat],
+      zoom: zoom,
+      minZoom: 5,
+      maxZoom: 10,
+      hash: false,
+    });
+    map.current.on("style.load", () => { setLoaded(true); });
+  });
+
+  useEffect(() => {
     if (!map.current || !map.current.isStyleLoaded()) return;
+    map.current.on('move', () => {
+      setLng(map.current.getCenter().lng.toFixed(4));
+      setLat(map.current.getCenter().lat.toFixed(4));
+      setZoom(map.current.getZoom().toFixed(2));
+    });
+  });
+
+  useEffect(() => {
+    if (!loaded) return;
 
     // remove old layers
     prevImages.forEach((img) => {
@@ -57,35 +82,7 @@ export function Map({ slider, images }: MapProps) {
         });
       }
     });
-  }, [prevImages, images]);
-
-  useEffect(() => {
-    if (map.current) return;
-    map.current = new mapboxgl.Map({
-      accessToken: MAPBOX_ACCESS_TOKEN,
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/dark-v9",
-      center: [lng, lat],
-      zoom: zoom,
-      minZoom: 5,
-      maxZoom: 10,
-      hash: false,
-    });
-    map.current.on("style.load", () => { updateLayers(); });
-  });
-
-  useEffect(() => {
-    if (!map.current || !map.current.isStyleLoaded()) return;
-    map.current.on('move', () => {
-      setLng(map.current.getCenter().lng.toFixed(4));
-      setLat(map.current.getCenter().lat.toFixed(4));
-      setZoom(map.current.getZoom().toFixed(2));
-    });
-  });
-
-  useEffect(() => {
-    updateLayers();
-  }, [updateLayers, prevImages, images]);
+  }, [loaded, prevImages, images]);
 
   useEffect(() => {
     if (!map.current || !map.current.isStyleLoaded()) return;
