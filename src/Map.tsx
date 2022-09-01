@@ -43,12 +43,6 @@ export function Map({ slider, images }: MapProps) {
     map.current.on("style.load", () => {
       setLoaded(true);
     });
-
-    map.current.on("move", () => {
-      setLng(map.current.getCenter().lng.toFixed(4));
-      setLat(map.current.getCenter().lat.toFixed(4));
-      setZoom(map.current.getZoom().toFixed(2));
-    })
   });
 
   useEffect(() => {
