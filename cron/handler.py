@@ -3,12 +3,15 @@ import re
 
 import boto3
 import requests
+import urllib3
 
 from requests_ntlm import HttpNtlmAuth
 
 from datetime import datetime, timedelta
 from io import BytesIO
 from os import environ
+
+urllib3.disable_warnings()
 
 
 class GeshemUpdate():
