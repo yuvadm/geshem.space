@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Map } from "./Map";
 import { Slider } from "./Slider";
 import { DateTime } from "./Datetime";
+import { Menu } from "./Menu";
 
 import { IMAGES_BASE_URL, PLAYBACK_HOURS, PLAYBACK_SLOTS } from "./config";
 
@@ -73,6 +74,7 @@ export function Geshem({ date }: GeshemProps) {
   return (
     <>
       <Map images={images} slider={slider} />
+      <Menu />
       <DateTime images={images} slider={slider} />
       <Slider slider={slider} playback={playback} setSlider={setSlider} />
     </>
