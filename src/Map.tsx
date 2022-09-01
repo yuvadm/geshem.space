@@ -19,9 +19,9 @@ export function Map({ slider, images }: MapProps) {
   const mapContainer = useRef(null);
   const map = useRef<mapboxgl.Map>(null);
 
-  const [lng, setLng] = useState(35);
-  const [lat, setLat] = useState(31.9);
-  const [zoom, setZoom] = useState(6.3);
+  const [lng] = useState(35);
+  const [lat] = useState(31.9);
+  const [zoom] = useState(6.3);
   const [loaded, setLoaded] = useState(false);
 
   const prevImages = useRef(images).current;
@@ -80,7 +80,7 @@ export function Map({ slider, images }: MapProps) {
   }, [loaded, prevImages, images]);
 
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || !images.length) return;
     images[slider] && map.current.setPaintProperty(`layer-${images[slider]}`, "raster-opacity", 0.85);
     return () => {
       // callback will hide the previous layer with the previous slider value
