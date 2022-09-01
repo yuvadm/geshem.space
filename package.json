@@ -34,7 +34,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serverless": "cd cron; serverless",
-    "deploycron": "cd cron; serverless deploy -f update",
+    "deploycron": "cd cron; serverless deploy function -f update",
     "invokecron": "cd cron; serverless invoke -l -f update"
   },
   "eslintConfig": {
