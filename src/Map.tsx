@@ -22,7 +22,7 @@ export function Map({ slider, images }: MapProps) {
   const [lat, setLat] = useState(31.9);
   const [zoom, setZoom] = useState(6.3);
 
-  const prevImages = useRef({ images }).current;
+  const prevImages = useRef(images).current;
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -48,9 +48,36 @@ export function Map({ slider, images }: MapProps) {
   });
 
   useEffect(() => {
-    // handle layer updates
-    console.log(images)
-  }, [images]);
+    // remove old layers
+    prevImages.map((img) => {
+      if (!images.includes(img)) {
+        map.current.removeLayer(`layer-${img}`);
+        map.current.removeSource(`source-${img}`);
+      }
+    });
+
+    // add new layers
+    images.map((img) => {
+      if (!images.includes(img)) {
+        map.current.addSource(`source-${img}`, {
+          type: "image",
+          url: `${IMAGES_BASE_URL}/${img}`,
+          coordinates: IMAGE_COORDINATES
+        });
+        map.current.addLayer({
+          id: `layer-${img}`,
+          source: `source-${img}`,
+          type: "raster",
+          paint: {
+            "raster-opacity": 0,
+            "raster-opacity-transition": {
+              duration: 0
+            }
+          }
+        });
+      }
+    });
+  }, [prevImages, images]);
 
   return (
     <div>
@@ -61,35 +88,3 @@ export function Map({ slider, images }: MapProps) {
     </div>
   );
 }
-  // return (
-  //   <Mapbox >
-  //     {images.map((img, i) => {
-  //       const id = `radar-280-${i}`;
-  //       return (
-  //         <Fragment key={`image-${id}`}>
-  //           {/* <Source
-  //             id={id}
-  //             key={`source-${id}`}
-  //             tileJsonSource={{
-  //               type: "image",
-  //               url: `${IMAGES_BASE_URL}/${img}`,
-  //               coordinates: IMAGE_COORDINATES
-  //             }}
-  //           />
-  //           <Layer
-  //             id={id}
-  //             key={`layer-${id}`}
-  //             sourceId={id}
-  //             type="raster"
-  //             paint={{
-  //               "raster-opacity": i === slider ? 0.85 : 0,
-  //               "raster-opacity-transition": {
-  //                 duration: 0
-  //               }
-  //             }}
-  //           /> */}
-  //         </Fragment>
-  //       );
-  //     })}
-  //   </Mapbox>
-  // );
