@@ -25,7 +25,6 @@ export function Map({ slider, images }: MapProps) {
   const [loaded, setLoaded] = useState(false);
 
   const prevImages = useRef(images).current;
-  const prevSlider = useRef(slider).current;
 
   useEffect(() => {
     if (map.current) return;
@@ -88,9 +87,12 @@ export function Map({ slider, images }: MapProps) {
 
   useEffect(() => {
     if (!loaded) return;
-    images[prevSlider] && map.current.setPaintProperty(`layer-${images[prevSlider]}`, "raster-opacity", 0);
     images[slider] && map.current.setPaintProperty(`layer-${images[slider]}`, "raster-opacity", 0.85);
-  }, [loaded, prevSlider, slider, images]);
+    return () => {
+      // callback will hide the previous layer with the previous slider value
+      map.current.setPaintProperty(`layer-${images[slider]}`, "raster-opacity", 0);
+    }
+  }, [loaded, slider, images]);
 
   return (
     <div>
