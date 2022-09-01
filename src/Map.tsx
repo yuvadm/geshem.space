@@ -15,7 +15,7 @@ interface MapProps {
   images: string[],
 }
 
-function Map({ slider, images }: MapProps) {
+export function Map({ slider, images }: MapProps) {
   const mapContainer = useRef(null);
   const map = useRef<mapboxgl.Map>(null);
   const [lng, setLng] = useState(35);
@@ -60,7 +60,7 @@ function Map({ slider, images }: MapProps) {
       }} />
     </div>
   );
-
+}
   // return (
   //   <Mapbox >
   //     {images.map((img, i) => {
@@ -93,6 +93,3 @@ function Map({ slider, images }: MapProps) {
   //     })}
   //   </Mapbox>
   // );
-}
-
-export default Map;

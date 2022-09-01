@@ -10,7 +10,7 @@ interface GeshemSliderProps {
   setSlider: React.Dispatch<React.SetStateAction<number>>
 }
 
-function Slider({ playback, slider, setSlider }: GeshemSliderProps) {
+export function Slider({ playback, slider, setSlider }: GeshemSliderProps) {
   const handleStyle = {
     height: 40,
     width: 40,
@@ -42,5 +42,3 @@ function Slider({ playback, slider, setSlider }: GeshemSliderProps) {
     </div>
   );
 }
-
-export default Slider;

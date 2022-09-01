@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import Map from "./Map";
-import Slider from "./Slider";
-import DateTime from "./Datetime";
+import { Map } from "./Map";
+import { Slider } from "./Slider";
+import { DateTime } from "./Datetime";
 
 import { IMAGES_BASE_URL } from "./config";
 
 import "./Geshem.css";
 import "rc-slider/assets/index.css";
 
-function App() {
+export function App() {
   return (
     <BrowserRouter>
       <Routes>
@@ -25,7 +25,7 @@ interface GeshemProps {
   date?: string
 }
 
-function Geshem({ date }: GeshemProps) {
+export function Geshem({ date }: GeshemProps) {
   const [images, setImages] = useState<string[]>([]);
   const [playback] = useState(
     date ||
@@ -77,5 +77,3 @@ function Geshem({ date }: GeshemProps) {
     </>
   );
 }
-
-export default App;

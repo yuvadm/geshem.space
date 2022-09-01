@@ -6,7 +6,7 @@ interface DateTimeProps {
   slider: number
 }
 
-function DateTime({ images, slider }: DateTimeProps) {
+export function DateTime({ images, slider }: DateTimeProps) {
   let datetime = null;
 
   if (images.length > 0) {
@@ -26,5 +26,3 @@ function DateTime({ images, slider }: DateTimeProps) {
     </div>
   );
 }
-
-export default DateTime;
