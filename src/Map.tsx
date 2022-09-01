@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // @ts-ignore
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -18,6 +18,7 @@ interface MapProps {
 export function Map({ slider, images }: MapProps) {
   const mapContainer = useRef(null);
   const map = useRef<mapboxgl.Map>(null);
+
   const [lng, setLng] = useState(35);
   const [lat, setLat] = useState(31.9);
   const [zoom, setZoom] = useState(6.3);
@@ -28,6 +29,7 @@ export function Map({ slider, images }: MapProps) {
 
   useEffect(() => {
     if (map.current) return;
+
     map.current = new mapboxgl.Map({
       accessToken: MAPBOX_ACCESS_TOKEN,
       container: mapContainer.current,
@@ -38,16 +40,16 @@ export function Map({ slider, images }: MapProps) {
       maxZoom: 10,
       hash: false,
     });
-    map.current.on("style.load", () => { setLoaded(true); });
-  });
 
-  useEffect(() => {
-    if (!map.current || !map.current.isStyleLoaded()) return;
-    map.current.on('move', () => {
+    map.current.on("style.load", () => {
+      setLoaded(true);
+    });
+
+    map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
-    });
+    })
   });
 
   useEffect(() => {
@@ -63,7 +65,7 @@ export function Map({ slider, images }: MapProps) {
 
     // add new layers
     images.forEach((img, i) => {
-      if (!prevImages.includes(img)) {
+      if (!prevImages.includes(img) && !map.current.getSource(`source-${img}`)) {
         map.current.addSource(`source-${img}`, {
           type: "image",
           url: `${IMAGES_BASE_URL}/${img}`,
@@ -74,7 +76,7 @@ export function Map({ slider, images }: MapProps) {
           source: `source-${img}`,
           type: "raster",
           paint: {
-            "raster-opacity": 0.5,
+            "raster-opacity": 0,
             "raster-opacity-transition": {
               duration: 0
             }
@@ -85,10 +87,10 @@ export function Map({ slider, images }: MapProps) {
   }, [loaded, prevImages, images]);
 
   useEffect(() => {
-    if (!map.current || !map.current.isStyleLoaded()) return;
-    map.current.setPaintProperty(`layer-${images[prevSlider]}`, "raster-opacity", 0);
-    map.current.setPaintProperty(`layer-${images[slider]}`, "raster-opacity", 0.85);
-  }, [prevSlider, slider, images]);
+    if (!loaded) return;
+    images[prevSlider] && map.current.setPaintProperty(`layer-${images[prevSlider]}`, "raster-opacity", 0);
+    images[slider] && map.current.setPaintProperty(`layer-${images[slider]}`, "raster-opacity", 0.85);
+  }, [loaded, prevSlider, slider, images]);
 
   return (
     <div>
