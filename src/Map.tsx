@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 // @ts-ignore
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -23,33 +23,13 @@ export function Map({ slider, images }: MapProps) {
   const [zoom, setZoom] = useState(6.3);
 
   const prevImages = useRef(images).current;
+  const prevSlider = useRef(slider).current;
 
-  useEffect(() => {
-    if (map.current) return; // initialize map only once
-    map.current = new mapboxgl.Map({
-      accessToken: MAPBOX_ACCESS_TOKEN,
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/dark-v9",
-      center: [lng, lat],
-      zoom: zoom,
-      minZoom: 5,
-      maxZoom: 10,
-      hash: false,
-    });
-  });
+  const updateLayers = useCallback(() => {
+    if (!map.current || !map.current.isStyleLoaded()) return;
 
-  useEffect(() => {
-    if (!map.current) return; // wait for map to initialize
-    map.current.on('move', () => {
-      setLng(map.current.getCenter().lng.toFixed(4));
-      setLat(map.current.getCenter().lat.toFixed(4));
-      setZoom(map.current.getZoom().toFixed(2));
-    });
-  });
-
-  useEffect(() => {
     // remove old layers
-    prevImages.map((img) => {
+    prevImages.forEach((img) => {
       if (!images.includes(img)) {
         map.current.removeLayer(`layer-${img}`);
         map.current.removeSource(`source-${img}`);
@@ -57,8 +37,8 @@ export function Map({ slider, images }: MapProps) {
     });
 
     // add new layers
-    images.map((img) => {
-      if (!images.includes(img)) {
+    images.forEach((img, i) => {
+      if (!prevImages.includes(img)) {
         map.current.addSource(`source-${img}`, {
           type: "image",
           url: `${IMAGES_BASE_URL}/${img}`,
@@ -69,7 +49,7 @@ export function Map({ slider, images }: MapProps) {
           source: `source-${img}`,
           type: "raster",
           paint: {
-            "raster-opacity": 0,
+            "raster-opacity": 0.5,
             "raster-opacity-transition": {
               duration: 0
             }
@@ -78,6 +58,40 @@ export function Map({ slider, images }: MapProps) {
       }
     });
   }, [prevImages, images]);
+
+  useEffect(() => {
+    if (map.current) return;
+    map.current = new mapboxgl.Map({
+      accessToken: MAPBOX_ACCESS_TOKEN,
+      container: mapContainer.current,
+      style: "mapbox://styles/mapbox/dark-v9",
+      center: [lng, lat],
+      zoom: zoom,
+      minZoom: 5,
+      maxZoom: 10,
+      hash: false,
+    });
+    map.current.on("style.load", () => { updateLayers(); });
+  });
+
+  useEffect(() => {
+    if (!map.current || !map.current.isStyleLoaded()) return;
+    map.current.on('move', () => {
+      setLng(map.current.getCenter().lng.toFixed(4));
+      setLat(map.current.getCenter().lat.toFixed(4));
+      setZoom(map.current.getZoom().toFixed(2));
+    });
+  });
+
+  useEffect(() => {
+    updateLayers();
+  }, [updateLayers, prevImages, images]);
+
+  useEffect(() => {
+    if (!map.current || !map.current.isStyleLoaded()) return;
+    map.current.setPaintProperty(`layer-${images[prevSlider]}`, "raster-opacity", 0);
+    map.current.setPaintProperty(`layer-${images[slider]}`, "raster-opacity", 0.85);
+  }, [prevSlider, slider, images]);
 
   return (
     <div>
