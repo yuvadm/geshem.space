@@ -1,5 +1,6 @@
 import React from "react";
 import RcSlider, { SliderProps, SliderRef } from 'rc-slider/lib/Slider';
+import { PLAYBACK_SLOTS } from "./config";
 
 // use workaround from: https://github.com/react-component/slider/issues/835#issuecomment-1201805736
 const CustomSlider = RcSlider as React.ForwardRefExoticComponent<SliderProps<number> & React.RefAttributes<SliderRef>>;
@@ -32,7 +33,7 @@ export function Slider({ playback, slider, setSlider }: GeshemSliderProps) {
     <div id="slider">
       <CustomSlider
         min={0}
-        max={playback ? 143 : 9}
+        max={playback ? PLAYBACK_SLOTS : 9}
         defaultValue={slider}
         handleStyle={handleStyle}
         railStyle={railStyle}

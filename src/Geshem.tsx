@@ -5,7 +5,7 @@ import { Map } from "./Map";
 import { Slider } from "./Slider";
 import { DateTime } from "./Datetime";
 
-import { IMAGES_BASE_URL } from "./config";
+import { IMAGES_BASE_URL, PLAYBACK_HOURS, PLAYBACK_SLOTS } from "./config";
 
 import "./Geshem.css";
 import "rc-slider/assets/index.css";
@@ -25,6 +25,7 @@ interface GeshemProps {
   date?: string
 }
 
+
 export function Geshem({ date }: GeshemProps) {
   const [images, setImages] = useState<string[]>([]);
   const [playback] = useState(
@@ -32,7 +33,7 @@ export function Geshem({ date }: GeshemProps) {
     new URL(window.location.toString()).searchParams.get("history") ||
     undefined
   );
-  const [slider, setSlider] = useState(playback ? 143 : 9);
+  const [slider, setSlider] = useState(playback ? PLAYBACK_SLOTS : 9);
 
   useEffect(() => {
     const fetchImages = async () =>
@@ -43,7 +44,7 @@ export function Geshem({ date }: GeshemProps) {
 
     const buildPlayback = async () => {
       const date = playback;
-      const hours = Array.from(Array(24).keys()).map(
+      const hours = Array.from(Array(PLAYBACK_HOURS).keys()).map(
         h => `${String(h).padStart(2, "0")}`
       );
       const minutes = Array.from(Array(6).keys()).map(
