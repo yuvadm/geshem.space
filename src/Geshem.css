@@ -12,23 +12,26 @@
   right: 20px;
   height: 4em;
   width: 4em;
-  line-height: 4em;
   text-align: center;
-  background-color: rgba(20, 30, 10, 0.8);
+  background-color: #3498db;
+  border-radius: 5px;
 }
 
 #bars {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
+  justify-content: center;
+  padding: 0em 0.6em;
+  height: 4em;
+  gap: 0.5em;
 }
 
 .bar {
-  height: 0.2em;
+  height: 0.4rem;
   width: 80%;
-  background-color: lightgray;
+  border-radius: 10px;
+  background-color: white;
 }
 
 #about {
@@ -41,7 +44,7 @@
 }
 
 #menu:hover {
-  background-color: rgba(0, 120, 0, 1);
+  background-color: #118bdc;
 }
 
 #date {
