@@ -23,7 +23,7 @@ Install dependencies and run dev server:
 
 ```bash
 $ npm install
-$ DANGEROUSLY_DISABLE_HOST_CHECK=true npm start
+$ npm start
 ```
 
 ### Deploy
