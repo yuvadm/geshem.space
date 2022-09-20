@@ -45,16 +45,10 @@ export function Geshem({ date }: GeshemProps) {
 
     const buildPlayback = async () => {
       const date = playback;
-      const hours = Array.from(Array(PLAYBACK_HOURS).keys()).map(
-        h => `${String(h).padStart(2, "0")}`
-      );
-      const minutes = Array.from(Array(6).keys()).map(
-        m => `${String(m * 10).padStart(2, "0")}`
-      );
+      const hours = Array.from(Array(PLAYBACK_HOURS).keys()).map(h => `${String(h).padStart(2, "0")}`);
+      const minutes = Array.from(Array(6).keys()).map(m => `${String(m * 10).padStart(2, "0")}`);
       const paths = hours.reduce<string[]>(
-        (acc, h) =>
-          acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/280.png`)),
-        []
+        (acc, h) => acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/280.png`)), []
       );
       setImages(paths);
     };
