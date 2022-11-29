@@ -23,12 +23,12 @@ Install dependencies and run dev server:
 
 ```bash
 $ npm install
-$ npm start
+$ DANGEROUSLY_DISABLE_HOST_CHECK=true npm start
 ```
 
 ### Deploy
 
-Deployment is handled transparently via Netlify.
+Deployment is handled transparently via Vercel.
 
 ### Cron Task
 

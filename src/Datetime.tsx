@@ -1,12 +1,16 @@
 import React from "react";
 import { DateTime as LuxonDateTime } from "luxon";
 
-function DateTime(props) {
-  let { images, slider } = props;
+interface DateTimeProps {
+  images: string[],
+  slider: number
+}
+
+export function DateTime({ images, slider }: DateTimeProps) {
   let datetime = null;
 
   if (images.length > 0) {
-    const ds = images[slider].substr(5, 13);
+    const ds = images[slider].substring(5, 18);
     datetime = LuxonDateTime.fromFormat(ds, "yyyyMMdd/HHmm", {
       zone: "utc",
     }).setZone("Asia/Jerusalem");
@@ -22,5 +26,3 @@ function DateTime(props) {
     </div>
   );
 }
-
-export default DateTime;

@@ -1,6 +1,6 @@
 {
   "name": "geshem",
-  "version": "5.2.1",
+  "version": "6.0.0",
   "description": "Geshem.space Rain Radar",
   "main": "geshem.js",
   "homepage": "https://geshem.space",
@@ -9,15 +9,24 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "axios": "^0.19.0",
-    "luxon": "^1.19.3",
-    "mapbox-gl": "^1.12.0",
-    "rc-slider": "^8.7.1",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
-    "react-mapbox-gl": "^4.8.2",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.1"
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/luxon": "^3.0.0",
+    "@types/mapbox-gl": "^2.7.5",
+    "@types/node": "^16.11.56",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "axios": "^0.27.2",
+    "luxon": "^3.0.3",
+    "mapbox-gl": "^2.11.0",
+    "rc-slider": "^10.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.8.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -25,11 +34,14 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serverless": "cd cron; serverless",
-    "deploycron": "cd cron; serverless deploy -f update",
+    "deploycron": "cd cron; serverless deploy function -f update",
     "invokecron": "cd cron; serverless invoke -l -f update"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -44,7 +56,7 @@
     ]
   },
   "devDependencies": {
-    "serverless": "^1.59.3",
+    "serverless": "^3.22.0",
     "serverless-python-requirements": "^5.0.1"
   },
   "proxy": "https://imgs.geshem.space/"
