@@ -22,6 +22,7 @@ export interface Env {
 }
 
 export default {
+	fetch: () => new Response("It's alive!"),
 	async scheduled(
 		controller: ScheduledController,
 		env: Env,
