@@ -19,7 +19,7 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "axios": "^0.27.2",
-    "luxon": "^3.0.3",
+    "luxon": "^3.2.1",
     "mapbox-gl": "^2.11.0",
     "rc-slider": "^10.0.1",
     "react": "^18.2.0",
