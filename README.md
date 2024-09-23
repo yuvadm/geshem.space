@@ -1,6 +1,6 @@
 # Geshem 🌧️
 
-<img src="public/screenshot.png" height="600" align="right">
+<img src="app/public/screenshot.png" height="600" align="right">
 
 An interactive rain radar clone running on Mapbox GL, see it live at: [https://geshem.space](https://geshem.space)
 
@@ -14,7 +14,7 @@ For some architectural notes on the deployment process go read https://yuv.al/bl
 ## Prerequisites
 
 - Node.js
-- Yarn
+- NPM
 - Serverless, for deploying the AWS Lambda task
 
 ## Dev
@@ -23,7 +23,7 @@ Install dependencies and run dev server:
 
 ```bash
 $ npm install
-$ DANGEROUSLY_DISABLE_HOST_CHECK=true npm start
+$ npm run dev
 ```
 
 ### Deploy
