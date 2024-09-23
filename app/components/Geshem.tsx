@@ -5,7 +5,6 @@ import React, { useState, useEffect } from "react";
 import { Map } from "./Map";
 import { Slider } from "./Slider";
 import { DateTime } from "./Datetime";
-import Fathom from "./Fathom";
 
 import { IMAGES_BASE_URL, PLAYBACK_HOURS, PLAYBACK_SLOTS } from "./config";
 
@@ -75,7 +74,6 @@ export function Geshem() {
 
   return (
     <>
-      <Fathom />
       <Map images={images} slider={slider} />
       <DateTime images={images} slider={slider} />
       <Slider slider={slider} playback={fragment} setSlider={setSlider} />
