@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Geshem.space | Real-Time Israel Rain Radar Visualization",
+  title: "geshem.space | Real-Time Israel Rain Radar Visualization",
   description: "Track Israel's rainfall in real-time with Geshem.space's advanced radar visualizer. Get accurate, up-to-date precipitation data and forecasts for precise weather monitoring across Israel.",
 };
 
