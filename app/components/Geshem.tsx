@@ -8,32 +8,12 @@ import { Slider } from "./Slider";
 import { DateTime } from "./Datetime";
 import { IMAGES_BASE_URL, PLAYBACK_HOURS, PLAYBACK_SLOTS } from "./config";
 
-// import "./Geshem.css";
 import "rc-slider/assets/index.css";
 
-// export function App() {
-//   return (
-//     <BrowserRouter>
-//       <Routes>
-//         <Route path="/" element={<Geshem />} />
-//         <Route path="/history/:date" element={<Geshem />} />
-//       </Routes>
-//     </BrowserRouter>
-//   );
-// }
-
-interface GeshemProps {
-  date?: string
-}
-
-export function Geshem({ date }: GeshemProps) {
+export function Geshem() {
   const [images, setImages] = useState<string[]>([]);
-  const [playback] = useState(
-    date ||
-    new URL(window.location.toString()).searchParams.get("history") ||
-    undefined
-  );
-  const [slider, setSlider] = useState(playback ? PLAYBACK_SLOTS : 9);
+  const [fragment, setFragment] = useState<string | undefined>(undefined);
+  const [slider, setSlider] = useState(fragment ? PLAYBACK_SLOTS : 9);
 
   useEffect(() => {
     const fetchImages = async () =>
@@ -43,7 +23,7 @@ export function Geshem({ date }: GeshemProps) {
         .then(setImages);
 
     const buildPlayback = async () => {
-      const date = playback;
+      const date = fragment;
       const hours = Array.from(Array(PLAYBACK_HOURS).keys()).map(
         h => `${String(h).padStart(2, "0")}`
       );
@@ -58,23 +38,39 @@ export function Geshem({ date }: GeshemProps) {
       setImages(paths);
     };
 
-    let timer: number;
-    if (playback) buildPlayback();
+    let timer: any;
+    if (fragment) buildPlayback();
     else {
       fetchImages();
-      timer = window.setInterval(fetchImages, 60 * 1000);
+      timer = setInterval(fetchImages, 60 * 1000);
     }
 
     return () => {
       if (timer !== undefined) clearInterval(timer);
     };
-  }, [playback]);
+  }, [fragment]);
+
+  useEffect(() => {
+    const fragment = window.location.hash.slice(1);
+    setFragment(fragment);
+
+    const handleHashChange = () => {
+      const newFragment = window.location.hash.slice(1);
+      setFragment(newFragment);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
 
   return (
     <>
       <Map images={images} slider={slider} />
       <DateTime images={images} slider={slider} />
-      <Slider slider={slider} playback={playback} setSlider={setSlider} />
+      <Slider slider={slider} playback={fragment} setSlider={setSlider} />
     </>
   );
 }
