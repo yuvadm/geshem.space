@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-// @ts-ignore
-import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import mapboxgl from 'mapbox-gl';
 
 import {
   MAPBOX_ACCESS_TOKEN,
@@ -16,8 +15,8 @@ interface MapProps {
 }
 
 export function Map({ slider, images }: MapProps) {
-  const mapContainer = useRef(null);
-  const map = useRef<mapboxgl.Map>(null);
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
 
   const [lng] = useState(35);
   const [lat] = useState(31.9);
@@ -29,42 +28,45 @@ export function Map({ slider, images }: MapProps) {
   useEffect(() => {
     if (map.current) return;
 
-    map.current = new mapboxgl.Map({
-      accessToken: MAPBOX_ACCESS_TOKEN,
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/dark-v9",
-      center: [lng, lat],
-      zoom: zoom,
-      minZoom: 5,
-      maxZoom: 10,
-      hash: false,
-    });
+    if (mapContainer.current) {
+      map.current = new mapboxgl.Map({
+        accessToken: MAPBOX_ACCESS_TOKEN,
+        container: mapContainer.current,
+        style: "mapbox://styles/mapbox/dark-v9",
+        center: [lng, lat],
+        zoom: zoom,
+        minZoom: 5,
+        maxZoom: 10,
+        hash: false,
+      });
 
-    map.current.on("style.load", () => {
-      setLoaded(true);
-    });
+      map.current.on("style.load", () => {
+        setLoaded(true);
+      });
+    }
+
   });
 
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || !map.current) return;
 
     // remove old layers
     prevImages.forEach((img) => {
       if (!images.includes(img)) {
-        map.current.removeLayer(`layer-${img}`);
-        map.current.removeSource(`source-${img}`);
+        map.current?.removeLayer(`layer-${img}`);
+        map.current?.removeSource(`source-${img}`);
       }
     });
 
     // add new layers
-    images.forEach((img, i) => {
-      if (!prevImages.includes(img) && !map.current.getSource(`source-${img}`)) {
-        map.current.addSource(`source-${img}`, {
+    images.forEach(img => {
+      if (!prevImages.includes(img) && !map.current?.getSource(`source-${img}`)) {
+        map.current?.addSource(`source-${img}`, {
           type: "image",
           url: `${IMAGES_BASE_URL}/${img}`,
           coordinates: IMAGE_COORDINATES
         });
-        map.current.addLayer({
+        map.current?.addLayer({
           id: `layer-${img}`,
           source: `source-${img}`,
           type: "raster",
@@ -80,11 +82,15 @@ export function Map({ slider, images }: MapProps) {
   }, [loaded, prevImages, images]);
 
   useEffect(() => {
-    if (!loaded || !images.length) return;
-    images[slider] && map.current.setPaintProperty(`layer-${images[slider]}`, "raster-opacity", 0.85);
+    if (!loaded || !images.length || !map.current) return;
+
+    if (images[slider]) {
+      map.current?.setPaintProperty(`layer-${images[slider]}`, "raster-opacity", 0.85)
+    };
+
     return () => {
       // callback will hide the previous layer with the previous slider value
-      map.current.setPaintProperty(`layer-${images[slider]}`, "raster-opacity", 0);
+      map.current?.setPaintProperty(`layer-${images[slider]}`, "raster-opacity", 0);
     }
   }, [loaded, slider, images]);
 

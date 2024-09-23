@@ -1,13 +1,11 @@
-const hostname = window && window.location && window.location.hostname;
-
-const PRODUCTION = hostname.includes("geshem");
+const PRODUCTION = process.env.NODE_ENV == "production";
 
 export const IMAGES_BASE_URL = PRODUCTION ? "https://imgs.geshem.space" : "";
 
 export const MAPBOX_ACCESS_TOKEN =
   "pk.eyJ1IjoieXV2YWRtIiwiYSI6ImNpcnMxbzBuaTAwZWdoa25oczlzZmkwbHcifQ.UHtLngbKm9O8945pJm23Nw";
 
-export const IMAGE_COORDINATES = [
+export const IMAGE_COORDINATES: [[number, number], [number, number], [number, number], [number, number]] = [
   [31.7503896894, 34.4878044232],
   [37.8574239563, 34.5078463729],
   [37.7157066403, 29.4538271687],
