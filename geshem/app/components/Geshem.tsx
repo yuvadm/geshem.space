@@ -1,30 +1,30 @@
+"use client"
+
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+// import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { Map } from "./Map";
 import { Slider } from "./Slider";
 import { DateTime } from "./Datetime";
-
 import { IMAGES_BASE_URL, PLAYBACK_HOURS, PLAYBACK_SLOTS } from "./config";
 
-import "./Geshem.css";
+// import "./Geshem.css";
 import "rc-slider/assets/index.css";
 
-export function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Geshem />} />
-        <Route path="/history/:date" element={<Geshem />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
+// export function App() {
+//   return (
+//     <BrowserRouter>
+//       <Routes>
+//         <Route path="/" element={<Geshem />} />
+//         <Route path="/history/:date" element={<Geshem />} />
+//       </Routes>
+//     </BrowserRouter>
+//   );
+// }
 
 interface GeshemProps {
   date?: string
 }
-
 
 export function Geshem({ date }: GeshemProps) {
   const [images, setImages] = useState<string[]>([]);

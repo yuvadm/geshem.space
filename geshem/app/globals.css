@@ -25,3 +25,34 @@ body {
     text-wrap: balance;
   }
 }
+
+#datetime {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: white;
+  font-family: monospace;
+}
+
+#date {
+  font-size: 1.4em;
+}
+
+#time {
+  font-size: 2.8em;
+}
+
+#slider {
+  position: fixed;
+  bottom: 8vh;
+  width: 30vw;
+  margin-left: 35vw;
+}
+
+@media only screen and (max-device-width: 812px) {
+  #slider {
+    width: 80vw;
+    margin-left: 8vw;
+    z-index: 10;
+  }
+}
