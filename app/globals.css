@@ -25,18 +25,3 @@ body {
     text-wrap: balance;
   }
 }
-
-#slider {
-  position: fixed;
-  bottom: 8vh;
-  width: 30vw;
-  margin-left: 35vw;
-}
-
-@media only screen and (max-device-width: 812px) {
-  #slider {
-    width: 80vw;
-    margin-left: 8vw;
-    z-index: 10;
-  }
-}

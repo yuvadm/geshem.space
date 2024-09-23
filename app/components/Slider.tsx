@@ -34,7 +34,7 @@ export function Slider({ playback, slider, setSlider }: GeshemSliderProps) {
   }
 
   return (
-    <div id="slider">
+    <div id="slider" className="fixed bottom-16 w-9/12 sm:w-1/3 left-0 right-0 pr-5 mx-auto">
       <CustomSlider
         min={0}
         max={playback ? PLAYBACK_SLOTS : 9}
