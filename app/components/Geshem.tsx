@@ -23,18 +23,24 @@ export function Geshem() {
         .then(setImages);
 
     const buildPlayback = async () => {
-      const date = fragment;
-      const hours = Array.from(Array(PLAYBACK_HOURS).keys()).map(
-        h => `${String(h).padStart(2, "0")}`
-      );
-      const minutes = Array.from(Array(6).keys()).map(
-        m => `${String(m * 10).padStart(2, "0")}`
-      );
-      const paths = hours.reduce<string[]>(
-        (acc, h) =>
-          acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/280.png`)),
-        []
-      );
+      if (fragment === undefined) return;
+      const date = fragment.slice(0, 8);
+      const startHour = parseInt(fragment.slice(8, 10)) || 9;
+      const startMinute = parseInt(fragment.slice(10, 12)) || 0;
+
+      const generateTimeSlots = (start: number): string[] => {
+        const slots = [];
+        for (let i = 0; i < PLAYBACK_HOURS * 6; i++) {
+          const minutes = (start + i * 10) % 60;
+          const hours = (startHour + Math.floor((start + i * 10) / 60)) % 24;
+          slots.push(`${String(hours).padStart(2, "0")}${String(minutes).padStart(2, "0")}`);
+        }
+        return slots;
+      };
+
+      const timeSlots = generateTimeSlots(startMinute);
+      const paths = timeSlots.map(slot => `imgs/${date}/${slot}/280.png`);
+
       setImages(paths);
     };
 
