@@ -38,7 +38,7 @@ export function Geshem() {
       setImages(paths);
     };
 
-    let timer: any;
+    let timer: NodeJS.Timeout;
     if (fragment) buildPlayback();
     else {
       fetchImages();
