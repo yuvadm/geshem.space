@@ -2,9 +2,6 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-interface ImageData {
-  [key: string]: string[];
-}
 
 interface CloudflareEnv {
   BASE_URL: string;
@@ -12,6 +9,7 @@ interface CloudflareEnv {
   AUTH_PASS: string;
   BUCKET_NAME: string;
   SCHEDULED?: boolean;
+  [key: string]: any;
 }
 
 class GeshemUpdate {
@@ -120,29 +118,10 @@ class GeshemUpdate {
     return `imgs/${d}/${t}/${res}.png`;
   }
 
-  private async generateJson(): Promise<void> {
-    const latestKeys = await this.getLatestBucketKeys();
-    const keys = latestKeys
-      .filter(key => key.endsWith('280.png'))
-      .sort()
-      .slice(-10);
-
-    const index: ImageData = { '280': keys };
-
-    await this.bucket.put('imgs.json', JSON.stringify(index), {
-      httpMetadata: {
-        contentType: 'application/json',
-        cacheControl: 'public, max-age=60'
-      }
-    });
-  }
 
   async run(): Promise<string> {
     try {
       const updated = await this.fetchMissingImages();
-      if (updated) {
-        await this.generateJson();
-      }
       return `Updated: ${updated}`;
     } catch (error) {
       console.error('Error in GeshemUpdate.run():', error);
@@ -151,7 +130,7 @@ class GeshemUpdate {
   }
 }
 
-export const GET: APIRoute = async ({ platform, request }) => {
+export const GET: APIRoute = async ({ locals, request }) => {
   // This endpoint should only be accessible via Cloudflare Cron
   const cron = request.headers.get('CF-Cron');
   if (!cron) {
@@ -159,14 +138,14 @@ export const GET: APIRoute = async ({ platform, request }) => {
   }
 
   try {
-    const env = platform?.env as unknown as CloudflareEnv;
+    const env = (locals as any).runtime?.env as unknown as CloudflareEnv;
 
     if (!env?.BASE_URL || !env?.AUTH_USER || !env?.AUTH_PASS) {
       return new Response('Missing environment variables', { status: 500 });
     }
 
     // Get R2 bucket (this would be configured in your Cloudflare Workers environment)
-    const bucket = env.BUCKET_NAME ? platform?.env[env.BUCKET_NAME] as R2Bucket : null;
+    const bucket = env.BUCKET_NAME ? env[env.BUCKET_NAME] as R2Bucket : null;
 
     if (!bucket) {
       return new Response('R2 bucket not configured', { status: 500 });

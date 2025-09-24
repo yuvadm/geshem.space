@@ -8,9 +8,6 @@ interface Env {
   IMGS_BUCKET: R2Bucket;
 }
 
-interface ImageData {
-  [key: string]: string[];
-}
 
 class GeshemUpdate {
   private bucket: R2Bucket;
@@ -118,29 +115,10 @@ class GeshemUpdate {
     return `imgs/${d}/${t}/${res}.png`;
   }
 
-  private async generateJson(): Promise<void> {
-    const latestKeys = await this.getLatestBucketKeys();
-    const keys = latestKeys
-      .filter(key => key.endsWith('280.png'))
-      .sort()
-      .slice(-10);
-
-    const index: ImageData = { '280': keys };
-
-    await this.bucket.put('imgs.json', JSON.stringify(index), {
-      httpMetadata: {
-        contentType: 'application/json',
-        cacheControl: 'public, max-age=60'
-      }
-    });
-  }
 
   async run(): Promise<string> {
     try {
       const updated = await this.fetchMissingImages();
-      if (updated) {
-        await this.generateJson();
-      }
       return `Updated: ${updated}`;
     } catch (error) {
       console.error('Error in GeshemUpdate.run():', error);
