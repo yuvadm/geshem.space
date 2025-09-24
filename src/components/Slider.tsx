@@ -1,43 +1,84 @@
-import React from "react";
-import RcSlider from 'rc-slider';
+import React, { useCallback, useRef, useState } from "react";
 import { PLAYBACK_SLOTS } from "../config";
-import "rc-slider/assets/index.css";
 
-interface GeshemSliderProps {
+interface SliderProps {
   playback?: string;
   slider: number;
   setSlider: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export function Slider({ playback, slider, setSlider }: GeshemSliderProps) {
-  const handleStyle = {
-    height: 40,
-    width: 40,
-    border: 0,
-    marginTop: -10,
-    boxShadow: ".5px .5px 2px 1px rgba(0,0,0,.32)"
-  };
+export function Slider({ playback, slider, setSlider }: SliderProps) {
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const railStyle = {
-    height: 20,
-    backgroundColor: "#3498db"
-  };
+  const max = playback ? PLAYBACK_SLOTS : 9;
 
-  const trackStyle = {
-    display: "none"
-  };
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    setIsDragging(true);
+    updateSliderValue(e);
+  }, []);
+
+  const updateSliderValue = useCallback((e: MouseEvent | React.MouseEvent) => {
+    if (!sliderRef.current) return;
+
+    const rect = sliderRef.current.getBoundingClientRect();
+    const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const value = Math.round(percentage * max);
+    setSlider(value);
+  }, [max, setSlider]);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (isDragging) {
+      updateSliderValue(e);
+    }
+  }, [isDragging, updateSliderValue]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  React.useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp]);
+
+  const percentage = (slider / max) * 100;
 
   return (
-    <div id="slider">
-      <RcSlider
-        min={0}
-        max={playback ? PLAYBACK_SLOTS : 9}
-        defaultValue={slider}
-        handleStyle={handleStyle}
-        railStyle={railStyle}
-        trackStyle={trackStyle}
-        onChange={(val) => setSlider(val as number)}
-      />
+    <div id="slider" style={{ padding: '10px 0' }}>
+      <div
+        ref={sliderRef}
+        style={{
+          position: 'relative',
+          height: '20px',
+          backgroundColor: '#3498db',
+          borderRadius: '10px',
+          cursor: 'pointer'
+        }}
+        onMouseDown={handleMouseDown}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: '-10px',
+            left: `calc(${percentage}% - 20px)`,
+            width: '40px',
+            height: '40px',
+            backgroundColor: '#fff',
+            borderRadius: '50%',
+            boxShadow: '.5px .5px 2px 1px rgba(0,0,0,.32)',
+            cursor: isDragging ? 'grabbing' : 'grab',
+            zIndex: 1
+          }}
+        />
+      </div>
     </div>
   );
 }

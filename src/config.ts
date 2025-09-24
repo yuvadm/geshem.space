@@ -1,6 +1,6 @@
 const hostname = typeof window !== 'undefined' && window.location && window.location.hostname;
 
-const PRODUCTION = hostname ? hostname.includes("geshem") : false;
+const PRODUCTION = true;
 
 export const IMAGES_BASE_URL = PRODUCTION ? "https://imgs.geshem.space" : "";
 

@@ -23,7 +23,7 @@ export function Geshem({ date }: GeshemProps) {
     const fetchImages = async () =>
       fetch(`${IMAGES_BASE_URL}/imgs.json`)
         .then(res => res.json())
-        .then(imgs => imgs["280"])
+        .then(imgs => (imgs as any)["280"])
         .then(setImages);
 
     const buildPlayback = async () => {

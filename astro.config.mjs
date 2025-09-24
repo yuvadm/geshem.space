@@ -19,5 +19,9 @@ export default defineConfig({
 
   adapter: cloudflare({
     imageService: "compile"
-  })
+  }),
+
+  devToolbar: {
+    enabled: false
+  }
 });
