@@ -1,0 +1,45 @@
+#datetime {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: white;
+  font-family: monospace;
+}
+
+#date {
+  font-size: 1.4em;
+}
+
+#time {
+  font-size: 2.8em;
+}
+
+#slider {
+  position: fixed;
+  bottom: 8vh;
+  width: 30vw;
+  margin-left: 35vw;
+}
+
+@media only screen and (max-device-width: 812px) {
+  #slider {
+    width: 80vw;
+    margin-left: 8vw;
+    z-index: 10;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

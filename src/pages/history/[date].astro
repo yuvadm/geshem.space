@@ -1,7 +1,9 @@
 ---
-import { Geshem } from '../components/Geshem';
-import '../styles/global.css';
-import '../styles/geshem.css';
+import { Geshem } from '../../components/Geshem';
+import '../../styles/global.css';
+import '../../styles/geshem.css';
+
+export const prerender = false;
 
 const { date } = Astro.params;
 ---
@@ -12,8 +14,8 @@ const { date } = Astro.params;
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Geshem - Rain Radar</title>
-		<meta name="description" content="Israel Rain Radar" />
+		<title>Geshem - Rain Radar History</title>
+		<meta name="description" content="Israel Rain Radar History" />
 	</head>
 	<body>
 		<Geshem client:load date={date} />
