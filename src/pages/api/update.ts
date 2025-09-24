@@ -7,9 +7,8 @@ interface CloudflareEnv {
   BASE_URL: string;
   AUTH_USER: string;
   AUTH_PASS: string;
-  BUCKET_NAME: string;
+  IMGS_BUCKET: R2Bucket;
   SCHEDULED?: boolean;
-  [key: string]: any;
 }
 
 class GeshemUpdate {
@@ -144,12 +143,11 @@ export const GET: APIRoute = async ({ locals, request }) => {
       return new Response('Missing environment variables', { status: 500 });
     }
 
-    // Get R2 bucket (this would be configured in your Cloudflare Workers environment)
-    const bucket = env.BUCKET_NAME ? env[env.BUCKET_NAME] as R2Bucket : null;
-
-    if (!bucket) {
+    if (!env.IMGS_BUCKET) {
       return new Response('R2 bucket not configured', { status: 500 });
     }
+
+    const bucket = env.IMGS_BUCKET;
 
     const updater = new GeshemUpdate(bucket, env);
     const result = await updater.run();
