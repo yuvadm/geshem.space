@@ -1,7 +1,7 @@
 {
-  "name": "geshem",
+  "name": "geshem.space",
   "type": "module",
-  "version": "0.0.1",
+  "version": "8.0.0",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -9,6 +9,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.13.10"
+    "@astrojs/react": "^4.3.1",
+    "@tailwindcss/vite": "^4.1.13",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "astro": "^5.13.10",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.13"
   }
 }
