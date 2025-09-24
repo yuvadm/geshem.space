@@ -11,8 +11,13 @@ export default defineConfig({
   integrations: [react()],
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    build: {
+      chunkSizeWarningLimit: 2000
+    }
   },
 
-  adapter: cloudflare({})
+  adapter: cloudflare({
+    imageService: "compile"
+  })
 });
