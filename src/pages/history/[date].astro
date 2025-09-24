@@ -1,0 +1,13 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Geshem } from '../../components/Geshem';
+import '../../styles/global.css';
+
+export const prerender = false;
+
+const { date } = Astro.params;
+---
+
+<Layout title="Geshem - Rain Radar History" description="Israel Rain Radar History">
+	<Geshem client:load date={date} />
+</Layout>

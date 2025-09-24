@@ -14,8 +14,7 @@ For some architectural notes on the deployment process go read https://yuv.al/bl
 ## Prerequisites
 
 - Node.js
-- Yarn
-- Serverless, for deploying the AWS Lambda task
+- NPM
 
 ## Dev
 
@@ -23,32 +22,9 @@ Install dependencies and run dev server:
 
 ```bash
 $ npm install
-$ DANGEROUSLY_DISABLE_HOST_CHECK=true npm start
+$ npm run dev
 ```
 
 ### Deploy
 
-Deployment is handled transparently via Vercel.
-
-### Cron Task
-
-#### Dev
-
-```bash
-$ cd cron
-$ pipenv install
-```
-
-#### Deploy
-
-```bash
-$ npm run deploycron
-```
-
-#### Invoke
-
-For testing the cron task:
-
-```bash
-$ npm run invokecron
-```
+Deployment is handled transparently on Cloudflare Workers.

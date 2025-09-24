@@ -1,0 +1,28 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = "geshem.space", description = "geshem.space - Israel Rain Radar" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Geshem">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#000000">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <script src="https://cdn.usefathom.com/script.js" data-site="MBXPLVRM" defer></script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,31 @@
+{
+    "name": "geshem",
+    "main": "./dist/_worker.js/index.js",
+    "compatibility_date": "2025-09-24",
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "assets": {
+        "binding": "ASSETS",
+        "directory": "./dist"
+    },
+    "observability": {
+        "enabled": true
+    },
+    "r2_buckets": [
+        {
+            "binding": "IMGS_BUCKET",
+            "bucket_name": "geshem"
+        }
+    ],
+    "routes": [
+        {
+            "pattern": "geshem.space",
+            "custom_domain": true
+        },
+        {
+            "pattern": "www.geshem.space",
+            "custom_domain": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Geshem } from "../components/Geshem";
+import "../styles/global.css";
+
+const { date } = Astro.params;
+---
+
+<Layout>
+	<Geshem client:load date={date} />
+</Layout>
