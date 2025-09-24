@@ -52,30 +52,18 @@ export function Slider({ playback, slider, setSlider }: SliderProps) {
   const percentage = (slider / max) * 100;
 
   return (
-    <div id="slider" style={{ padding: '10px 0' }}>
+    <div id="slider" className="py-2.5 fixed bottom-[8vh] w-[30vw] ml-[35vw] max-[812px]:w-[80vw] max-[812px]:ml-[8vw] max-[812px]:z-10">
       <div
         ref={sliderRef}
-        style={{
-          position: 'relative',
-          height: '20px',
-          backgroundColor: '#3498db',
-          borderRadius: '10px',
-          cursor: 'pointer'
-        }}
+        className="relative h-5 bg-blue-500 rounded-full cursor-pointer"
         onMouseDown={handleMouseDown}
       >
         <div
+          className={`absolute -top-2.5 w-10 h-10 bg-white rounded-full shadow-md z-[1] ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
           style={{
-            position: 'absolute',
-            top: '-10px',
-            left: `calc(${percentage}% - 20px)`,
-            width: '40px',
-            height: '40px',
-            backgroundColor: '#fff',
-            borderRadius: '50%',
-            boxShadow: '.5px .5px 2px 1px rgba(0,0,0,.32)',
-            cursor: isDragging ? 'grabbing' : 'grab',
-            zIndex: 1
+            left: `calc(${percentage}% - 20px)`
           }}
         />
       </div>

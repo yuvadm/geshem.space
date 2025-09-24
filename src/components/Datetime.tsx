@@ -20,9 +20,9 @@ export function DateTime({ images, slider }: DateTimeProps) {
   const time = datetime ? datetime.toFormat("HH:mm") : "";
 
   return (
-    <div id="datetime">
-      <div id="date">{date}</div>
-      <div id="time">{time}</div>
+    <div id="datetime" className="absolute top-5 left-5 text-white font-mono">
+      <div id="date" className="text-xl">{date}</div>
+      <div id="time" className="text-4xl">{time}</div>
     </div>
   );
 }

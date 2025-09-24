@@ -99,10 +99,7 @@ export function Map({ slider, images }: MapProps) {
 
   return (
     <div>
-      <div ref={mapContainer} className="map-container" style={{
-        height: "100vh",
-        width: "100vw"
-      }} />
+      <div ref={mapContainer} className="map-container h-screen w-screen" />
     </div>
   );
 }
