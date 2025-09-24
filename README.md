@@ -1,43 +1,30 @@
-# Astro Starter Kit: Minimal
+# Geshem 🌧️
 
-```sh
-npm create astro@latest -- --template minimal
+<img src="public/screenshot.png" height="600" align="right">
+
+An interactive rain radar clone running on Mapbox GL, see it live at: [https://geshem.space](https://geshem.space)
+
+The entire service is served off of static assets located in S3 buckets:
+
+- A static main index page, React-based JS bundle and other static assets that are uploaded upon deploy
+- Radar images that are collected and indexed every minute by a Python recurring task running on AWS Lambda
+
+For some architectural notes on the deployment process go read https://yuv.al/blog/an-architecture-for-periodically-updating-static-websites/
+
+## Prerequisites
+
+- Node.js
+- NPM
+
+## Dev
+
+Install dependencies and run dev server:
+
+```bash
+$ npm install
+$ npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### Deploy
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Deployment is handled transparently on Cloudflare Workers.
