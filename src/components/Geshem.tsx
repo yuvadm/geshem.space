@@ -21,7 +21,7 @@ export function Geshem({ date }: GeshemProps) {
 
   useEffect(() => {
     const fetchImages = async () =>
-      fetch(`${IMAGES_BASE_URL}/imgs.json`)
+      fetch(`/imgs/`)
         .then(res => res.json())
         .then(imgs => (imgs as any)["280"])
         .then(setImages);
