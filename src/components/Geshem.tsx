@@ -21,9 +21,9 @@ export function Geshem({ date }: GeshemProps) {
 
   useEffect(() => {
     const fetchImages = async () =>
-      fetch(`${IMAGES_BASE_URL}/imgs.json`)
+      fetch(`${IMAGES_BASE_URL}/imgs/`)
         .then(res => res.json())
-        .then(imgs => (imgs as any)["280"])
+        .then(data => data.images.map((img: any) => img.path))
         .then(setImages);
 
     const buildPlayback = async () => {
@@ -36,7 +36,7 @@ export function Geshem({ date }: GeshemProps) {
       );
       const paths = hours.reduce<string[]>(
         (acc, h) =>
-          acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/280.png`)),
+          acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/gis.png`)),
         []
       );
       setImages(paths);
