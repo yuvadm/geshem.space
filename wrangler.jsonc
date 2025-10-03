@@ -27,8 +27,10 @@
             "pattern": "www.geshem.space",
             "custom_domain": true
         }
-    ]
-    // "triggers": {
-    //     "crons": ["* * * * *"]
-    // }
+    ],
+    "triggers": {
+        "crons": [
+            "* * * * *"
+        ]
+    }
 }
