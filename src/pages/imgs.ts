@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { DateTime } from 'luxon';
 
 export const prerender = false;
 
@@ -16,26 +17,50 @@ export const GET: APIRoute = async ({ locals }) => {
 
     const bucket = env.IMGS_BUCKET;
 
-    // Get the latest images from yesterday onwards
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().slice(0, 10).replace(/-/g, '');
+    // Get images from the last hour
+    const now = DateTime.utc();
+    const oneHourAgo = now.minus({ hours: 1 });
+
+    // Search from 6 hours ago to have a buffer in case some images are missing
+    const sixHoursAgo = now.minus({ hours: 6 });
+    const startDate = sixHoursAgo.toFormat('yyyyMMdd');
+    const startHour = sixHoursAgo.toFormat('HH');
 
     const objects = await bucket.list({
       prefix: 'imgs/',
-      startAfter: `imgs/${yesterdayStr}`
+      startAfter: `imgs/${startDate}/${startHour}`
     });
 
-    // Filter for 280.png files and get the latest 10
+    // Filter for gis.png files from the last hour and get up to 12 images
     const imageKeys = objects.objects
       .map((obj: any) => obj.key)
-      .filter((key: string) => key.endsWith('/280.png'))
+      .filter((key: string) => {
+        if (!key.endsWith('/gis.png')) return false;
+
+        // Extract date/time from path: imgs/20251003/0950/gis.png
+        const pathParts = key.split('/');
+        if (pathParts.length !== 4) return false;
+
+        const dateStr = pathParts[1]; // YYYYMMDD
+        const timeStr = pathParts[2]; // HHMM
+
+        // Parse as UTC timestamp using luxon
+        const imageTime = DateTime.fromFormat(
+          `${dateStr} ${timeStr}`,
+          'yyyyMMdd HHmm',
+          { zone: 'utc' }
+        );
+
+        if (!imageTime.isValid) return false;
+
+        return imageTime >= oneHourAgo && imageTime <= now;
+      })
       .sort()
-      .slice(-10);
+      .slice(-12);
 
     // Transform keys to full URLs
     const images = imageKeys.map((key: string) => {
-      // Extract date/time from path: imgs/20250622/0930/280.png
+      // Extract date/time from path: imgs/20251003/0950/gis.png
       const pathParts = key.split('/');
       const date = pathParts[1];
       const time = pathParts[2];
@@ -52,7 +77,7 @@ export const GET: APIRoute = async ({ locals }) => {
     return new Response(JSON.stringify({
       images: images,
       count: images.length,
-      timestamp: new Date().toISOString()
+      timestamp: DateTime.utc().toISO()
     }), {
       status: 200,
       headers: {
