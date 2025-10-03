@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 import { Map } from "./Map";
 import { Slider } from "./Slider";
@@ -14,7 +15,9 @@ export function Geshem({ date }: GeshemProps) {
   const [images, setImages] = useState<string[]>([]);
   const [playback] = useState(
     date ||
-    (typeof window !== 'undefined' ? new URL(window.location.toString()).searchParams.get("history") : null) ||
+    (typeof window !== "undefined"
+      ? new URL(window.location.toString()).searchParams.get("history")
+      : null) ||
     undefined
   );
   const [slider, setSlider] = useState(playback ? PLAYBACK_SLOTS : 9);
@@ -22,21 +25,21 @@ export function Geshem({ date }: GeshemProps) {
   useEffect(() => {
     const fetchImages = async () =>
       fetch(`/imgs/`)
-        .then(res => res.json())
-        .then(data => (data as any).images.map((img: any) => img.path))
+        .then((res) => res.json())
+        .then((data) => (data as any).images.map((img: any) => img.path))
         .then(setImages);
 
     const buildPlayback = async () => {
       const date = playback;
-      const hours = Array.from(Array(PLAYBACK_HOURS).keys()).map(
-        h => `${String(h).padStart(2, "0")}`
+      const hours = Array.from(Array(PLAYBACK_HOURS).keys()).map((h) =>
+        `${String(h).padStart(2, "0")}`
       );
       const minutes = Array.from(Array(6).keys()).map(
-        m => `${String(m * 10).padStart(2, "0")}`
+        (m) => `${String(m * 10).padStart(2, "0")}`
       );
       const paths = hours.reduce<string[]>(
         (acc, h) =>
-          acc.concat(minutes.map(m => `imgs/${date}/${h}${m}/gis.png`)),
+          acc.concat(minutes.map((m) => `imgs/${date}/${h}${m}/gis.png`)),
         []
       );
       setImages(paths);
@@ -57,6 +60,12 @@ export function Geshem({ date }: GeshemProps) {
 
   return (
     <>
+      {/* Dark Mode Toggle at top-right */}
+      <div style={{ display: "flex", justifyContent: "flex-end", padding: "10px" }}>
+        <ThemeToggle />
+      </div>
+
+      {/* Existing components */}
       <Map images={images} slider={slider} />
       <DateTime images={images} slider={slider} />
       <Slider slider={slider} playback={playback} setSlider={setSlider} />
