@@ -51,7 +51,7 @@ class GeshemUpdate {
     };
   }
 
-  private async getLatestImage(): Promise<RadarImage | null> {
+  private async getAllImages(): Promise<RadarImage[]> {
     const response = await fetch(GeshemUpdate.API_URL);
 
     if (!response.ok) {
@@ -62,11 +62,10 @@ class GeshemUpdate {
     const images = data.data.types.IMSRadar;
 
     if (!images || images.length === 0) {
-      return null;
+      return [];
     }
 
-    // Get the latest image (last in the array)
-    return images[images.length - 1];
+    return images;
   }
 
   private parseFilename(filepath: string): { date: string; time: string } | null {
@@ -116,62 +115,67 @@ class GeshemUpdate {
 
   private async fetchAndStoreImages(): Promise<number> {
     // Get all images from API
-    const apiImage = await this.getLatestImage();
-    if (!apiImage) {
+    const apiImages = await this.getAllImages();
+    if (apiImages.length === 0) {
       console.log('No images found in API response');
       return 0;
     }
+
+    console.log(`Found ${apiImages.length} images in API response`);
 
     // Get existing gis.png keys in bucket
     const existingKeys = await this.getExistingGisKeys();
 
     let savedCount = 0;
 
-    console.log(`Processing image: ${apiImage.file_name}`);
+    for (const apiImage of apiImages) {
+      console.log(`Processing image: ${apiImage.file_name}`);
 
-    // Parse filename to get date and time
-    const parsed = this.parseFilename(apiImage.file_name);
-    if (!parsed) {
-      console.error(`Failed to parse filename: ${apiImage.file_name}`);
-      return 0;
-    }
-
-    console.log(`Parsed Israeli time - Date: ${parsed.date}, Time: ${parsed.time}`);
-
-    // Convert Israeli time to UTC
-    const utc = this.convertIsraeliToUTC(parsed.date, parsed.time);
-    console.log(`Converted to UTC - Date: ${utc.date}, Time: ${utc.time}`);
-
-    // Build R2 key: imgs/YYYYMMDD/HHMM/gis.png
-    const key = `imgs/${utc.date}/${utc.time}/gis.png`;
-
-    // Check if already exists
-    if (existingKeys.has(key)) {
-      console.log(`Image already exists at ${key}`);
-      return 0;
-    }
-
-    // Fetch the image
-    const imageUrl = `${GeshemUpdate.BASE_URL}${apiImage.file_name}`;
-    console.log(`Downloading from ${imageUrl}`);
-
-    const response = await fetch(imageUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch image: ${response.statusText}`);
-    }
-
-    const imageData = await response.arrayBuffer();
-
-    // Upload to R2
-    console.log(`Uploading to ${key}`);
-    await this.bucket.put(key, imageData, {
-      httpMetadata: {
-        contentType: 'image/png',
-        cacheControl: 'public, max-age=31536000'
+      // Parse filename to get date and time
+      const parsed = this.parseFilename(apiImage.file_name);
+      if (!parsed) {
+        console.error(`Failed to parse filename: ${apiImage.file_name}`);
+        continue;
       }
-    });
 
-    savedCount++;
+      console.log(`Parsed Israeli time - Date: ${parsed.date}, Time: ${parsed.time}`);
+
+      // Convert Israeli time to UTC
+      const utc = this.convertIsraeliToUTC(parsed.date, parsed.time);
+      console.log(`Converted to UTC - Date: ${utc.date}, Time: ${utc.time}`);
+
+      // Build R2 key: imgs/YYYYMMDD/HHMM/gis.png
+      const key = `imgs/${utc.date}/${utc.time}/gis.png`;
+
+      // Check if already exists
+      if (existingKeys.has(key)) {
+        console.log(`Image already exists at ${key}, skipping`);
+        continue;
+      }
+
+      // Fetch the image
+      const imageUrl = `${GeshemUpdate.BASE_URL}${apiImage.file_name}`;
+      console.log(`Downloading from ${imageUrl}`);
+
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        console.error(`Failed to fetch image: ${response.statusText}`);
+        continue;
+      }
+
+      const imageData = await response.arrayBuffer();
+
+      // Upload to R2
+      console.log(`Uploading to ${key}`);
+      await this.bucket.put(key, imageData, {
+        httpMetadata: {
+          contentType: 'image/png',
+          cacheControl: 'public, max-age=31536000'
+        }
+      });
+
+      savedCount++;
+    }
 
     return savedCount;
   }
