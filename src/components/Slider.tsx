@@ -5,13 +5,14 @@ interface SliderProps {
   playback?: string;
   slider: number;
   setSlider: React.Dispatch<React.SetStateAction<number>>;
+  imageCount: number;
 }
 
-export function Slider({ playback, slider, setSlider }: SliderProps) {
+export function Slider({ playback, slider, setSlider, imageCount }: SliderProps) {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const max = playback ? PLAYBACK_SLOTS : 9;
+  const max = playback ? PLAYBACK_SLOTS : Math.max(0, imageCount - 1);
 
   const handleStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);

@@ -17,7 +17,7 @@ export function Geshem({ date }: GeshemProps) {
     (typeof window !== 'undefined' ? new URL(window.location.toString()).searchParams.get("history") : null) ||
     undefined
   );
-  const [slider, setSlider] = useState(playback ? PLAYBACK_SLOTS : 9);
+  const [slider, setSlider] = useState(0);
 
   useEffect(() => {
     const fetchImages = async () =>
@@ -55,11 +55,25 @@ export function Geshem({ date }: GeshemProps) {
     };
   }, [playback]);
 
+  // Update slider to point to the latest image when images change
+  useEffect(() => {
+    if (images.length > 0) {
+      setSlider(prevSlider => {
+        const maxIndex = playback ? PLAYBACK_SLOTS : images.length - 1;
+        // If this is the first load (slider is 0) or if slider is out of bounds, set to max
+        if (prevSlider === 0 || prevSlider > maxIndex) {
+          return maxIndex;
+        }
+        return prevSlider;
+      });
+    }
+  }, [images.length, playback]);
+
   return (
     <>
       <Map images={images} slider={slider} />
       <DateTime images={images} slider={slider} />
-      <Slider slider={slider} playback={playback} setSlider={setSlider} />
+      <Slider slider={slider} playback={playback} setSlider={setSlider} imageCount={images.length} />
     </>
   );
 }
