@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Map } from "./Map";
 import { Slider } from "./Slider";
@@ -18,7 +18,6 @@ export function Geshem({ date }: GeshemProps) {
     undefined
   );
   const [slider, setSlider] = useState(0);
-  const isInitialLoad = useRef(true);
 
   useEffect(() => {
     const fetchImages = async () =>
@@ -61,18 +60,10 @@ export function Geshem({ date }: GeshemProps) {
     if (images.length > 0) {
       setSlider(prevSlider => {
         const maxIndex = playback ? PLAYBACK_SLOTS : images.length - 1;
-
-        // On initial load, set to the latest image (rightmost)
-        if (isInitialLoad.current) {
-          isInitialLoad.current = false;
+        // If this is the first load (slider is 0) or if slider is out of bounds, set to max
+        if (prevSlider === 0 || prevSlider > maxIndex) {
           return maxIndex;
         }
-
-        // If slider is out of bounds (e.g., after image count changes), clamp it
-        if (prevSlider > maxIndex) {
-          return maxIndex;
-        }
-
         return prevSlider;
       });
     }
