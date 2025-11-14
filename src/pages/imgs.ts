@@ -68,7 +68,7 @@ export const GET: APIRoute = async ({ locals }) => {
 
       return {
         path: key,
-        url: `https://imgs.geshem.space/${date}/${time}/${filename}`,
+        url: `https://imgs.geshem.space/imgs/${date}/${time}/${filename}`,
         date: date,
         time: time
       };
